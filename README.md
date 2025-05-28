@@ -1,31 +1,6 @@
-# wahoo
-wahoo!
+# wahoo!
 
+a funny AUR helper i made
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-...this is a private github repo wtf are you doing here.
+### DISCLAIMER
+wahoo is still in early development. im not responsible if you break your system using this.
