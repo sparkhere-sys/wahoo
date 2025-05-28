@@ -1,4 +1,5 @@
 # Maintainer: Spark <spark-aur@proton.me>
+SCRIPTNAME=core.py
 pkgname=wahoo
 pkgver=0.0.1
 pkgrel=1
@@ -11,5 +12,5 @@ source=("core.py") # for now. wahoo will be expanded later so this line will be 
 sha256sums=("SKIP") # im sorry
 
 package() {
-  install -Dm755 "$srcdir/$source" "$pkgdir/usr/bin/wahoo"
+  install -Dm755 "$srcdir/$SCRIPTNAME" "$pkgdir/usr/bin/wahoo"
 }
