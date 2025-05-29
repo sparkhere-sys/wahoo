@@ -2,7 +2,7 @@
 ## intended to be used as a binary
 
 # wahoo!
-## v0.0.1
+## v0.0.2
 ## made with <3 by spark
 
 # LIBRARIES AND MODULES
@@ -17,22 +17,33 @@ import os
 ## as for source, i plan on allowing people to change the source in later versions
 prompt = "null"
 sourcedir = "null"
-source = "https://aur.archlinux.org/" 
+source = "https://aur.archlinux.org" 
 
 # FUNCTIONS
 
-def run(cmd):
+def run(cmd, dir, yolo):
+  if dir != "null":
+    os.chdir(dir)
+  
   print(f"wahoo: Running {cmd}")
-  # if cmd !=
-  prompt = input("Proceed? [Y/n] ").strip().lower()
-  if prompt.lower() == "n":
-    print("Aborted.")
-    return
+  if not yolo:
+    prompt = input("Proceed? [Y/n] ").strip().lower()
+    if prompt.lower() == "n":
+      print("Aborted.")
+      return
 
   try:
     subprocess.run(cmd, shell=True, check=True)
   except subprocess.CalledProcessError:
-    print("wahoo: Command failed.")
+    if cmd.split()[0] == "git":
+      print("wahoo: Failed to clone package. Are you sure it exists in the AUR?")
+    elif cmd.split()[0] == "makepkg":
+      print("wahoo: Failed to build package. Is there an error in the PKGBUILD?")
+    elif cmd.split()[1] == "pacman" and cmd.split()[2] != "-Rns":
+      print("wahoo: pacman failed to install package.")
+    else:
+      print("wahoo: Command failed.")
+    sys.exit(1)
 
 def install(pkg):
   wahooroot = Path.home() / ".wahoo" / "source"
@@ -41,24 +52,30 @@ def install(pkg):
   sourcedir = wahooroot / pkg
 
   if not sourcedir.exists():
-    # the lines below are commented out since you already have a y/n prompt in run()
-    ## confirm = input(f"wahoo: Proceed with installing {pkg}? [Y/n] ")
-    ## if confirm.lower() == "n":
-    ##  print("Aborted.")
-    ##  return
+    # while there IS a confirm prompt, yolo mode is enabled when using run()
+    prompt = input(f"wahoo: Proceed with installing {pkg}? [Y/n] ")
+    if prompt.lower() == "n":
+      print("Aborted.")
+    return
 
     print("wahoo: Starting install")
     print(f"wahoo: Downloading {pkg} from AUR...")
-    os.chdir(wahooroot) # cd to ~/.wahoo/source/
-    subprocess.run(f"git clone {source}/{pkg}.git", shell=True, check=True) # verbose because it doesn't run in the background. is it possible?
+    # os.chdir(wahooroot)
+    # subprocess.run(f"git clone {source}/{pkg}.git", shell=True, check=True)
+    run(f"git clone {source}/{pkg}.git", wahooroot, True)
+    print(f"wahoo: {pkg} Downloaded.")
 
   else:
     print(f"wahoo: {pkg} source already exists at {sourcedir}.")
-
-  print(f"wahoo: {pkg} Downloaded.")
+    
   print(f"wahoo: Trying to install {pkg}...")
-  os.chdir(sourcedir) # moves to where git cloned the repo from the aur
-  subprocess.run("makepkg -si", shell=True, check=True) # then builds the package
+  prompt = input("Run 'makepkg' with '-si'?")
+  if prompt.lower() != "n":
+    run("makepkg", sourcedir, True)
+  else:
+    run("makepkg -si", sourcedir, False)
+  ## os.chdir(sourcedir) # moves to where git cloned the repo from the aur
+  ## subprocess.run("makepkg -si", shell=True, check=True) # then builds the package
   print(f"wahoo! {pkg} installled.")
 
 def uninstall(pkg):
@@ -67,7 +84,8 @@ def uninstall(pkg):
   print(f"wahoo! {pkg} uninstalled.")
 
 def help():
-  print("help coming in v0.0.2, im too lazy to type it, sorry.")
+  print("[Available commands]")
+  print("uhhhhh")
 def main():
   if len(sys.argv) < 3:
     help()
@@ -81,6 +99,11 @@ def main():
       install(pkg)
     case ("remove" | "uninstall" | "-R" | "-Rns"):
       uninstall(pkg)
+    case ("help" | "-H"):
+      help()
+      sys.exit(1)
+    case ("moo"):
+      print("wahoo: This is NOT archapt, brother")
     case _:
       print("wahoo: Invalid command.")
       help()
