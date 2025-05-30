@@ -9,6 +9,7 @@ url="https://github.com/sparkhere-sys/wahoo"
 license=("MIT")
 depends=("python>=3.10")
 source=("main.py")
+provides=("wahoo") # no shit sherlock
 sha256sums=("SKIP") # im sorry
 
 package() {
