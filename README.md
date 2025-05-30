@@ -12,6 +12,13 @@ wahoo is still in early development. im not responsible if you break your system
 - `install` (aliases: `-S`)
 - `uninstall` (aliases: `-R`, `remove`)
 
+### usage
+```bash
+wahoo install neofetch
+wahoo -S neofetch
+wahoo uninstall neofetch
+```
+
 ## to do for v0.0.3
 things that are done will be ~~crossed out~~
 
