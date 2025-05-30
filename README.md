@@ -22,7 +22,7 @@ things that are done will be ~~crossed out~~
 ### from source
 open up your terminal, then:
 ```bash
-git clone https://sparkhere-sys/wahoo.git
+git clone https://github.com/sparkhere-sys/wahoo.git
 cd wahoo
 makepkg -si
 ```
@@ -40,5 +40,6 @@ just follow these basic guidelines:
 - use pull requests
 - if you're fixing a bug *describe what it did* and *how you fixed it* so everyone can be on the same page
 - just don't be a dick :)
+- remember that this has the [MIT license](https://github.com/sparkhere-sys/wahoo/blob/main/LICENSE).
 
 # okay bye
