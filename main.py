@@ -13,16 +13,13 @@ import subprocess
 import os
 
 # VARIABLES
-## none of these are constants, i just have a habit of defining variables globally even though they're only used locally lol
-## as for source, i plan on allowing people to change the source in later versions
-prompt = "null"
-sourcedir = "null"
+## for source, i plan on allowing people to change the source in later versions, but for now it remains here
 source = "https://aur.archlinux.org" 
 
 # FUNCTIONS
 
-def run(cmd, dir, yolo):
-  if dir != "null":
+def run(cmd, dir=None, yolo=False):
+  if dir:
     os.chdir(dir)
   
   print(f"wahoo: Running {cmd}")
@@ -35,14 +32,19 @@ def run(cmd, dir, yolo):
   try:
     subprocess.run(cmd, shell=True, check=True)
   except subprocess.CalledProcessError:
-    if cmd.split()[0] == "git":
-      print("wahoo: Failed to clone package. Are you sure it exists in the AUR?")
-    elif cmd.split()[0] == "makepkg":
-      print("wahoo: Failed to build package. Is there an error in the PKGBUILD?")
-    elif cmd.split()[1] == "pacman" and cmd.split()[2] != "-Rns":
-      print("wahoo: pacman failed to install package.")
+    # if cmd.split()[0] == "git":
+    if cmd.startswith("git"):
+      print("wahoo error: Failed to clone package. Are you sure it exists in the AUR?")
+    # elif cmd.split()[0] == "makepkg":
+    elif cmd.startswith("makepkg"):
+      print("wahoo error: Failed to build package. Is there an error in the PKGBUILD?")
+    # elif cmd.split()[1] == "pacman" and cmd.split()[2] != "-Rns":
+    elif "pacman" in cmd and "-Rns" not in cmd:
+      print("wahoo error: pacman failed to install package.")
+    elif "pacman" in cmd:
+      print("wahoo error: pacman failed to uninstall package. Are you sure it exists on your system?")
     else:
-      print("wahoo: Command failed.")
+      print("wahoo error: Command failed.")
     sys.exit(1)
 
 def install(pkg):
@@ -56,7 +58,7 @@ def install(pkg):
     prompt = input(f"wahoo: Proceed with installing {pkg}? [Y/n] ")
     if prompt.lower() == "n":
       print("Aborted.")
-    return
+      return
 
     print("wahoo: Starting install")
     print(f"wahoo: Downloading {pkg} from AUR...")
@@ -69,34 +71,42 @@ def install(pkg):
     print(f"wahoo: {pkg} source already exists at {sourcedir}.")
     
   print(f"wahoo: Trying to install {pkg}...")
-  prompt = input("Run 'makepkg' with '-si'?")
-  if prompt.lower() != "n":
+  prompt = input("Run 'makepkg' with '-si'? [Y/n]")
+  if prompt.lower() == "n":
     run("makepkg", sourcedir, True)
   else:
-    run("makepkg -si", sourcedir, False)
+    run("makepkg -si", sourcedir, True)
   ## os.chdir(sourcedir) # moves to where git cloned the repo from the aur
   ## subprocess.run("makepkg -si", shell=True, check=True) # then builds the package
-  print(f"wahoo! {pkg} installled.")
+  print(f"wahoo! {pkg} installed.")
 
 def uninstall(pkg):
-  print(f"wahoo: Running 'sudo pacman -Rns {pkg} --noconfirm'...")
-  subprocess.run(f"sudo pacman -Rns {pkg} --noconfirm", shell=True, check=True)
+  print(f"wahoo: Running 'sudo pacman -Rns {pkg}'...")
+  run(f"sudo pacman -Rns {pkg} --noconfirm", None, False)
+  # subprocess.run(f"sudo pacman -Rns {pkg} --noconfirm", shell=True, check=True)
   print(f"wahoo! {pkg} uninstalled.")
 
 def help():
   print("[Available commands]")
-  print("uhhhhh")
+  print("I'm STILL not typing this help command.")
+
+def flagparsing():
+  print("Empty for now...")
+
 def main():
-  if len(sys.argv) < 3:
+  if len(sys.argv) < 2:
     help()
     sys.exit(1)
 
   cmd = sys.argv[1]
-  pkg = sys.argv[2]
+  pkg = sys.argv[2] if len(sys.argv) > 2 else None
 
   match cmd:
     case ("install" | "-S"):
-      install(pkg)
+      if not pkg:
+        print("wahoo: No package or invalid package specified. Are you sure that's a real package?")
+        sys.exit(1)
+      install(pkg)  
     case ("remove" | "uninstall" | "-R" | "-Rns"):
       uninstall(pkg)
     case ("help" | "-H"):
@@ -104,12 +114,18 @@ def main():
       sys.exit(1)
     case ("moo"):
       print("wahoo: This is NOT archapt, brother")
+    case ("version" | "--version"):
+      print("wahoo - v0.0.2")
+      print("made with <3 by spark :D")
     case _:
       print("wahoo: Invalid command.")
       help()
       sys.exit(1)
 
-# the last part (i have no clue how to name this)
+# MAIN
 
 if __name__ == "__main__":
-  main() # this doesn't run main if wahoo is imported as a module
+  try:
+    main() # this doesn't run main if wahoo is imported as a module
+  except KeyboardInterrupt:
+    print("wahoo: Interrupted by Ctrl+C, see you next time")
