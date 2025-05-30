@@ -1,6 +1,43 @@
-# wahoo!
+# wahoo! (v0.0.2)
+a funny AUR helper i made in python :D
+this README is informal by design, if you have any questions pull up an issue or contact me
 
-a funny AUR helper i made
-
-### DISCLAIMER
+## DISCLAIMER
 wahoo is still in early development. im not responsible if you break your system using this.
+
+**wahoo is NOT intended to be used as an alias for `pacman` commands. if you want that, use [archapt](https://github.com/sparkhere-sys/archapt/)**
+
+## available commands
+- `install` (aliases: `-S`)
+- `uninstall` (aliases: `-R`, `remove`)
+
+## to do for v0.0.3
+things that are done will be ~~crossed out~~
+
+- add `list` and `show` commands
+- add flags
+
+## installation
+### from source
+open up your terminal, then:
+```bash
+git clone https://sparkhere-sys/wahoo.git
+cd wahoo
+makepkg -si
+```
+you can replace `makepkg -si` with just `makepkg` if you'd like
+
+### from AUR
+soon™️
+
+wait a minute this is an AUR helper-
+
+## contributing
+if you'd like to contribute, then feel free to do so!
+just follow these basic guidelines:
+
+- use pull requests
+- if you're fixing a bug *describe what it did* and *how you fixed it* so everyone can be on the same page
+- just don't be a dick :)
+
+# okay bye
