@@ -1,5 +1,6 @@
 # wahoo! (v0.0.2)
 a funny AUR helper i made in python :D
+
 this README is informal by design, if you have any questions pull up an issue or contact me
 
 ## DISCLAIMER
