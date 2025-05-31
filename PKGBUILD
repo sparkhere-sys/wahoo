@@ -8,7 +8,7 @@ arch=("x86_64")
 url="https://github.com/sparkhere-sys/wahoo"
 license=("Modified-MIT")
 depends=("python>=3.10" "git" "makepkg")
-source=("main.py")
+source=("$SCRIPTNAME" "LICENSE.md")
 provides=("wahoo") # no shit sherlock
 sha256sums=("SKIP") # im sorry
 
