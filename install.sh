@@ -24,7 +24,7 @@ for dep in "${depends[@]}"; do
   fi
 done
 
-if [[ "${1+-}" == "update" ]]; then
+if [[ "${1-}" == "update" ]]; then
   echo "wahoo: Updating wahoo..."
   if [ -d "$localrepo/.git" ]; then
     echo "wahoo: Existing wahoo source found. Updating..."
