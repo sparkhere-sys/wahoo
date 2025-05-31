@@ -19,9 +19,6 @@ source = "https://aur.archlinux.org"
 # FUNCTIONS
 
 def run(cmd, dir=None, yolo=False):
-  if dir:
-    os.chdir(dir)
-  
   print(f"wahoo: Running {cmd}")
   if not yolo:
     prompt = input("Proceed? [Y/n] ").strip().lower()
@@ -30,7 +27,7 @@ def run(cmd, dir=None, yolo=False):
       return
 
   try:
-    subprocess.run(cmd, shell=True, check=True)
+    subprocess.run(cmd, shell=True, check=True, cwd=dir)
   except subprocess.CalledProcessError:
     # if cmd.split()[0] == "git":
     if cmd.startswith("git"):
