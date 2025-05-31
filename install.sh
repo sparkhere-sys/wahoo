@@ -3,6 +3,7 @@
 
 if [[ $EUID -eq 0 ]]; then
   echo "wahoo error: don't run this with sudo, or else makepkg will fail."
+  exit 1
 fi
 
 set -euo pipefail
