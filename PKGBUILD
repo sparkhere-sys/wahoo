@@ -14,4 +14,5 @@ sha256sums=("SKIP") # im sorry
 
 package() {
   install -Dm755 "$srcdir/$SCRIPTNAME" "$pkgdir/usr/bin/wahoo"
+  install -Dm644 LICENSE.md "$pkgdir/usr/share/licenses/$pkgname/LICENSE.md"
 }
