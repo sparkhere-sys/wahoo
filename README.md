@@ -24,8 +24,12 @@ things that are done will be ~~crossed out~~
 
 - add `list` and `show` commands
 - add flags
+- ~~create install.sh~~
 
 ## installation
+### with install.sh
+download it, make it executable with `chmod +x ./install.sh`, run it.
+
 ### from source
 open up your terminal, then:
 ```bash
@@ -40,6 +44,13 @@ soon™️
 
 wait a minute this is an AUR helper-
 
+## updating wahoo
+run:
+```bash
+wahoo update wahoo
+```
+yeah yeah i know, recursive syntax, but it works
+
 ## contributing
 if you'd like to contribute, then feel free to do so!
 just follow these basic guidelines:
@@ -50,3 +61,9 @@ just follow these basic guidelines:
 - remember that this has the [MIT license](https://github.com/sparkhere-sys/wahoo/blob/main/LICENSE).
 
 # okay bye
+made with <3 by spark
+
+contact me:
+
+- [my email](mailto:spark-aur@proton.me)
+- my discord: **spark-sys**
