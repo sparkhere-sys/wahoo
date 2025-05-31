@@ -14,7 +14,7 @@ import os
 
 # VARIABLES
 ## for source, i plan on allowing people to change the source in later versions, but for now it remains here
-source = "https://aur.archlinux.org" 
+## source = "https://aur.archlinux.org" 
 
 # FUNCTIONS
 
@@ -44,7 +44,16 @@ def run(cmd, dir=None, yolo=False):
       print("wahoo error: Command failed.")
     sys.exit(1)
 
-def install(pkg):
+def install_sh():
+  wahooroot = Path.home() / ".wahoo" / "source" / "wahoo"
+  install_sh = wahooroot / "install.sh"
+
+  if not install_sh.exists():
+    print("wahoo warn: install.sh does not exist in the wahoo directory. Downloading...")
+    install("wahoo", "https://github.com/sparkhere-sys/", False)
+    print("wahoo! Latest update fetched, and install.sh has been downloaded.")
+
+def install(pkg, source="https://aur.archlinux.org", install=True):
   wahooroot = Path.home() / ".wahoo" / "source"
   wahooroot.mkdir(parents=True, exist_ok=True)
 
@@ -58,24 +67,28 @@ def install(pkg):
       return
 
     print("wahoo: Starting install")
-    print(f"wahoo: Downloading {pkg} from AUR...")
+    if source == "https://aur.archlinux.org":
+      print(f"wahoo: Downloading {pkg} from AUR...")
+    else:
+      print(f"wahoo: Downlading {pkg} from user-provided source...")
     # os.chdir(wahooroot)
     # subprocess.run(f"git clone {source}/{pkg}.git", shell=True, check=True)
     run(f"git clone {source}/{pkg}.git", wahooroot, True)
-    print(f"wahoo: {pkg} Downloaded.")
+    print(f"wahoo! {pkg} Downloaded.")
 
   else:
-    print(f"wahoo: {pkg} source already exists at {sourcedir}.")
-    
-  print(f"wahoo: Trying to install {pkg}...")
-  prompt = input("Run 'makepkg' with '-si'? [Y/n]")
-  if prompt.lower() == "n":
-    run("makepkg -s", sourcedir, True) # -s is used to install missing dependencies.
-  else:
-    run("makepkg -si", sourcedir, True) # -si both installs missing dependencies 
-  ## os.chdir(sourcedir) # moves to where git cloned the repo from the aur
-  ## subprocess.run("makepkg -si", shell=True, check=True) # then builds the package
-  print(f"wahoo! {pkg} installed.")
+    print(f"wahoo warn: {pkg} source already exists at {sourcedir}.")
+
+  if install:
+    print(f"wahoo: Trying to install {pkg}...")
+    prompt = input("Run 'makepkg' with '-si'? [Y/n]")
+    if prompt.lower() == "n":
+      run("makepkg -s", sourcedir, True) # -s is used to install missing dependencies.
+    else:
+      run("makepkg -si", sourcedir, True) # -si both installs missing dependencies 
+    ## os.chdir(sourcedir) # moves to where git cloned the repo from the aur
+    ## subprocess.run("makepkg -si", shell=True, check=True) # then builds the package
+    print(f"wahoo! {pkg} installed.")
 
 def uninstall(pkg):
   print(f"wahoo: Running 'sudo pacman -Rns {pkg}'...")
@@ -126,6 +139,7 @@ def main():
 
       if pkg == "wahoo":
         print("wahoo: Self update requested. Running './install.sh update'...")
+        install_sh()
         os.chdir(Path.home() / ".wahoo/source/wahoo/")
         try:
           subprocess.run("./install.sh update", shell=True, check=True)
