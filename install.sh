@@ -29,6 +29,7 @@ if [[ "${1-}" == "update" ]]; then
   if [ -d "$localrepo/.git" ]; then
     echo "wahoo: Existing wahoo source found. Updating..."
     cd "$localrepo"
+    git reset --hard HEAD
     git pull
     echo "wahoo! Pulled from the latest commit."
   else
