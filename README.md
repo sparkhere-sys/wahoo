@@ -58,7 +58,7 @@ just follow these basic guidelines:
 - use pull requests
 - if you're fixing a bug *describe what it did* and *how you fixed it* so everyone can be on the same page
 - just don't be a dick :)
-- remember that this has the [MIT license](https://github.com/sparkhere-sys/wahoo/blob/main/LICENSE).
+- remember that this has the [MIT license](https://github.com/sparkhere-sys/wahoo/blob/main/LICENSE). modified sure, but its the MIT license.
 
 # okay bye
 made with <3 by spark
