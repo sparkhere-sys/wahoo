@@ -12,7 +12,7 @@ wahooroot="$HOME/.wahoo/source/"
 localrepo="$wahooroot/wahoo"
 mkdir -p "$wahooroot"
 
-depends=("git" "base-devel" "sudo")
+depends=("git" "makepkg" "sudo")
 repo="https://github.com/sparkhere-sys/wahoo.git"
 dir="wahoo"
 
