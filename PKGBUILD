@@ -6,7 +6,7 @@ pkgrel=1
 pkgdesc="an AUR helper made in python because why not? made with <3 by spark"
 arch=("x86_64")
 url="https://github.com/sparkhere-sys/wahoo"
-license=("MIT")
+license=("Modified-MIT")
 depends=("python>=3.10" "git" "base-devel")
 source=("main.py")
 provides=("wahoo") # no shit sherlock
