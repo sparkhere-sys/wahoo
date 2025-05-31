@@ -1,6 +1,10 @@
 #!/bin/bash
 ## auto installs wahoo
 
+if [[ $EUID -eq 0 ]]; then
+  echo "wahoo error: don't run this with sudo, or else makepkg will fail."
+fi
+
 set -euo pipefail
 
 wahooroot="$HOME/.wahoo/source/"
@@ -38,6 +42,10 @@ if [[ "${1+-}" == "update" ]]; then
   makepkg -si --noconfirm
   echo "wahoo! Successfully updated wahoo."
 else
+  if [ -d "$localrepo" ]; then
+    echo "wahoo warn: Existing source directory found. Removing to avoid conflicts..."
+    rm -rf "$localrepo" # scary!
+  fi
   echo "wahoo: Downloading wahoo..."
   git clone "$repo" "$localrepo"
   echo "wahoo: Building and installing wahoo..."
