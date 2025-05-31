@@ -104,7 +104,7 @@ def main():
   match cmd:
     case ("install" | "-S"):
       if not pkg:
-        print("wahoo: No package or invalid package specified. Are you sure that's a real package?")
+        print("wahoo error: No package or invalid package specified. Are you sure that's a real package?")
         sys.exit(1)
       install(pkg)  
     case ("remove" | "uninstall" | "-R" | "-Rns"):
@@ -117,6 +117,20 @@ def main():
     case ("version" | "--version"):
       print("wahoo - v0.0.2")
       print("made with <3 by spark :D")
+    case ("update" | "-Sy"):
+      if not pkg:
+        print("wahoo error: No package or invalid package specified. Are you sure that's a real package?")
+        return
+
+      if pkg == "wahoo":
+        print("wahoo: Self update requested. Running './install.sh update'...")
+        os.chdir(Path.home() / ".wahoo/source/wahoo/")
+        try:
+          subprocess.run("./install.sh update", shell=True, check=True)
+        except subprocess.CalledProcessError:
+          print("wahoo error: install.sh failed. Is it executable, or does it not exist?")
+      else:
+        print("wahoo error: Update command not implemented. Sorry!")
     case _:
       print("wahoo: Invalid command.")
       help()
