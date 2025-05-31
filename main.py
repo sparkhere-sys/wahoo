@@ -73,9 +73,9 @@ def install(pkg):
   print(f"wahoo: Trying to install {pkg}...")
   prompt = input("Run 'makepkg' with '-si'? [Y/n]")
   if prompt.lower() == "n":
-    run("makepkg", sourcedir, True)
+    run("makepkg -s", sourcedir, True) # -s is used to install missing dependencies.
   else:
-    run("makepkg -si", sourcedir, True)
+    run("makepkg -si", sourcedir, True) # -si both installs missing dependencies 
   ## os.chdir(sourcedir) # moves to where git cloned the repo from the aur
   ## subprocess.run("makepkg -si", shell=True, check=True) # then builds the package
   print(f"wahoo! {pkg} installed.")
@@ -87,8 +87,13 @@ def uninstall(pkg):
   print(f"wahoo! {pkg} uninstalled.")
 
 def help():
-  print("[Available commands]")
-  print("I'm STILL not typing this help command.")
+  print("[Available commands]") # okay fine i'll type it
+  print("install, -S:                  Installs a package from the AUR.")
+  print("uninstall, remove, -R, -Rns:  Uninstalls an existing packge.")
+  print("help, -H:                     Prints this message.")
+  print("update, -Sy:                  Updates an existing AUR package. You can also update wahoo with this.")
+  print("[Available flags]")
+  print("Nothing yet.")
 
 def flagparsing():
   print("Empty for now...")
