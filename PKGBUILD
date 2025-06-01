@@ -1,5 +1,6 @@
 # Maintainer: Spark <spark-aur@proton.me>
 SCRIPTNAME=main.py
+pkgmaintainer="Spark <spark-aur@proton.me>"
 pkgname=wahoo
 pkgver="0.0.3-alpha"
 pkgrel=1
@@ -7,7 +8,7 @@ pkgdesc="an AUR helper made in python because why not? made with <3 by spark"
 arch=("x86_64")
 url="https://github.com/sparkhere-sys/wahoo"
 license=("Modified-MIT")
-depends=("python>=3.10" "git" "makepkg")
+depends=("python>=3.10" "git" "makepkg" "bash")
 source=("$SCRIPTNAME" "LICENSE.md")
 provides=("wahoo") # no shit sherlock
 sha256sums=("SKIP") # im sorry
