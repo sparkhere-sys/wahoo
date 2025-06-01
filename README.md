@@ -23,6 +23,7 @@ wahoo install neofetch
 wahoo -S neofetch
 wahoo uninstall neofetch
 ```
+> Note: Running `wahoo install wahoo` causes a segmentation fault. This is intentional. Do not send me an email about this.
 
 ## to do for v0.0.3
 things that are done will be ~~crossed out~~
