@@ -195,8 +195,6 @@ def main():
     case ("help" | "-H" | "--help" | "--h"):
       help()
       sys.exit(1)
-    case ("moo"):
-      print("wahoo: This is NOT archapt, brother")
     case ("version" | "--version"):
       print("wahoo - v0.3 beta")
       print("made with <3 by spark :D")
