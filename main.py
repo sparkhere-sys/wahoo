@@ -2,7 +2,7 @@
 ## intended to be used as a binary
 
 # wahoo!
-## v0.0.3a
+## v0.0.3 alpha
 ## made with <3 by spark
 
 # LIBRARIES AND MODULES
