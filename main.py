@@ -3,7 +3,7 @@
 ## wahoo!
 ## v0.0.3 alpha
 ## made with <3 by spark
-## certain lines of code will be commented out with ##. thats an intentional decision, aka me being to lazy to hold down the fucking backspace key.
+## certain lines of code will be commented out with ##. thats an intentional decision, aka me being to lazy to hold down the backspace key.
 
 # LIBRARIES AND MODULES
 
@@ -61,7 +61,7 @@ def install(pkg, source="https://aur.archlinux.org", build=True):
   sourcedir = wahooroot / pkg
 
   if not sourcedir.exists():
-    # old comment: "while there IS a confirm prompt, yolo mode is enabled when using run()" well that was a fucking lie.
+    # old comment: "while there IS a confirm prompt, yolo mode is enabled when using run()" well that was a lie.
 
     print("wahoo: Starting install")
     if source == "https://aur.archlinux.org":
@@ -178,7 +178,7 @@ def main():
   if flags:
     flagparsing(flags)
 
-  match cmd: # i fucking love match case
+  match cmd: # i love match case
     case ("install" | "-S"):
       if not pkg:
         print("wahoo error: No package or invalid package specified.")
