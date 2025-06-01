@@ -22,7 +22,7 @@ wahoo uninstall neofetch
 ## to do for v0.0.3
 things that are done will be ~~crossed out~~
 
-- add `list` and `show` commands
+- ~~add `list` and `show` commands~~
 - add flags
 - ~~create install.sh~~
 
