@@ -1,7 +1,6 @@
 #!/usr/bin/python3
-## intended to be used as a binary
 
-# wahoo!
+## wahoo!
 ## v0.0.3 alpha
 ## made with <3 by spark
 
@@ -11,10 +10,6 @@ import sys
 from pathlib import Path
 import subprocess
 import os
-
-# VARIABLES
-## for source, i plan on allowing people to change the source in later versions, but for now it remains here
-## source = "https://aur.archlinux.org" 
 
 # FUNCTIONS
 
@@ -148,6 +143,8 @@ def update(pkg):
   except:
     return
 
+def search():
+  print("Nothing here yet...")
 
 def main():
   if len(sys.argv) < 2:
@@ -164,7 +161,7 @@ def main():
   match cmd:
     case ("install" | "-S"):
       if not pkg:
-        print("wahoo error: No package or invalid package specified. Are you sure that's a real package?")
+        print("wahoo error: No package or invalid package specified.")
         sys.exit(1)
       install(pkg)  
     case ("remove" | "uninstall" | "-R" | "-Rns"):
@@ -179,7 +176,7 @@ def main():
       print("made with <3 by spark :D")
     case ("update" | "-Sy"):
       if not pkg:
-        print("wahoo error: No package or invalid package specified. Are you sure that's a real package?")
+        print("wahoo error: No package or invalid package specified.")
         return
 
       if pkg == "wahoo":
@@ -192,6 +189,18 @@ def main():
           print("wahoo error: install.sh failed. Is it not executable, or does it not exist?")
       else:
         update(pkg)
+    case ("list" | "-Q" | "-Qs"):
+      if pkg:
+        run(f"sudo pacman -Qs {pkg}", yolo=True)
+        return
+
+      run("sudo pacman -Q", yolo=True)
+    case ("show" | "-Qi"):
+      if not pkg:
+        print("wahoo error: No package or invalid package specified.")
+        return
+
+      run(f"sudo pacman -Qi {pkg}", yolo=True)
     case _:
       print("wahoo: Invalid command.")
       help()
