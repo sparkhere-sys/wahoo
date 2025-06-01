@@ -56,7 +56,7 @@ def install(pkg, source="https://aur.archlinux.org", build=True):
   sourcedir = wahooroot / pkg
 
   if not sourcedir.exists():
-    ## old comment: while there IS a confirm prompt, yolo mode is enabled when using run()
+    # old comment: "while there IS a confirm prompt, yolo mode is enabled when using run()" well that was a fucking lie.
     ## prompt = input(f"wahoo: Proceed with installing {pkg}? [Y/n] ")
     ## if prompt.lower() == "n":
       ## print("Aborted.")
