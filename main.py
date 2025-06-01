@@ -198,7 +198,7 @@ def main():
     case ("moo"):
       print("wahoo: This is NOT archapt, brother")
     case ("version" | "--version"):
-      print("wahoo - v0.0.3 alpha")
+      print("wahoo - v0.3 beta")
       print("made with <3 by spark :D")
     case ("update" | "-Sy"):
       if not pkg:
