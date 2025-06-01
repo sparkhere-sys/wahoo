@@ -1,9 +1,10 @@
 #!/usr/bin/python3
 
 ## wahoo!
-## v0.3 alpha
+## v0.3 beta
 ## made with <3 by spark
 ## certain lines of code will be commented out with ##. thats an intentional decision, aka me being to lazy to hold down the backspace key.
+## docstrings in v0.4 :)
 
 # LIBRARIES AND MODULES
 
