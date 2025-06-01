@@ -11,6 +11,11 @@ wahoo is still in early development. im not responsible if you break your system
 ## available commands
 - `install` (aliases: `-S`)
 - `uninstall` (aliases: `-R`, `remove`)
+- `list` (aliases: `-Q`, `-Qs`)
+- `show` (aliases: `info`, `-Qi`)
+- `update` (aliases: `-Sy`)
+- `version`
+- `help` (aliases: `-H`, `--help`) (before you ask, `--help` isn't recognized as a flag by wahoo's code. deal with it)
 
 ### usage
 ```bash
@@ -50,6 +55,8 @@ run:
 wahoo update wahoo
 ```
 yeah yeah i know, recursive syntax, but it works
+
+or you can run `./install.sh update`
 
 ## contributing
 if you'd like to contribute, then feel free to do so!
