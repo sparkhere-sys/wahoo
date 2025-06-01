@@ -1,5 +1,8 @@
 #!/bin/bash
-## auto installs wahoo
+
+## wahoo! install.sh
+## v1.0 (yes the install.sh is on a different version than the python script, deal with it)
+## installs and updates wahoo
 
 if [[ $EUID -eq 0 ]]; then
   echo "wahoo error: don't run this with sudo, or else makepkg will fail."
