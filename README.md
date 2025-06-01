@@ -60,7 +60,7 @@ just follow these basic guidelines:
 - just don't be a dick :)
 - remember that this has the [MIT license](https://github.com/sparkhere-sys/wahoo/blob/main/LICENSE). modified sure, but its the MIT license.
 
-# okay bye
+# uhhh bye
 made with <3 by spark
 
 contact me:
@@ -74,6 +74,6 @@ contact me:
 > 
 > I'm fine with you doing anything with my stuff, I won't yell at you.
 > 
-> But if you are trying to use `wahoo` for commercial usage then I will have to politely ask you to cease.
+> But if you are trying to use `wahoo` for commercial purposes then I will have to politely ask you to cease.
 > 
 > Bye! :D
