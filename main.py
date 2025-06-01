@@ -56,20 +56,19 @@ def install(pkg, source="https://aur.archlinux.org", build=True):
   sourcedir = wahooroot / pkg
 
   if not sourcedir.exists():
-    # while there IS a confirm prompt, yolo mode is enabled when using run()
-    prompt = input(f"wahoo: Proceed with installing {pkg}? [Y/n] ")
-    if prompt.lower() == "n":
-      print("Aborted.")
-      return
+    ## old comment: while there IS a confirm prompt, yolo mode is enabled when using run()
+    ## prompt = input(f"wahoo: Proceed with installing {pkg}? [Y/n] ")
+    ## if prompt.lower() == "n":
+      ## print("Aborted.")
+      ## return
 
     print("wahoo: Starting install")
     if source == "https://aur.archlinux.org":
       print(f"wahoo: Downloading {pkg} from AUR...")
     else:
       print(f"wahoo: Downloading {pkg} from user-provided source...")
-    # os.chdir(wahooroot)
-    # subprocess.run(f"git clone {source}/{pkg}.git", shell=True, check=True)
-    run(f"git clone {source}/{pkg}.git", wahooroot, True)
+      
+    run(f"git clone {source}/{pkg}.git", wahooroot, False)
     print(f"wahoo! {pkg} Downloaded.")
 
   else:
@@ -77,15 +76,14 @@ def install(pkg, source="https://aur.archlinux.org", build=True):
 
   if build:
     print(f"wahoo: Trying to install {pkg}...")
-    prompt = input("Build and install package? [Y/n]")
-    if prompt.lower() == "n":
+    prompt = input("Build package without installing? [y/N]")
+    if prompt.lower() == "y":
       print("wahoo: Building...")
       run("makepkg -s --noconfirm", sourcedir, True) # -s is used to install missing dependencies.
     else:
       print("wahoo: Building and installing...")
-      run("makepkg -si --noconfirm", sourcedir, True) # -si both installs missing dependencies 
-    ## os.chdir(sourcedir) # moves to where git cloned the repo from the aur
-    ## subprocess.run("makepkg -si", shell=True, check=True) # then builds the package
+      run("makepkg -si --noconfirm", sourcedir, True) # -si both installs missing dependencies and the built package
+    
     print(f"wahoo! {pkg} installed.")
 
 def ensure_install_sh():
@@ -102,7 +100,6 @@ def ensure_install_sh():
 def uninstall(pkg, yolo=False):
   print(f"wahoo: Running 'sudo pacman -Rns {pkg}'...")
   run(f"sudo pacman -Rns {pkg} --noconfirm", None, yolo)
-  # subprocess.run(f"sudo pacman -Rns {pkg} --noconfirm", shell=True, check=True)
   print(f"wahoo! {pkg} uninstalled.")
 
 def help():
