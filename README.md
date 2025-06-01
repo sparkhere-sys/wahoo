@@ -1,4 +1,4 @@
-# wahoo! (v0.0.3 alpha)
+# wahoo! (v0.3 beta)
 a funny AUR helper i made in python :D
 
 this README is informal by design, if you have any questions pull up an issue or contact me
