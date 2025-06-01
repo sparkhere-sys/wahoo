@@ -14,12 +14,13 @@ fi
 set -euo pipefail
 
 wahooroot="$HOME/.wahoo/source/"
-localrepo="$wahooroot/wahoo"
+localrepo="$wahooroot/wahoo" # i swear to god if you make this empty in your fork...
 mkdir -p "$wahooroot"
 
 depends=("git" "sudo") # excluding makepkg
 repo="https://github.com/sparkhere-sys/wahoo.git"
 dir="wahoo"
+countdown=5
 
 for dep in "${depends[@]}"; do
   if ! command -v "$dep" >/dev/null 2>&1; then
@@ -50,6 +51,7 @@ if [[ "${1-}" == "update" ]]; then
     git clone "$repo" "$localrepo"
     echo "wahoo! Successfully cloned repo."
   fi
+  
   echo "wahoo: Removing old wahoo package (if installed)"
   sudo pacman -R --noconfirm wahoo || true
   echo "wahoo: Building and installing wahoo..."
@@ -59,8 +61,17 @@ if [[ "${1-}" == "update" ]]; then
 else
   if [ -d "$localrepo" ]; then
     echo "wahoo warn: Existing source directory found. Removing to avoid conflicts..."
+    echo "wahoo: Clearing old directory in 5 seconds. Press Ctrl+C to interrupt."
+    
+    while [ $countdown -gt 0 ]; do
+      echo "$countdown"
+      sleep 1
+      countdown=$((countdown - 1))
+    done
+    
     rm -rf "$localrepo/" # scary!
   fi
+  
   echo "wahoo: Downloading wahoo..."
   git clone "$repo" "$localrepo"
   echo "wahoo: Building and installing wahoo..."
