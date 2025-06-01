@@ -17,17 +17,25 @@ wahooroot="$HOME/.wahoo/source/"
 localrepo="$wahooroot/wahoo"
 mkdir -p "$wahooroot"
 
-depends=("git" "makepkg" "sudo")
+depends=("git" "sudo") # excluding makepkg
 repo="https://github.com/sparkhere-sys/wahoo.git"
 dir="wahoo"
 
 for dep in "${depends[@]}"; do
   if ! command -v "$dep" >/dev/null 2>&1; then
     echo "wahoo error: Missing dependency: $dep"
-    echo "Please install it first."
-    exit 1
+    echo "wahoo: Installing $dep..."
+    sudo pacman -Sy $dep --noconfirm
+    echo "wahoo: $dep installed. Proceeding with installation..."
   fi
 done
+
+if ! command -v makepkg &>/dev/null; then
+  echo "wahoo error: Missing dependency: makepkg"
+  echo "wahoo: Installing base-devel..."
+  sudo pacman -Sy base-devel --noconfirm
+  echo "wahoo: base-devel installed. Proceeding with installation..."
+fi
 
 if [[ "${1-}" == "update" ]]; then
   echo "wahoo: Updating wahoo..."
@@ -51,7 +59,7 @@ if [[ "${1-}" == "update" ]]; then
 else
   if [ -d "$localrepo" ]; then
     echo "wahoo warn: Existing source directory found. Removing to avoid conflicts..."
-    rm -rf "$localrepo" # scary!
+    rm -rf "$localrepo/" # scary!
   fi
   echo "wahoo: Downloading wahoo..."
   git clone "$repo" "$localrepo"
