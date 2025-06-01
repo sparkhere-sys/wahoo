@@ -66,7 +66,7 @@ def install(pkg, source="https://aur.archlinux.org", build=True):
     if source == "https://aur.archlinux.org":
       print(f"wahoo: Downloading {pkg} from AUR...")
     else:
-      print(f"wahoo: Downlading {pkg} from user-provided source...")
+      print(f"wahoo: Downloading {pkg} from user-provided source...")
     # os.chdir(wahooroot)
     # subprocess.run(f"git clone {source}/{pkg}.git", shell=True, check=True)
     run(f"git clone {source}/{pkg}.git", wahooroot, True)
