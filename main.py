@@ -2,7 +2,7 @@
 ## intended to be used as a binary
 
 # wahoo!
-## v0.0.2
+## v0.0.3a
 ## made with <3 by spark
 
 # LIBRARIES AND MODULES
@@ -44,7 +44,7 @@ def run(cmd, dir=None, yolo=False):
       print("wahoo error: Command failed.")
     sys.exit(1)
 
-def install_sh():
+def ensure_install_sh():
   wahooroot = Path.home() / ".wahoo" / "source" / "wahoo"
   install_sh = wahooroot / "install.sh"
 
@@ -52,8 +52,10 @@ def install_sh():
     print("wahoo warn: install.sh does not exist in the wahoo directory. Downloading...")
     install("wahoo", "https://github.com/sparkhere-sys/", False)
     print("wahoo! Latest update fetched, and install.sh has been downloaded.")
+    print("wahoo: Making install.sh executable...")
+    run("chmod +x install.sh", wahooroot)
 
-def install(pkg, source="https://aur.archlinux.org", install=True):
+def install(pkg, source="https://aur.archlinux.org", build=True):
   wahooroot = Path.home() / ".wahoo" / "source"
   wahooroot.mkdir(parents=True, exist_ok=True)
 
@@ -81,32 +83,71 @@ def install(pkg, source="https://aur.archlinux.org", install=True):
 
   if install:
     print(f"wahoo: Trying to install {pkg}...")
-    prompt = input("Run 'makepkg' with '-si'? [Y/n]")
+    prompt = input("Build and install package? [Y/n]")
     if prompt.lower() == "n":
-      run("makepkg -s", sourcedir, True) # -s is used to install missing dependencies.
+      print("wahoo: Building...")
+      run("makepkg -s --noconfirm", sourcedir, True) # -s is used to install missing dependencies.
     else:
-      run("makepkg -si", sourcedir, True) # -si both installs missing dependencies 
+      print("wahoo: Building and installing...")
+      run("makepkg -si --noconfirm", sourcedir, True) # -si both installs missing dependencies 
     ## os.chdir(sourcedir) # moves to where git cloned the repo from the aur
     ## subprocess.run("makepkg -si", shell=True, check=True) # then builds the package
     print(f"wahoo! {pkg} installed.")
 
-def uninstall(pkg):
+def uninstall(pkg, yolo=False):
   print(f"wahoo: Running 'sudo pacman -Rns {pkg}'...")
-  run(f"sudo pacman -Rns {pkg} --noconfirm", None, False)
+  run(f"sudo pacman -Rns {pkg} --noconfirm", None, yolo)
   # subprocess.run(f"sudo pacman -Rns {pkg} --noconfirm", shell=True, check=True)
   print(f"wahoo! {pkg} uninstalled.")
 
 def help():
-  print("[Available commands]") # okay fine i'll type it
+  print("[Available commands]")
   print("install, -S:                  Installs a package from the AUR.")
-  print("uninstall, remove, -R, -Rns:  Uninstalls an existing packge.")
+  print("uninstall, remove, -R, -Rns:  Uninstalls an existing package.")
   print("help, -H:                     Prints this message.")
   print("update, -Sy:                  Updates an existing AUR package. You can also update wahoo with this.")
   print("[Available flags]")
   print("Nothing yet.")
+  print("[Usage]")
+  print("wahoo -S foo")
+  print("wahoo install foo")
+  print("wahoo update wahoo")
+  print("wahoo -Sy foo")
+  print("wahoo uninstall foo")
 
-def flagparsing():
-  print("Empty for now...")
+def flagparsing(flags):
+  print("wahoo warn: No flag support yet.")
+  return
+
+def update(pkg):
+  wahooroot = Path.home() / ".wahoo" / "source" / pkg
+
+  if not wahooroot.exists():
+    print(f"wahoo error: {pkg} doesn't exist on your system. Install it with wahoo install {pkg}.")
+    return
+
+  print(f"wahoo: Starting update")
+  print("wahoo: Pulling latest update from AUR...")
+  try:
+    run("git pull", wahooroot)
+  except:
+    return
+
+  prompt = input(f"wahoo: Rebuild and install {pkg}? [Y/n]").strip().lower()
+  if prompt == "n":
+    print("wahoo: Skipping reinstall.")
+    return
+
+  try:
+    print("wahoo: Starting rebuild...")
+    print("wahoo: Removing old package...")
+    uninstall(pkg, True) # runs with yolo
+    print("wahoo: Building and installing...")
+    run("makepkg -si", wahooroot, True)
+    print(f"wahoo! {pkg} updated.")
+  except:
+    return
+
 
 def main():
   if len(sys.argv) < 2:
@@ -115,6 +156,10 @@ def main():
 
   cmd = sys.argv[1]
   pkg = sys.argv[2] if len(sys.argv) > 2 else None
+  flags = sys.argv[3:] if len(sys.argv) > 3 else None
+  cmd = cmd.lower() # i know there's going to be someone stupid enough to type wahoo iNstALL
+  if flags:
+    flagparsing(flags)
 
   match cmd:
     case ("install" | "-S"):
@@ -124,7 +169,7 @@ def main():
       install(pkg)  
     case ("remove" | "uninstall" | "-R" | "-Rns"):
       uninstall(pkg)
-    case ("help" | "-H"):
+    case ("help" | "-H" | "--help" | "--h"):
       help()
       sys.exit(1)
     case ("moo"):
@@ -138,15 +183,15 @@ def main():
         return
 
       if pkg == "wahoo":
-        print("wahoo: Self update requested. Running './install.sh update'...")
-        install_sh()
+        print("wahoo: Self update requested. Updating with install.sh...")
+        ensure_install_sh()
         os.chdir(Path.home() / ".wahoo/source/wahoo/")
         try:
           subprocess.run("./install.sh update", shell=True, check=True)
         except subprocess.CalledProcessError:
-          print("wahoo error: install.sh failed. Is it executable, or does it not exist?")
+          print("wahoo error: install.sh failed. Is it not executable, or does it not exist?")
       else:
-        print("wahoo error: Update command not implemented. Sorry!")
+        update(pkg)
     case _:
       print("wahoo: Invalid command.")
       help()
