@@ -8,7 +8,7 @@ fi
 
 if ! curl -s --head https://example.com | grep "200 OK" > /dev/null; then
   echo "wahoo error: No internet. install.sh requires internet in order to install or update wahoo. If you have already cloned wahoo's GitHub repo, then run makepkg there."
-  exit
+  exit 1
 fi
 
 set -euo pipefail
