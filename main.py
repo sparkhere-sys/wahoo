@@ -3,7 +3,7 @@
 ## wahoo!
 ## v0.0.3 alpha
 ## made with <3 by spark
-## certain lines of code will be commented out 
+## certain lines of code will be commented out with ##. thats an intentional decision, aka me being to lazy to hold down the fucking backspace key.
 
 # LIBRARIES AND MODULES
 
