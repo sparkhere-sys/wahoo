@@ -33,7 +33,10 @@ things that are done will be ~~crossed out~~
 
 ## installation
 ### with install.sh
-download it, make it executable with `chmod +x ./install.sh`, run it.
+run this:
+```
+curl -fsSL https://raw.githubusercontent.com/sparkhere-sys/wahoo/refs/heads/main/install.sh | bash
+```
 
 ### from source
 open up your terminal, then:
