@@ -65,9 +65,9 @@ or you can run `./install.sh update`
 if you'd like to contribute, then feel free to do so!
 just follow these basic guidelines:
 
-- use pull requests
+- use pull requests like a normal human being
 - if you're fixing a bug *describe what it did* and *how you fixed it* so everyone can be on the same page
-- just don't be a dick :)
+- just don't be a dick, follow the [code of conduct](https://github.com/sparkhere-sys/wahoo/blob/main/CODE_OF_CONDUCT.md)
 - remember that this has the [MIT license](https://github.com/sparkhere-sys/wahoo/blob/main/LICENSE). modified sure, but its the MIT license.
 
 # uhhh bye
