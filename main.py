@@ -175,6 +175,10 @@ def main():
       if not pkg:
         print("wahoo error: No package or invalid package specified.")
         sys.exit(1)
+      
+      if pkg == "wahoo": # why would you try to download wahoo with wahoo?
+        os.kill(os.getpid(), 11) # this legit gives you a segmentation fault error
+      
       install(pkg)  
     case ("remove" | "uninstall" | "-R" | "-Rns"):
       uninstall(pkg)
