@@ -101,6 +101,8 @@ def help():
   print("uninstall, remove, -R, -Rns:  Uninstalls an existing package.")
   print("help, -H:                     Prints this message.")
   print("update, -Sy:                  Updates an existing AUR package. You can also update wahoo with this.")
+  print("list, -Q, -Qs                 Shows all packages installed. If used with a second argument, it'll search for packages of the same name on your system.")
+  print("info, show, -Qi               Shows info for a specific package.")
   print("[Available flags]")
   print("Nothing yet.")
   print("[Usage]")
