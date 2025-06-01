@@ -3,6 +3,7 @@
 ## wahoo!
 ## v0.0.3 alpha
 ## made with <3 by spark
+## certain lines of code will be commented out 
 
 # LIBRARIES AND MODULES
 
@@ -10,34 +11,38 @@ import sys
 from pathlib import Path
 import subprocess
 import os
-import requests
+import requests # new dependency
 
 # FUNCTIONS
 def internet_check():
   try:
-    requests.get("https://example.com", timeout=3)
+    requests.get("https://google.com", timeout=3) # it used to ping example.com funny enough
     return True
-  except requests.RequestException:
+  except requests.RequestException: # which usually means no internet
     return False
   
-def run(cmd, dir=None, yolo=False):
+def run(cmd, dir=None, yolo=False, exit=False):
   print(f"wahoo: Running {cmd}")
   if not yolo:
     prompt = input("Proceed? [Y/n] ").strip().lower()
-    if prompt.lower() == "n":
+    if prompt == "n":
       print("Aborted.")
-      return
+      if exit:
+        return
+      else:
+        sys.exit(0)
 
   try:
     subprocess.run(cmd, shell=True, check=True, cwd=dir)
   except subprocess.CalledProcessError:
-    # if cmd.split()[0] == "git":
+    # here comes the error handling. this took a while to write but it was worth it
+    ## if cmd.split()[0] == "git":
     if cmd.startswith("git"):
       print("wahoo error: Failed to clone package. Are you sure it exists in the AUR?")
-    # elif cmd.split()[0] == "makepkg":
+    ## elif cmd.split()[0] == "makepkg":
     elif cmd.startswith("makepkg"):
       print("wahoo error: Failed to build package. Is there an error in the PKGBUILD?")
-    # elif cmd.split()[1] == "pacman" and cmd.split()[2] != "-Rns":
+    ## elif cmd.split()[1] == "pacman" and cmd.split()[2] != "-Rns":
     elif "pacman" in cmd and "-Rns" not in cmd:
       print("wahoo error: pacman failed to install package.")
     elif "pacman" in cmd:
@@ -57,16 +62,12 @@ def install(pkg, source="https://aur.archlinux.org", build=True):
 
   if not sourcedir.exists():
     # old comment: "while there IS a confirm prompt, yolo mode is enabled when using run()" well that was a fucking lie.
-    ## prompt = input(f"wahoo: Proceed with installing {pkg}? [Y/n] ")
-    ## if prompt.lower() == "n":
-      ## print("Aborted.")
-      ## return
 
     print("wahoo: Starting install")
     if source == "https://aur.archlinux.org":
       print(f"wahoo: Downloading {pkg} from AUR...")
     else:
-      print(f"wahoo: Downloading {pkg} from user-provided source...")
+      print(f"wahoo: Downloading {pkg}...")
       
     run(f"git clone {source}/{pkg}.git", wahooroot, False)
     print(f"wahoo! {pkg} Downloaded.")
@@ -76,10 +77,10 @@ def install(pkg, source="https://aur.archlinux.org", build=True):
 
   if build:
     print(f"wahoo: Trying to install {pkg}...")
-    prompt = input("Build package without installing? [y/N]")
-    if prompt.lower() == "y":
+    prompt = input("Build package without installing? [y/N]").strip().lower()
+    if prompt == "y":
       print("wahoo: Building...")
-      run("makepkg -s --noconfirm", sourcedir, True) # -s is used to install missing dependencies.
+      run("makepkg -s --noconfirm", sourcedir, True) # -s is used to install missing dependencies
     else:
       print("wahoo: Building and installing...")
       run("makepkg -si --noconfirm", sourcedir, True) # -si both installs missing dependencies and the built package
@@ -92,17 +93,24 @@ def ensure_install_sh():
 
   if not install_sh.exists():
     print("wahoo warn: install.sh does not exist in the wahoo directory. Downloading...")
-    install("wahoo", "https://github.com/sparkhere-sys/", False)
+    install("wahoo", "https://github.com/sparkhere-sys/", False) # since this uses install() and that chekcks for internet when its called, i don't need to add an internet check in ensure_install_sh()
     print("wahoo! Latest update fetched, and install.sh has been downloaded.")
     print("wahoo: Making install.sh executable...")
     run("chmod +x install.sh", wahooroot)
 
 def uninstall(pkg, yolo=False):
-  print(f"wahoo: Running 'sudo pacman -Rns {pkg}'...")
-  run(f"sudo pacman -Rns {pkg} --noconfirm", None, yolo)
+  ## print(f"wahoo: Running 'sudo pacman -Rns {pkg}'...")
+  sourcedir = Path.home() / ".wahoo" / "source" / pkg
+  
+  run(f"sudo pacman -Rns {pkg} --noconfirm", yolo=False) # the print above was commented out since run() already shows what command is being run, so its redundant to have two of them.
   print(f"wahoo! {pkg} uninstalled.")
+  print("wahoo: Cleaning up source directory...")
+  run(f"rm -rf {sourcedir}", yolo=False, exit=True)
+  print("wahoo! Source directory cleaned.")
+  
 
 def help():
+  # i wish i didn't have to update this with every commit
   print("[Available commands]")
   print("install, -S:                  Installs a package from the AUR.")
   print("uninstall, remove, -R, -Rns:  Uninstalls an existing package.")
@@ -120,7 +128,7 @@ def help():
   print("wahoo uninstall foo")
 
 def flagparsing(flags):
-  print("wahoo warn: No flag support yet.")
+  print("wahoo warn: No flag support yet.") # uhhhhh
   return
 
 def update(pkg):
@@ -130,7 +138,7 @@ def update(pkg):
   wahooroot = Path.home() / ".wahoo" / "source" / pkg
 
   if not wahooroot.exists():
-    print(f"wahoo error: {pkg} doesn't exist on your system. Install it with wahoo install {pkg}.")
+    print(f"wahoo error: {pkg} doesn't exist on your system. Install it with wahoo install {pkg}.") # might make it call install() here since maybe people are using wahoo with the pacman command syntax. if i do that, this will change from a 'wahoo error' to a 'wahoo warn'.
     return
 
   print(f"wahoo: Starting update")
@@ -156,7 +164,7 @@ def update(pkg):
     return
 
 def search():
-  print("Nothing here yet...")
+  print("Nothing here yet...") # coming soon! ...in valve time.
 
 def main():
   if len(sys.argv) < 2:
@@ -170,13 +178,14 @@ def main():
   if flags:
     flagparsing(flags)
 
-  match cmd:
+  match cmd: # i fucking love match case
     case ("install" | "-S"):
       if not pkg:
         print("wahoo error: No package or invalid package specified.")
         sys.exit(1)
       
       if pkg == "wahoo": # why would you try to download wahoo with wahoo?
+        print("wahoo: Bold of you to try to install wahoo with wahoo.")
         os.kill(os.getpid(), 11) # this legit gives you a segmentation fault error
       
       install(pkg)  
@@ -228,4 +237,4 @@ if __name__ == "__main__":
   try:
     main() # this doesn't run main if wahoo is imported as a module
   except KeyboardInterrupt:
-    print("wahoo: Interrupted by Ctrl+C, see you next time")
+    print("wahoo: Interrupted by Ctrl+C, see you next time") # lol
