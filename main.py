@@ -76,7 +76,7 @@ def install(pkg, source="https://aur.archlinux.org", build=True):
   else:
     print(f"wahoo warn: {pkg} source already exists at {sourcedir}.")
 
-  if install:
+  if build:
     print(f"wahoo: Trying to install {pkg}...")
     prompt = input("Build and install package? [Y/n]")
     if prompt.lower() == "n":
@@ -174,7 +174,7 @@ def main():
     case ("moo"):
       print("wahoo: This is NOT archapt, brother")
     case ("version" | "--version"):
-      print("wahoo - v0.0.2")
+      print("wahoo - v0.0.3 alpha")
       print("made with <3 by spark :D")
     case ("update" | "-Sy"):
       if not pkg:
