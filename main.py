@@ -10,9 +10,16 @@ import sys
 from pathlib import Path
 import subprocess
 import os
+import requests
 
 # FUNCTIONS
-
+def internet_check():
+  try:
+    requests.get("https://example.com", timeout=3)
+    return True
+  except requests.RequestException:
+    return False
+  
 def run(cmd, dir=None, yolo=False):
   print(f"wahoo: Running {cmd}")
   if not yolo:
@@ -39,18 +46,10 @@ def run(cmd, dir=None, yolo=False):
       print("wahoo error: Command failed.")
     sys.exit(1)
 
-def ensure_install_sh():
-  wahooroot = Path.home() / ".wahoo" / "source" / "wahoo"
-  install_sh = wahooroot / "install.sh"
-
-  if not install_sh.exists():
-    print("wahoo warn: install.sh does not exist in the wahoo directory. Downloading...")
-    install("wahoo", "https://github.com/sparkhere-sys/", False)
-    print("wahoo! Latest update fetched, and install.sh has been downloaded.")
-    print("wahoo: Making install.sh executable...")
-    run("chmod +x install.sh", wahooroot)
-
 def install(pkg, source="https://aur.archlinux.org", build=True):
+  if not internet_check():
+    print("wahoo error: No internet. Aborting install...")
+    sys.exit(1)
   wahooroot = Path.home() / ".wahoo" / "source"
   wahooroot.mkdir(parents=True, exist_ok=True)
 
@@ -89,6 +88,17 @@ def install(pkg, source="https://aur.archlinux.org", build=True):
     ## subprocess.run("makepkg -si", shell=True, check=True) # then builds the package
     print(f"wahoo! {pkg} installed.")
 
+def ensure_install_sh():
+  wahooroot = Path.home() / ".wahoo" / "source" / "wahoo"
+  install_sh = wahooroot / "install.sh"
+
+  if not install_sh.exists():
+    print("wahoo warn: install.sh does not exist in the wahoo directory. Downloading...")
+    install("wahoo", "https://github.com/sparkhere-sys/", False)
+    print("wahoo! Latest update fetched, and install.sh has been downloaded.")
+    print("wahoo: Making install.sh executable...")
+    run("chmod +x install.sh", wahooroot)
+
 def uninstall(pkg, yolo=False):
   print(f"wahoo: Running 'sudo pacman -Rns {pkg}'...")
   run(f"sudo pacman -Rns {pkg} --noconfirm", None, yolo)
@@ -117,6 +127,9 @@ def flagparsing(flags):
   return
 
 def update(pkg):
+  if not internet_check():
+    print("wahoo error: No internet. Aborting...")
+    sys.exit(1)
   wahooroot = Path.home() / ".wahoo" / "source" / pkg
 
   if not wahooroot.exists():
