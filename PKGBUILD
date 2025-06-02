@@ -1,7 +1,7 @@
 # Maintainer: Spark <spark-aur@proton.me>
 SCRIPTNAME=wahoo.py
 pkgname=wahoo
-pkgver=0.3-beta
+pkgver=0.3beta
 pkgrel=1
 pkgdesc="an AUR helper made in python because why not? made with <3 by spark"
 arch=("x86_64")
