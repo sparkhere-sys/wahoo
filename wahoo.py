@@ -12,12 +12,12 @@ import sys
 from pathlib import Path
 import subprocess
 import os
-import requests # new dependency
+import requests # depends on python-requests
 
 # FUNCTIONS
 def internet_check():
   try:
-    requests.get("https://google.com", timeout=3) # it used to ping example.com funny enough
+    requests.get("https://google.com", timeout=3)
     return True
   except requests.RequestException: # which usually means no internet
     return False
@@ -37,13 +37,10 @@ def run(cmd, dir=None, yolo=False, exit=False):
     subprocess.run(cmd, shell=True, check=True, cwd=dir)
   except subprocess.CalledProcessError:
     # here comes the error handling. this took a while to write but it was worth it
-    ## if cmd.split()[0] == "git":
     if cmd.startswith("git"):
       print("wahoo error: Failed to clone package. Are you sure it exists in the AUR?")
-    ## elif cmd.split()[0] == "makepkg":
     elif cmd.startswith("makepkg"):
       print("wahoo error: Failed to build package. Is there an error in the PKGBUILD?")
-    ## elif cmd.split()[1] == "pacman" and cmd.split()[2] != "-Rns":
     elif "pacman" in cmd and "-Rns" not in cmd:
       print("wahoo error: pacman failed to install package.")
     elif "pacman" in cmd:
@@ -62,8 +59,6 @@ def install(pkg, source="https://aur.archlinux.org", build=True):
   sourcedir = wahooroot / pkg
 
   if not sourcedir.exists():
-    # old comment: "while there IS a confirm prompt, yolo mode is enabled when using run()" well that was a lie.
-
     print("wahoo: Starting install")
     if source == "https://aur.archlinux.org":
       print(f"wahoo: Downloading {pkg} from AUR...")
@@ -164,9 +159,33 @@ def update(pkg):
   except:
     return
 
-def search():
-  print("Nothing here yet...") # coming soon! ...in valve time.
+def search(pkg):
+  ## print("Nothing here yet...") # coming soon! ...in valve time.
+  if not internet_check():
+    print("wahoo error: No internet. Aborting...")
+    sys.exit(1)
 
+  url = f"https://aur.archlinux.org/rpc/?v=5&type=search&arg={pkg}"
+  
+  try:
+    response = requests.get(url, timeout=3)
+    data = response.json()
+    results = data.get("results", [])
+
+    if not results:
+      print(f"wahoo: No results found for {pkg}.")
+      print("wahoo: If it's not an AUR package, try searching for it with pacman.")
+      return
+
+    print(f"wahoo! Found {len(results)} results for '{pkg}'.")
+    for entry in results:
+      name = entry.get("Name", "unknown")
+      desc = entry.get("Description", "no description")
+      votes = entry.get("NumVotes", 0)
+      print(f" - {name} ({votes} votes): {desc}")
+  except Exception as e:
+    print(f"wahoo error: Failed to fetch search results. ({e})")
+  
 def main():
   if len(sys.argv) < 2:
     help()
@@ -225,6 +244,8 @@ def main():
         return
 
       run(f"sudo pacman -Qi {pkg}", yolo=True)
+    case ("search" | "-Ss"):
+      search(pkg)
     case _:
       print("wahoo: Invalid command.")
       help()
