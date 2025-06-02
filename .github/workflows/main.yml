@@ -1,0 +1,39 @@
+name: Build and update .SRCINFO
+
+on:
+  push:
+    branches:
+      - main
+      - aur
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # you cannot escape canonical
+
+    steps:
+      - name: Get repo files (with checkout)
+        uses: actions/checkout@v3
+
+      - name: Set up Arch container
+        uses: addnab/docker-run-action@v3
+        with:
+          image: archlinux:latest
+          options: --rm
+          run: |
+            pacman -Sy --noconfirm base-devel git
+            makepkg --printsrcinfo > .SRCINFO
+
+      - name: Commit and push .SRCINFO if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .SRCINFO
+          if ! git diff --cached --quiet; then
+            git commit -m "GitHub Actions: Update .SRCINFO"
+            git push origin HEAD
+          else
+            echo "No changes in .SRCINFO"
+          fi
+
+# done
