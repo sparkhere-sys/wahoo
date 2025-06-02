@@ -29,6 +29,9 @@ jobs:
             chown -R builder:builder /repo
             sudo -u builder bash -c "cd /repo && makepkg --printsrcinfo > .SRCINFO"
 
+      - name: Fix git permissions
+        run: sudo chown -R $USER:$USER ${{ github.workspace }}
+
       - name: Commit and push .SRCINFO if changed
         run: |
           cd ${{ github.workspace }}
