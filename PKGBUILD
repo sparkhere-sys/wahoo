@@ -1,5 +1,5 @@
 # Maintainer: Spark <spark-aur@proton.me>
-SCRIPTNAME=main.py
+SCRIPTNAME=wahoo.py
 pkgname=wahoo
 pkgver=0.3-beta
 pkgrel=1
