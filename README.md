@@ -36,7 +36,9 @@ things that are done will be ~~crossed out~~
 ### with install.sh
 run this:
 ```
-curl -fsSL https://raw.githubusercontent.com/sparkhere-sys/wahoo/refs/heads/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/sparkhere-sys/wahoo/refs/heads/main/install.sh -o install.sh
+chmod +x install.sh
+./install.sh
 ```
 
 ### from source
