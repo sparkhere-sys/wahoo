@@ -40,7 +40,7 @@ jobs:
           git add .SRCINFO
           if ! git diff --cached --quiet; then
             git commit -m "GitHub Actions: Update .SRCINFO"
-            git push origin HEAD || echo "Push failed. Skipping..."
+            git push https://${{ secrets.GITHUB_TOKEN }}@github.com/sparkhere-sys/wahoo.git HEAD || echo "Push failed." && exit 255
           else
             echo "No changes in .SRCINFO"
           fi
