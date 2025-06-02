@@ -1,4 +1,6 @@
 name: Build and update .SRCINFO
+# i only made this because i wrote wahoo in windows and can't build it so uhhhh
+# github actions saves the day!
 
 on:
   push:
@@ -19,19 +21,22 @@ jobs:
         uses: addnab/docker-run-action@v3
         with:
           image: archlinux:latest
-          options: --rm
+          options: -v ${{ github.workspace }}:/repo --rm
           run: |
-            pacman -Sy --noconfirm base-devel git
-            makepkg --printsrcinfo > .SRCINFO
+            pacman -Sy --noconfirm base-devel git > /dev/null
+            useradd -m builder
+            chown -R builder /repo
+            su builder -c "cd /repo && makepkg --printsrcinfo > .SRCINFO"
 
       - name: Commit and push .SRCINFO if changed
         run: |
+          cd ${{ github.workspace }}
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .SRCINFO
           if ! git diff --cached --quiet; then
             git commit -m "GitHub Actions: Update .SRCINFO"
-            git push origin HEAD
+            git push origin HEAD || echo "Push failed. Skipping..."
           else
             echo "No changes in .SRCINFO"
           fi
