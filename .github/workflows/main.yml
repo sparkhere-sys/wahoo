@@ -21,7 +21,7 @@ jobs:
         uses: addnab/docker-run-action@v3
         with:
           image: archlinux:latest
-          options: -v ${{ github.workspace }}:/repo --rm
+          options: -v ${{ github.workspace }}:/repo --rm --user $(id -u):$(id -g)
           run: |
             pacman -Sy --noconfirm base-devel git > /dev/null
             useradd -m builder
