@@ -21,12 +21,10 @@ jobs:
         uses: addnab/docker-run-action@v3
         with:
           image: archlinux:latest
-          options: -v ${{ github.workspace }}:/repo --rm --user $(id -u):$(id -g)
+          options: -v ${{ github.workspace }}:/repo --rm --user 1001:121
           run: |
-            pacman -Sy --noconfirm base-devel git > /dev/null
-            useradd -m builder
-            chown -R builder /repo
-            su builder -c "cd /repo && makepkg --printsrcinfo > .SRCINFO"
+            pacman -Sy --noconfirm base-devel git
+            cd /repo && makepkg --printsrcinfo > .SRCINFO
 
       - name: Commit and push .SRCINFO if changed
         run: |
