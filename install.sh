@@ -29,7 +29,7 @@ for dep in "${depends[@]}"; do
   if ! command -v "$dep" >/dev/null 2>&1; then
     echo "wahoo error: Missing dependency: $dep"
     echo "wahoo: Installing $dep..."
-    sudo pacman -Sy $dep --noconfirm
+    sudo pacman -Sy --needed $dep --noconfirm
     echo "wahoo: $dep installed. Proceeding with installation..."
   fi
 done
@@ -37,7 +37,7 @@ done
 if ! command -v makepkg &>/dev/null; then
   echo "wahoo error: Missing dependency: makepkg"
   echo "wahoo: Installing base-devel..."
-  sudo pacman -Sy base-devel --noconfirm
+  sudo pacman -Sy -needed base-devel --noconfirm
   echo "wahoo: base-devel installed. Proceeding with installation..."
 fi
 
