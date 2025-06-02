@@ -9,7 +9,6 @@ on:
       - aur
     paths:
       - 'PKGBUILD'
-      - '.SRCINFO'
   workflow_dispatch:
 
 jobs:
