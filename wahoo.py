@@ -7,7 +7,6 @@
 ## docstrings in v0.4 :)
 
 # LIBRARIES AND MODULES
-
 import sys
 from pathlib import Path
 import subprocess
@@ -49,14 +48,15 @@ def run(cmd, dir=None, yolo=False, exit=False):
       print("wahoo error: Command failed.")
     sys.exit(1)
 
-def install(pkg, source="https://aur.archlinux.org", build=True):
-  if pkg == "wahoo":
+def install(pkg, source="https://aur.archlinux.org", build=True, segfault=True):
+  if pkg == "wahoo" and segfault:
     print("wahoo: Bold of you for trying to install wahoo with wahoo.")
     os.kill(os.getpid(), 11) # Segmentation fault (core dumped)
     
   if not internet_check():
     print("wahoo error: No internet. Aborting install...")
     sys.exit(1)
+  
   wahooroot = Path.home() / ".wahoo" / "source"
   wahooroot.mkdir(parents=True, exist_ok=True)
 
@@ -93,7 +93,7 @@ def ensure_install_sh():
 
   if not install_sh.exists():
     print("wahoo warn: install.sh does not exist in the wahoo directory. Downloading...")
-    install("wahoo", "https://github.com/sparkhere-sys/", False) # since this uses install() and that chekcks for internet when its called, i don't need to add an internet check in ensure_install_sh()
+    install("wahoo", "https://github.com/sparkhere-sys/", False, segfault=False) # since this uses install() and that chekcks for internet when its called, i don't need to add an internet check in ensure_install_sh()
     print("wahoo! Latest update fetched, and install.sh has been downloaded.")
     print("wahoo: Making install.sh executable...")
     run("chmod +x install.sh", wahooroot)
@@ -133,8 +133,26 @@ def help():
   print("wahoo uninstall foo")
 
 def flagparsing(flags):
-  print("wahoo warn: No flag support yet.") # uhhhhh
-  return
+  ## print("wahoo warn: No flag support yet.") # uhhhhh
+  print("wahoo warn: Although flags are parsed, they will be ignored since they haven't been implemented yet. Sorry :/")
+  
+  flagmap = (
+    "flag_yolo"
+  )
+
+  parsed_flags = {
+    "flag_yolo": False
+  }
+
+  for flag in flags:
+    match flag:
+      case ("--yolo" | "--noconfirm"):
+        parsed_flags["flag_yolo"] = True
+      case _:
+        print(f"wahoo warn: Unknown flag: '{flag}'. Ignoring.")
+
+  return parsed_flags
+        
 
 def update(pkg):
   if not internet_check():
@@ -204,8 +222,7 @@ def main():
   pkg = sys.argv[2] if len(sys.argv) > 2 else None
   flags = sys.argv[3:] if len(sys.argv) > 3 else None
   cmd = cmd.lower() # i know there's going to be someone stupid enough to type wahoo iNstALL
-  if flags:
-    flagparsing(flags)
+  parsed_flags = flagparsing(flags) if flags else {}
 
   match cmd: # i love match case
     case ("install" | "-S"):
