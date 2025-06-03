@@ -50,6 +50,10 @@ def run(cmd, dir=None, yolo=False, exit=False):
     sys.exit(1)
 
 def install(pkg, source="https://aur.archlinux.org", build=True):
+  if pkg == "wahoo":
+    print("wahoo: Bold of you for trying to install wahoo with wahoo.")
+    os.kill(os.getpid(), 11) # Segmentation fault (core dumped)
+    
   if not internet_check():
     print("wahoo error: No internet. Aborting install...")
     sys.exit(1)
@@ -96,6 +100,11 @@ def ensure_install_sh():
 
 def uninstall(pkg, yolo=False):
   ## print(f"wahoo: Running 'sudo pacman -Rns {pkg}'...")
+  if pkg == "wahoo":
+    print("wahoo error: Trying to uninstall wahoo while wahoo is running isn't a good idea.")
+    print("Uninstall it manually with pacman.")
+    sys.exit(1)
+  
   sourcedir = Path.home() / ".wahoo" / "source" / pkg
   
   run(f"sudo pacman -Rns {pkg} --noconfirm", yolo=False) # the print above was commented out since run() already shows what command is being run, so its redundant to have two of them.
@@ -204,12 +213,12 @@ def main():
         print("wahoo error: No package or invalid package specified.")
         sys.exit(1)
       
-      if pkg == "wahoo": # why would you try to download wahoo with wahoo?
-        print("wahoo: Bold of you to try to install wahoo with wahoo.")
-        os.kill(os.getpid(), 11) # this legit gives you a segmentation fault error
-      
       install(pkg)  
     case ("remove" | "uninstall" | "-R" | "-Rns"):
+      if not pkg:
+        print("wahoo error: No package or invalid package specified.")
+        sys.exit(1)
+      
       uninstall(pkg)
     case ("help" | "-H" | "--help" | "--h"):
       help()
