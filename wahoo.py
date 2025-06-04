@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 ## wahoo!
-## v0.3 beta
+## v0.3 stable
 ## made with <3 by spark
 ## certain lines of code will be commented out with ##. thats an intentional decision, aka me being too lazy to hold down the backspace key.
 ## docstrings in v0.4 :)
@@ -72,7 +72,7 @@ def install(pkg, source="https://aur.archlinux.org", build=True, segfault=True, 
     if yolo:
       run(f"git clone {source}/{pkg}.git", wahooroot, yolo)
     else:
-      run(f"git clone {source/{pkg}.git", wahooroot, False)
+      run(f"git clone {source}/{pkg}.git", wahooroot, False)
     print(f"wahoo! {pkg} Downloaded.")
 
   else:
