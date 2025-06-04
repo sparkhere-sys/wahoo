@@ -1,4 +1,4 @@
-# wahoo! (v0.3 beta)
+# wahoo! (v0.3 stable)
 a funny AUR helper i made in python :D
 
 this README is informal by design, if you have any questions pull up an issue or contact me
@@ -25,13 +25,10 @@ wahoo uninstall neofetch
 ```
 > Note: Running `wahoo install wahoo` causes a segmentation fault. This is intentional. Do not send me an email about this.
 
-## to do for v0.3 stable
+## to do for v0.4 stable
 things that are done will be ~~crossed out~~
 
-- ~~add `list` and `show` commands~~
-- add flags (in progress!)
-- ~~create install.sh~~
-- ~~add `search`~~
+- nothing yet
 
 ## installation
 ### with install.sh
