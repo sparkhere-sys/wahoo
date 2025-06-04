@@ -6,7 +6,6 @@ on:
   push:
     branches:
       - main
-      - aur
     paths:
       - 'PKGBUILD'
   workflow_dispatch:
