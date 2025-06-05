@@ -6,7 +6,7 @@ this README is informal by design, if you have any questions pull up an issue or
 ## DISCLAIMER
 wahoo is still in early development. im not responsible if you break your system using this.
 
-**wahoo is NOT intended to be used as an alias for `pacman` commands. if you want that, use [archapt](https://github.com/sparkhere-sys/archapt/)**
+**wahoo is NOT a wrapper for** `pacman` **commands. if you want that, use [archapt](https://github.com/sparkhere-sys/archapt/)**
 
 ## available commands
 - `install` (aliases: `-S`)
