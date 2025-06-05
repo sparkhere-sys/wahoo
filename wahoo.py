@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 ## wahoo!
-## v0.3 stable
+## v0.4 alpha
 ## made with <3 by spark
 ## certain lines of code will be commented out with ##. thats an intentional decision, aka me being too lazy to hold down the backspace key.
 ## docstrings in v0.4 :)
@@ -15,6 +15,10 @@ import requests # depends on python-requests
 
 # FUNCTIONS
 def internet_check():
+  '''
+  Pings google.com to check for internet. Returns <True> if internet is available, and <False> if not.
+  '''
+  
   try:
     requests.get("https://google.com", timeout=3)
     return True
@@ -22,6 +26,16 @@ def internet_check():
     return False
   
 def run(cmd, dir=None, yolo=False, exit=False):
+  '''
+  Runs a shell command.
+  Arguments:
+  - cmd (the command to be run)
+  - dir (changes working directory)
+  - yolo (runs without confirmation)
+  - exit (on abort, it will run return if <True> and will exit if <False>.)
+  '''
+  # TODO: Rename exit to something that makes more sense
+  
   print(f"wahoo: Running {cmd}")
   if not yolo:
     prompt = input("Proceed? [Y/n] ").strip().lower()
@@ -49,6 +63,20 @@ def run(cmd, dir=None, yolo=False, exit=False):
     sys.exit(1)
 
 def install(pkg, source="https://aur.archlinux.org", build=True, segfault=True, yolo=False):
+  '''
+  Downloads, builds, and installs a package.
+  Flow:
+  - Runs an internet check
+  - Runs git clone to download a package
+  - Builds (and by default, installs) the package with makepkg
+  Arguments:
+  - pkg (the package to be installed)
+  - source (where to clone the git repo from, by default its the AUR)
+  - build (if <True>, then wahoo will run makepkg.)
+  - segfault (if <True>, then the segmentation fault easter egg occurs)
+  - yolo (if <True>, skips all confirmation prompts and runs the run() function with yolo=True)
+  '''
+  
   if pkg == "wahoo" and segfault:
     print("wahoo: Bold of you for trying to install wahoo with wahoo.")
     print("Segmentation fault (core dumped)") # os.kill(os.getpid(), 11)
@@ -91,6 +119,10 @@ def install(pkg, source="https://aur.archlinux.org", build=True, segfault=True, 
     print(f"wahoo! {pkg} installed.")
 
 def ensure_install_sh():
+  '''
+  CLI component. checks if wahoo's install.sh is present in the source directory. if not, then it downloads it straight from source.
+  '''
+  
   wahooroot = Path.home() / ".wahoo" / "source" / "wahoo"
   install_sh = wahooroot / "install.sh"
 
@@ -102,6 +134,13 @@ def ensure_install_sh():
     run("chmod +x install.sh", wahooroot)
 
 def uninstall(pkg, yolo=False):
+  '''
+  uses pacman to uninstall a package, AUR or not.
+  Arguments:
+  - pkg (the package to be uninstalled)
+  - yolo (if <True>, will run the run() function with yolo=True)
+  '''
+  
   ## print(f"wahoo: Running 'sudo pacman -Rns {pkg}'...")
   if pkg == "wahoo":
     print("wahoo error: Trying to uninstall wahoo while wahoo is running isn't a good idea.")
@@ -118,7 +157,10 @@ def uninstall(pkg, yolo=False):
   
 
 def help():
-  # i wish i didn't have to update this with every commit
+  '''
+  CLI component. does exactly what it says on the tin. also a pain to update
+  '''
+
   print("[Available commands]")
   print("install, -S:                  Installs a package from the AUR.")
   print("uninstall, remove, -R, -Rns:  Uninstalls an existing package.")
@@ -133,6 +175,12 @@ def help():
   print("wahoo <command> <pkg> <flags> (for commands like install, uninstall, etc)")
 
 def flagparsing(flags):
+  '''
+  CLI component. parses flags given to wahoo and returns them as a dict.
+  Arguments:
+  - flags (the flags to be parsed)
+  '''
+  
   ## print("wahoo warn: No flag support yet.") # uhhhhh
   print("wahoo warn: Although flags are parsed, they will be ignored since they haven't been implemented yet. Sorry :/")
   
@@ -155,6 +203,19 @@ def flagparsing(flags):
         
 
 def update(pkg, yolo=False):
+  '''
+  Updates a package from the AUR.
+  Flow:
+  - Runs an internet check
+  - Calls return if the package doesn't exist
+  - Pulls latest commits with git
+  - Uninstalls the old package
+  - Rebuilds and installs the package
+  Arguments:
+  - pkg (the pkg to be updated)
+  - yolo (if <True>, skips all confirmation prompts and runs the run() function with yolo=True)
+  '''
+  
   if not internet_check():
     print("wahoo error: No internet. Aborted.")
     sys.exit(1)
@@ -189,6 +250,17 @@ def update(pkg, yolo=False):
     sys.exit(1)
 
 def search(pkg):
+  '''
+  Searches for a package from the AUR.
+  Flow:
+  - runs an internet check
+  - sends a get request to the AUR
+  - calls return if no packages were found
+  - prints the details of each package (name, description, and votes)
+  Arguments:
+  - pkg (the package to be searched for)
+  '''
+  
   ## print("Nothing here yet...") # coming soon! ...in valve time.
   if not internet_check():
     print("wahoo error: No internet. Aborted.")
@@ -216,6 +288,10 @@ def search(pkg):
     print(f"wahoo error: Failed to fetch search results. ({e})")
   
 def main():
+  '''
+  CLI component. has a match case block which runs the functions above. if you read the code then this will be easy to understand.
+  '''
+  
   if os.geteuid() == 0:
     print("wahoo error: Don't run wahoo as root. Otherwise, wahoo will exit unexpectedly.")
     sys.exit(1)
