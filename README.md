@@ -23,7 +23,9 @@ wahoo install neofetch
 wahoo -S neofetch
 wahoo uninstall neofetch
 ```
-> Note: Running `wahoo install wahoo` causes a segmentation fault. This is intentional. Do not send me an email about this.
+> Note: Running `wahoo install wahoo` causes a *fake* segmentation fault. `wahoo` didn't actually crash.
+>
+> This is just an easter egg, so don't email me about this.
 
 ## to do for v0.4 stable
 things that are done will be ~~crossed out~~
