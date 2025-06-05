@@ -216,6 +216,10 @@ def search(pkg):
     print(f"wahoo error: Failed to fetch search results. ({e})")
   
 def main():
+  if os.geteuid() == 0:
+    print("wahoo error: Don't run wahoo as root. Otherwise, wahoo will exit unexpectedly.")
+    sys.exit(1)
+  
   if len(sys.argv) < 2:
     help()
     sys.exit(1)
