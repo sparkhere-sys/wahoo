@@ -1,6 +1,6 @@
 pkgbase = wahoo
 	pkgdesc = an AUR helper made in python because why not? made with <3 by spark
-	pkgver = 0.3
+	pkgver = 0.4
 	pkgrel = 1
 	url = https://github.com/sparkhere-sys/wahoo
 	arch = x86_64
