@@ -9,6 +9,7 @@ pkgbase = wahoo
 	depends = git
 	depends = bash
 	depends = python-requests
+	depends = sudo
 	provides = wahoo
 	source = wahoo.py
 	source = LICENSE
