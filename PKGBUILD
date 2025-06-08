@@ -7,7 +7,7 @@ pkgdesc="an AUR helper made in python because why not? made with <3 by spark"
 arch=("x86_64")
 url="https://github.com/sparkhere-sys/wahoo"
 license=("Custom")
-depends=("python>=3.10" "git" "bash" "python-requests")
+depends=("python>=3.10" "git" "bash" "python-requests" "sudo")
 source=("$SCRIPTNAME" "LICENSE")
 provides=("$pkgname") # no kidding sherlock
 sha256sums=("SKIP" "SKIP") # checksums in v1.0 i promise
