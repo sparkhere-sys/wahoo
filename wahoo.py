@@ -300,9 +300,9 @@ def main():
     help()
     sys.exit(1)
 
-  cmd = sys.argv[1]
-  pkg = sys.argv[2] if len(sys.argv) > 2 else None
-  flags = sys.argv[3:] if len(sys.argv) > 3 else None
+  cmd = sys.argv[1] if len(sys.argv) >= 2 else "help"
+  pkg = sys.argv[2] if len(sys.argv) >= 3 else None
+  flags = sys.argv[3:] if len(sys.argv) >= 4 else None
   cmd = cmd.lower() # i know there's going to be someone stupid enough to type wahoo iNstALL
   parsed_flags = flagparsing(flags) if flags else {}
 
