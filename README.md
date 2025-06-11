@@ -1,4 +1,4 @@
-# wahoo! (v0.3 stable)
+# wahoo! (v0.4 alpha)
 a funny AUR helper i made in python :D
 
 this README is informal by design, if you have any questions pull up an issue or contact me
@@ -9,13 +9,16 @@ me and any contributors are NOT responsible if you break your system using wahoo
 **wahoo is *not* a wrapper for** `pacman` **commands. if you want that, use [archapt](https://github.com/sparkhere-sys/archapt/)**
 
 ## available commands
-- `install` (aliases: `-S`)
-- `uninstall` (aliases: `-R`, `remove`)
-- `list` (aliases: `-Q`, `-Qs`)
-- `show` (aliases: `info`, `-Qi`)
-- `update` (aliases: `-Sy`)
-- `version`
-- `help`
+| Command | Aliases | What it does |
+|---------|---------|--------------|
+| `install` | `-S` | Installs a package from the AUR. |
+| `uninstall` | `-R`, `-remove` | Uninstalls a package (AUR or not) |
+| `list` | `-Q`, `-Qs` | Lists all your installed ***AUR*** packages. |
+| `show` | `-Qi`, `info` | Shows package information for an installed package. |
+| `update` | `-Sy` | Updates an AUR package. |
+| `search` | `-Ss` | Searches for a package from the AUR. |
+| `version` | none :/ | I- What the hell do you want me to say? |
+| `help` | none :/ | Again, what the hell do you want me to say? |
 
 ### usage
 ```bash
@@ -28,10 +31,9 @@ wahoo uninstall neofetch
 > This is just an easter egg, so don't email me about this.
 
 ## to do for v0.4 stable
-things that are done will be ~~crossed out~~
 
-- add coloring with something like `colorama`
-- add an `upgrade` command that updates every AUR package *installed with wahoo* and (maybe as a prompt) runs `pacman -Syu`
+- [ ] add coloring with something like `colorama`
+- [ ] add an `upgrade` command that updates every AUR package *installed with wahoo* and (maybe as a prompt) runs `pacman -Syu`
 
 ## installation
 ### from source
