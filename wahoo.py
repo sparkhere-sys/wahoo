@@ -72,7 +72,7 @@ def run(cmd, dir=None, yolo=False, exit=False):
   '''
   # TODO: Rename exit to something that makes more sense
 
-  prompt()
+  prompt(f"wahoo: Running {cmd}", yolo, exit) # HOLY SHIT HOW DID I FORGET TO ADD THIS UUAGAUHGAUAGUAGAUGAUGAAHGAUHAGUAGAUHAGA
   try:
     subprocess.run(cmd, shell=True, check=True, cwd=dir)
   except subprocess.CalledProcessError:
