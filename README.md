@@ -4,9 +4,9 @@ a funny AUR helper i made in python :D
 this README is informal by design, if you have any questions pull up an issue or contact me
 
 ## DISCLAIMER
-wahoo is still in early development. im not responsible if you break your system using this.
+me and any contributors are NOT responsible if you break your system using wahoo. if you got a complaint, pull up an issue or yell at me about it in my email.
 
-**wahoo is NOT a wrapper for** `pacman` **commands. if you want that, use [archapt](https://github.com/sparkhere-sys/archapt/)**
+**wahoo is *not* a wrapper for** `pacman` **commands. if you want that, use [archapt](https://github.com/sparkhere-sys/archapt/)**
 
 ## available commands
 - `install` (aliases: `-S`)
@@ -15,7 +15,7 @@ wahoo is still in early development. im not responsible if you break your system
 - `show` (aliases: `info`, `-Qi`)
 - `update` (aliases: `-Sy`)
 - `version`
-- `help` (aliases: `-H`, `--help`) (before you ask, `--help` isn't recognized as a flag by wahoo's code. deal with it)
+- `help`
 
 ### usage
 ```bash
@@ -30,17 +30,10 @@ wahoo uninstall neofetch
 ## to do for v0.4 stable
 things that are done will be ~~crossed out~~
 
-- nothing yet
+- add coloring with something like `colorama`
+- add an `upgrade` command that updates every AUR package *installed with wahoo* and (maybe as a prompt) runs `pacman -Syu`
 
 ## installation
-### with install.sh
-run this:
-```
-curl -fsSL https://raw.githubusercontent.com/sparkhere-sys/wahoo/refs/heads/main/install.sh -o install.sh
-chmod +x install.sh
-./install.sh
-```
-
 ### from source
 open up your terminal, then:
 ```bash
@@ -49,6 +42,14 @@ cd wahoo
 makepkg -si
 ```
 you can replace `makepkg -si` with just `makepkg` if you'd like
+
+### with install.sh
+run this:
+```
+curl -fsSL https://raw.githubusercontent.com/sparkhere-sys/wahoo/refs/heads/main/install.sh -o install.sh
+chmod +x install.sh
+./install.sh
+```
 
 ### from AUR
 soon™️
@@ -62,9 +63,9 @@ wahoo update wahoo
 ```
 yeah yeah i know, recursive syntax, but it works
 
-or you can run `./install.sh update`
+or you can run `./install.sh update` if you have that downloaded
 
-## contributing
+## [contributing](https://github.com/sparkhere-sys/wahoo/blob/main/CONTRIBUTING.md)
 if you'd like to contribute, then feel free to do so!
 just follow these basic guidelines:
 
