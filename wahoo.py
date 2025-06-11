@@ -3,8 +3,10 @@
 ## wahoo!
 ## v0.4 alpha
 ## made with <3 by spark
-## certain lines of code will be commented out with ##. thats an intentional decision, aka me being too lazy to hold down the backspace key.
-## docstrings in v0.4 :)
+## certain lines of code will be commented out with ##. thats an intentional decision, a.k.a. me trying to speedrun coding
+## feel free to replace the docstrings with things that make more sense.
+
+version = "0.4 alpha"
 
 # LIBRARIES AND MODULES
 import sys
@@ -79,7 +81,7 @@ def install(pkg, source="https://aur.archlinux.org", build=True, segfault=True, 
   
   if pkg == "wahoo" and segfault:
     print("wahoo: Bold of you for trying to install wahoo with wahoo.")
-    print("Segmentation fault (core dumped)") # os.kill(os.getpid(), 11)
+    print("Segmentation fault (core dumped)") # originally, it ran os.kill(os.getpid(), 11) but i removed it in case some strict AUR mod decides to kill me.
     
   if not internet_check():
     print("wahoo error: No internet. Aborted.")
@@ -158,14 +160,16 @@ def uninstall(pkg, yolo=False):
 
 def help():
   '''
-  CLI component. does exactly what it says on the tin. also a pain to update
+  CLI component. does exactly what it says on the tin.
   '''
+
+  # my least favorite part of the code YAHOO
 
   print("[Available commands]")
   print("install, -S:                  Installs a package from the AUR.")
   print("uninstall, remove, -R, -Rns:  Uninstalls an existing package.")
   print("help, -H, --help:             Prints this message.")
-  print("update, -Sy:                  Updates an existing AUR package. You can also update wahoo with this.")
+  print("update, -Sy:                  Updates an existing AUR package. You can also update wahoo by running this with wahoo as the package.")
   print("list, -Q, -Qs                 Shows all packages installed. If used with a second argument, it'll search for packages of the same name on your system.")
   print("info, show, -Qi               Shows info for a specific package.")
   print("version, --version:           Prints the version of wahoo you're running.")
@@ -182,11 +186,7 @@ def flagparsing(flags):
   '''
   
   ## print("wahoo warn: No flag support yet.") # uhhhhh
-  print("wahoo warn: Although flags are parsed, they will be ignored since they haven't been implemented yet. Sorry :/")
-  
-  flagmap = (
-    "flag_yolo"
-  )
+  ## print("wahoo warn: Although flags are parsed, they will be ignored since they haven't been implemented yet. Sorry :/")
 
   parsed_flags = {
     "flag_yolo": False
@@ -200,7 +200,6 @@ def flagparsing(flags):
         print(f"wahoo warn: Unknown flag: '{flag}'. Ignoring.")
 
   return parsed_flags
-        
 
 def update(pkg, yolo=False):
   '''
@@ -229,7 +228,8 @@ def update(pkg, yolo=False):
   print("wahoo: Pulling latest update from AUR...")
   try:
     run("git pull", wahooroot)
-  except:
+  except Exception as e:
+    print(f"wahoo error: Pull failed. ({e})")
     return
 
   if not yolo:
@@ -249,6 +249,15 @@ def update(pkg, yolo=False):
     print(f"wahoo error: Update failed. ({e})")
     sys.exit(1)
 
+def self_update():
+  print("wahoo: Self update requested. Updating with install.sh...")
+  ensure_install_sh()
+  os.chdir(Path.home() / ".wahoo/source/wahoo/")
+  try:
+    subprocess.run("./install.sh update", shell=True, check=True)
+  except subprocess.CalledProcessError:
+    print("wahoo error: install.sh failed. Is it not executable, or does it not exist?")
+
 def search(pkg):
   '''
   Searches for a package from the AUR.
@@ -261,7 +270,6 @@ def search(pkg):
   - pkg (the package to be searched for)
   '''
   
-  ## print("Nothing here yet...") # coming soon! ...in valve time.
   if not internet_check():
     print("wahoo error: No internet. Aborted.")
     sys.exit(1)
@@ -331,13 +339,7 @@ def main():
         return
 
       if pkg == "wahoo":
-        print("wahoo: Self update requested. Updating with install.sh...")
-        ensure_install_sh()
-        os.chdir(Path.home() / ".wahoo/source/wahoo/")
-        try:
-          subprocess.run("./install.sh update", shell=True, check=True)
-        except subprocess.CalledProcessError:
-          print("wahoo error: install.sh failed. Is it not executable, or does it not exist?")
+        self_update()
       else:
         update(pkg)
     case ("list" | "-Q" | "-Qs"):
