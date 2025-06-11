@@ -4,7 +4,19 @@
 ## v0.4 alpha
 ## made with <3 by spark
 ## certain lines of code will be commented out with ##. thats an intentional decision, a.k.a. me trying to speedrun coding
-## feel free to replace the docstrings with things that make more sense.
+## feel free to replace the docstrings with things that make more sense. just don't touch my comments. or anyone's comments, really. just remove TODO comments if you see that they're implemented. a clean codebase is a happy codebase :)
+
+# quick developer's note,
+# i haven't implemented this yet but im leaving this note here for future me
+# an exit code of 0: command went off without a hitch, no problems here.
+# an exit code of 1: CLI error. nothing to worry about (i think)
+# an exit code of 2: something went wrong in the run() function, like a subprocess error
+# an exit code of 3: something went wrong somewhere else in the code.
+# an exit code of 11: yeah thats the segfault easter egg lol
+# an exit code of anything else: god knows what happened
+# an exit code of 255: i have no fucking clue why this would happen but if it does then something went catastrophically wrong
+
+# also im never using classes. never. not until i get used to them at the very least.
 
 version = "0.4 alpha"
 
@@ -26,6 +38,27 @@ def internet_check():
     return True
   except requests.RequestException: # which usually means no internet
     return False
+
+def prompt(msg, yolo=False, exit=False):
+  '''
+  CLI component. Prompts the user for confirmation before running a command.
+  I really just recycled this from the run() function lmao
+  I won't bother writing a docstring for this, it's 8:00 PM as I'm writing this and I have better things to code.
+  '''
+
+  # TODO: Rename exit to something that makes more sense
+
+  print(msg)
+  if not yolo:
+    user_input = input("Proceed? [Y/n] ").strip().lower()
+    if user_input == "n":
+      print("Aborted.")
+      if exit:
+        return "ABORT" # idk if this will work lmfao
+      else:
+        sys.exit(0)
+    return "CONTINUE" # ditto
+
   
 def run(cmd, dir=None, yolo=False, exit=False):
   '''
@@ -35,25 +68,18 @@ def run(cmd, dir=None, yolo=False, exit=False):
   - dir (changes working directory)
   - yolo (runs without confirmation)
   - exit (on abort, it will run return if <True> and will exit if <False>.)
+  Do note that `exit` is actually just routed straight to the prompt() function. Programmer laziness at its finest.
   '''
   # TODO: Rename exit to something that makes more sense
-  
-  print(f"wahoo: Running {cmd}")
-  if not yolo:
-    prompt = input("Proceed? [Y/n] ").strip().lower()
-    if prompt == "n":
-      print("Aborted.")
-      if exit:
-        return
-      else:
-        sys.exit(0)
 
+  prompt()
   try:
     subprocess.run(cmd, shell=True, check=True, cwd=dir)
   except subprocess.CalledProcessError:
     # here comes the error handling. this took a while to write but it was worth it
+    # TODO: rewrite this to use match-case
     if cmd.startswith("git"):
-      print("wahoo error: Failed to clone package. Are you sure it exists in the AUR?")
+      print("wahoo error: Git ran into an error. Is the package name correct?")
     elif cmd.startswith("makepkg"):
       print("wahoo error: Failed to build package. Is there an error in the PKGBUILD?")
     elif "pacman" in cmd and "-Rns" not in cmd:
@@ -82,6 +108,7 @@ def install(pkg, source="https://aur.archlinux.org", build=True, segfault=True, 
   if pkg == "wahoo" and segfault:
     print("wahoo: Bold of you for trying to install wahoo with wahoo.")
     print("Segmentation fault (core dumped)") # originally, it ran os.kill(os.getpid(), 11) but i removed it in case some strict AUR mod decides to kill me.
+    sys.exit(11) # hehe
     
   if not internet_check():
     print("wahoo error: No internet. Aborted.")
@@ -249,6 +276,31 @@ def update(pkg, yolo=False):
     print(f"wahoo error: Update failed. ({e})")
     sys.exit(1)
 
+def upgrade(yolo=False):
+  '''
+  IN PROGRESS
+  I will write the docstring for this later.
+  '''
+
+  if not internet_check():
+    print("wahoo error: No internet. Aborted.")
+    sys.exit(1)
+  
+  # IMPORTANT: THIS FUNCTION DOESN'T HAVE A PROMPT! I'll add a prompt when I finish the 'prompt()' function but for now this will run by itself. I'm not responsible if you break your system with this.
+  print("wahoo: Updating all packages...")
+  wahooroot = Path.home() / ".wahoo" / "source"
+  print("wahoo: To update wahoo itself, run 'wahoo update wahoo' or 'wahoo -Sy wahoo'.")
+  
+  for pkg in wahooroot.iterdir():
+    if pkg.is_dir():
+      pkg_name = pkg.name
+      print(f"wahoo: Updating {pkg_name}...")
+      update(pkg_name, yolo=True) # note: this assumes that you already went through the prompt at the start of the function, but that isn't implemented so this will run without confirmation. i know.
+  
+  ## run("sudo pacman -Syu --noconfirm", yolo=True) # i didn't implement this because i didn't finish the prompt() function yet, and i don't want to run this without confirmation. could break system packages if run willy nilly. maybe i'll change this to run pacman -Sy instead of -Syu. if you want to update the system, just run the pacman command directly. cmon, you're a big boy.
+  # holy shit that above comment is long af, anyway
+  print("wahoo! Upgrade finished.")
+
 def self_update():
   print("wahoo: Self update requested. Updating with install.sh...")
   ensure_install_sh()
@@ -315,6 +367,11 @@ def main():
   parsed_flags = flagparsing(flags) if flags else {}
 
   match cmd: # i love match case
+    # this is literally the laziest code i have ever written lmfao
+    # match-case is literally just nested if-else statements
+    # i wonder if thats how they implemented it in the interpreter lol
+    # food for thought ig
+
     case ("install" | "-S"):
       if not pkg:
         print("wahoo error: No package or invalid package specified.")
@@ -357,6 +414,9 @@ def main():
       run(f"sudo pacman -Qi {pkg}", yolo=True)
     case ("search" | "-Ss"):
       search(pkg)
+    case ("upgrade" | "-Syu"):
+      print("wahoo warn: Upgrade command is still a WIP.")
+      upgrade()
     case _:
       print("wahoo: Invalid command.")
       help()
