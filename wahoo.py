@@ -54,10 +54,10 @@ def prompt(msg, yolo=False, exit_on_abort=False):
     if user_input == "n":
       print("Aborted.")
       if exit:
-        return "ABORT" # idk if this will work lmfao
+        return False
       else:
         sys.exit(0)
-    return "CONTINUE" # ditto
+    return True
 
   
 def run(cmd, dir=None, yolo=False, exit_on_abort=False):
@@ -67,28 +67,29 @@ def run(cmd, dir=None, yolo=False, exit_on_abort=False):
   - cmd (the command to be run)
   - dir (changes working directory)
   - yolo (runs without confirmation)
-  - exit (on abort, it will run return if <True> and will exit if <False>.)
-  Do note that `exit` is actually just routed straight to the prompt() function. Programmer laziness at its finest.
+  - exit_on_abort (on abort, it will run return if <True> and will exit if <False>.)
+  Do note that `exit_on_abort` is actually just routed straight to the prompt() function. Programmer laziness at its finest.
   '''
-  # TODO: Rename exit to something that makes more sense
-
-  prompt(f"wahoo: Running {cmd}", yolo, exit) # HOLY SHIT HOW DID I FORGET TO ADD THIS UUAGAUHGAUAGUAGAUGAUGAAHGAUHAGUAGAUHAGA
-  try:
-    subprocess.run(cmd, shell=True, check=True, cwd=dir)
-  except subprocess.CalledProcessError:
-    # here comes the error handling. this took a while to write but it was worth it
-    # TODO: rewrite this to use match-case
-    if cmd.startswith("git"):
-      print("wahoo error: Git ran into an error. Is the package name correct?")
-    elif cmd.startswith("makepkg"):
-      print("wahoo error: Failed to build package. Is there an error in the PKGBUILD?")
-    elif "pacman" in cmd and "-Rns" not in cmd:
-      print("wahoo error: pacman failed to install package.")
-    elif "pacman" in cmd:
-      print("wahoo error: pacman failed to uninstall package. Are you sure it exists on your system?")
-    else:
-      print("wahoo error: Command failed.")
-    sys.exit(1)
+  
+  if prompt(f"wahoo: Running {cmd}", yolo, exit):    
+    try:
+      subprocess.run(cmd, shell=True, check=True, cwd=dir)
+    except subprocess.CalledProcessError:
+      # here comes the error handling. this took a while to write but it was worth it
+      # TODO: rewrite this to use match-case
+      if cmd.startswith("git"):
+        print("wahoo error: Git ran into an error. Is the package name correct?")
+      elif cmd.startswith("makepkg"):
+        print("wahoo error: Failed to build package. Is there an error in the PKGBUILD?")
+      elif "pacman" in cmd and "-Rns" not in cmd:
+        print("wahoo error: pacman failed to install package.")
+      elif "pacman" in cmd:
+        print("wahoo error: pacman failed to uninstall package. Are you sure it exists on your system?")
+      else:
+        print("wahoo error: Command failed.")
+      sys.exit(2)
+  else:
+    pass # i have no clue what to put here i can't lie. is this a bad dev habit? yes. do i care? def no lmao
 
 def install(pkg, source="https://aur.archlinux.org", build=True, segfault=True, yolo=False):
   '''
