@@ -331,8 +331,9 @@ def main():
       help()
       sys.exit(1)
     case ("version" | "--version"):
-      print("wahoo - v0.3 beta")
-      print("made with <3 by spark :D")
+      print(f"wahoo v{version}")
+      print("made with <3 by spark")
+      print("tip: run 'wahoo update wahoo' or 'wahoo -Sy wahoo' to update wahoo to the latest version.")
     case ("update" | "-Sy"):
       if not pkg:
         print("wahoo error: No package or invalid package specified.")
