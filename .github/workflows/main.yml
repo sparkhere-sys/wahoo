@@ -37,17 +37,19 @@ jobs:
       - name: Fix git permissions # multiple times i had an error just because i forgot to add this
         run: sudo chown -R $USER:$USER ${{ github.workspace }}
 
-      - name: Commit and push .SRCINFO if changed
+      - name: Commit and push .SRCINFO and PKGBUILD if changed
         run: |
           cd ${{ github.workspace }}
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add .SRCINFO
+          git add -u
           if ! git diff --cached --quiet; then
-            git commit -m "GitHub Actions: Update .SRCINFO"
+            git commit -m "GitHub Actions: Update .SRCINFO and PKGBUILD"
             git push https://${{ secrets.GITHUB_TOKEN }}@github.com/sparkhere-sys/wahoo.git HEAD || { echo "Push failed."; exit 255; }
           else
             echo "No changes in .SRCINFO, not commiting."
           fi
+      # update: changed 'git add .SRCINFO' to 'git add -u'
+      ## damn the bot writes better commit messages than me (i don't even write commit messages lmao)
 
 # done
