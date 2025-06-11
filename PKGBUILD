@@ -10,7 +10,8 @@ license=("Custom") # modified MIT license, no commercial usage clause added
 depends=("python>=3.10" "git" "bash" "python-requests" "sudo")
 source=("$SCRIPTNAME" "LICENSE")
 provides=("wahoo")
-sha256sums=("SKIP" "SKIP")
+sha256sums=('2ef886a6d06f36f5827f0ff5bab2d7ae71444cb1c4001a9995549b02eb8bf4ab'
+            '7d58c0581544a88060b883012151056fb309da2dc74eaa2ee5de2b57c0897029')
 
 package() {
   install -Dm755 "$srcdir/$SCRIPTNAME" "$pkgdir/usr/bin/wahoo"
