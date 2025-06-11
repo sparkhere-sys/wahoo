@@ -46,14 +46,12 @@ def prompt(msg, yolo=False, exit_on_abort=False):
   I won't bother writing a docstring for this, it's 8:00 PM as I'm writing this and I have better things to code.
   '''
 
-  # TODO: Rename exit to something that makes more sense
-
   print(msg)
   if not yolo:
     user_input = input("Proceed? [Y/n] ").strip().lower()
     if user_input == "n":
       print("Aborted.")
-      if exit:
+      if exit_on_abort:
         return False
       else:
         sys.exit(0)
@@ -71,7 +69,7 @@ def run(cmd, dir=None, yolo=False, exit_on_abort=False):
   Do note that `exit_on_abort` is actually just routed straight to the prompt() function. Programmer laziness at its finest.
   '''
   
-  if prompt(f"wahoo: Running {cmd}", yolo, exit):    
+  if prompt(f"wahoo: Running {cmd}", yolo, exit_on_abort):    
     try:
       subprocess.run(cmd, shell=True, check=True, cwd=dir)
     except subprocess.CalledProcessError:
