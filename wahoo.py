@@ -39,7 +39,7 @@ def internet_check():
   except requests.RequestException: # which usually means no internet
     return False
 
-def prompt(msg, yolo=False, exit=False):
+def prompt(msg, yolo=False, exit_on_abort=False):
   '''
   CLI component. Prompts the user for confirmation before running a command.
   I really just recycled this from the run() function lmao
@@ -60,7 +60,7 @@ def prompt(msg, yolo=False, exit=False):
     return "CONTINUE" # ditto
 
   
-def run(cmd, dir=None, yolo=False, exit=False):
+def run(cmd, dir=None, yolo=False, exit_on_abort=False):
   '''
   Runs a shell command.
   Arguments:
@@ -181,7 +181,7 @@ def uninstall(pkg, yolo=False):
   run(f"sudo pacman -Rns {pkg} --noconfirm", yolo=yolo) # the print above was commented out since run() already shows what command is being run, so its redundant to have two of them.
   print(f"wahoo! {pkg} uninstalled.")
   print("wahoo: Cleaning up source directory...")
-  run(f"rm -rf {sourcedir}", yolo=yolo, exit=True)
+  run(f"rm -rf {sourcedir}", yolo=yolo, exit_on_abort=True)
   print("wahoo! Source directory cleaned.")
   
 
