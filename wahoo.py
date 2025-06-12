@@ -312,7 +312,7 @@ def upgrade(yolo=False):
     print("wahoo: To update wahoo itself, run 'wahoo update wahoo' or 'wahoo -Sy wahoo'.")
   
     for pkg in wahooroot.iterdir():
-      if pkg.is_dir() and pkg.name() != "wahoo": # don't update wahoo itself here.
+      if pkg.is_dir() and pkg.name != "wahoo": # don't update wahoo itself here.
         pkg_name = pkg.name
         print(f"wahoo: Updating {pkg_name}...")
         update(pkg_name, yolo=True) # note: this assumes that you already went through the prompt at the start of the function
@@ -324,11 +324,13 @@ def upgrade(yolo=False):
 def self_update():
   print("wahoo: Self update requested. Updating with install.sh...")
   ensure_install_sh()
-  os.chdir(Path.home() / ".wahoo/source/wahoo/")
+  ## os.chdir(Path.home() / ".wahoo/source/wahoo/")
+  wahooroot = Path.home() / ".wahoo" / "source" / "wahoo"
   try:
-    subprocess.run("./install.sh update", shell=True, check=True)
+    subprocess.run("./install.sh update", shell=True, check=True, cwd=wahooroot)
   except subprocess.CalledProcessError:
-    print("wahoo error: install.sh failed. Is it not executable, or does it not exist?")
+    print("wahoo error: install.sh failed.")
+    sys.exit(3)
 
 def search(pkg):
   '''
