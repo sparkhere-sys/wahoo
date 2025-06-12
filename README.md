@@ -11,31 +11,31 @@ if you got a complaint, pull up an issue or yell at me about it in my email.
 **wahoo is *not* a wrapper for** `pacman` **commands. if you want that, use [archapt](https://github.com/sparkhere-sys/archapt/)**
 
 ## available commands
-| Command | Aliases | What it does |
-|---------|---------|--------------|
-| `install` | `-S` | Installs a package from the AUR. |
-| `uninstall` | `-R`, `-remove` | Uninstalls a package (AUR or not) |
-| `list` | `-Q`, `-Qs` | Lists all your installed ***AUR*** packages. |
-| `show` | `-Qi`, `info` | Shows package information for an installed package. |
-| `update` | `-Sy` | Updates an AUR package. |
-| `search` | `-Ss` | Searches for a package from the AUR. |
-| `version` | none :/ | I- What the hell do you want me to say? |
-| `help` | none :/ | Again, what the hell do you want me to say? |
+| Command | Aliases | What it does | Usage |
+|---------|---------|--------------|-------|
+| `install` | `-S` | Installs a package from the AUR. | `wahoo install foo` |
+| `uninstall` | `-R`, `-remove` | Uninstalls a package (AUR or not) | `wahoo uninstall foo` |
+| `list` | `-Q`, `-Qs` | Lists all your installed packages. | `wahoo list`, `wahoo list foo` (which searches for an installed package) |
+| `show` | `-Qi`, `info` | Shows package information for an installed package. | `wahoo show foo`
+| `update` | `-Sy` | Updates an AUR package. | `wahoo update foo`, and to update wahoo itself, `wahoo update wahoo` |
+| `search` | `-Ss` | Searches for a package from the AUR. | `wahoo search foo` |
+| `version` | none :/ | I- What the hell do you want me to say? | `wahoo version` |
+| `help` | none :/ | Again, what the hell do you want me to say? | `wahoo help`, will also trigger if you run wahoo with no arguments. |
 
-### usage
-```bash
-wahoo install neofetch
-wahoo -S neofetch
-wahoo uninstall neofetch
-```
 > Note: Running `wahoo install wahoo` causes a *fake* segmentation fault. `wahoo` didn't actually crash.
 >
 > This is just an easter egg, so don't email me about this.
+
+### available flags
+| Flag | Aliases | What it does |
+|------|---------|--------------|
+| `--yolo` | `--noconfirm` | Skips all confirmation prompts. |
 
 ## to do for v0.4 stable
 
 - [ ] add coloring with something like `colorama`
 - [x] add an `upgrade` command that updates every AUR package *installed with wahoo* and (maybe as a prompt) runs `pacman -Syu`
+- [ ] add more flags (suggest flags to add [here](https://github.com/sparkhere-sys/wahoo/issues/1))
 
 ## installation
 ### from source
