@@ -18,6 +18,11 @@
 
 # also im never using classes. never. not until i get used to them at the very least.
 
+# developer's note again (12/6/2025)
+# v0.4 is basically done! the road to v1.0 looks clearer now!
+# that being said, i will change v0.4 alpha to v0.4 beta
+# stable will release when i add colored output :D
+
 version = "0.4 alpha"
 
 # LIBRARIES AND MODULES
@@ -41,10 +46,17 @@ def internet_check():
 
 def prompt(msg, yolo=False, exit_on_abort=False):
   '''
-  CLI component. Prompts the user for confirmation before running a command.
+  CLI component. (also used outside of the CLI for safety reasons)
+  Prompts the user for confirmation. Returns <False> if the user aborts, and <True> if the user confirms.
   I really just recycled this from the run() function lmao
-  I won't bother writing a docstring for this, it's 8:00 PM as I'm writing this and I have better things to code.
+  Arguments:
+  - msg (the message to be printed)
+  - yolo (if <True>, skips the prompt and immediately returns <True>)
+  - exit_on_abort (if <True>, returns <False> if the user aborts, and if <False>, exits the script with code 0)
   '''
+  # once again, exit_on_abort is a misnomer.
+  # i should probably rename it to dont_exit or smth like that?
+  # that will probably be for the stable release of v0.4, because laziness
 
   print(msg)
   if not yolo:
@@ -55,6 +67,7 @@ def prompt(msg, yolo=False, exit_on_abort=False):
         return False
       else:
         sys.exit(0)
+    
     return True
 
   
@@ -68,6 +81,7 @@ def run(cmd, dir=None, yolo=False, exit_on_abort=False):
   - exit_on_abort (on abort, it will run return if <True> and will exit if <False>.)
   Do note that `exit_on_abort` is actually just routed straight to the prompt() function. Programmer laziness at its finest.
   '''
+  # see the prompt() function on my thoughts on exit_on_abort's ridiculous name
   
   if prompt(f"wahoo: Running {cmd}", yolo, exit_on_abort):    
     try:
@@ -88,6 +102,7 @@ def run(cmd, dir=None, yolo=False, exit_on_abort=False):
       sys.exit(2)
   else:
     pass # i have no clue what to put here i can't lie. is this a bad dev habit? yes. do i care? def no lmao
+    ## sys.exit(0) # maybe? i have no clue. the pass will remain until v0.4 stable (i hope)
 
 def install(pkg, source="https://aur.archlinux.org", build=True, segfault=True, yolo=False):
   '''
@@ -277,28 +292,34 @@ def update(pkg, yolo=False):
 
 def upgrade(yolo=False):
   '''
-  IN PROGRESS
-  I will write the docstring for this later.
+  Upgrades all packages *installed with wahoo.* wahoo has no access to any packages installed with other AUR helpers, like yay or paru, so it won't do anything to those.
+  Flow:
+  - Runs an internet check
+  - Prompts the user for confirmation (unless --yolo is used)
+  - Goes through each package in ~/.wahoo/source and updates them (ignores wahoo itself)
+  - (prompted) Runs an update to pacman packages with 'pacman -Sy' (requires sudo however. not sure how to get around that yet)
   '''
 
+  # remind me never to write long comments again.
   if not internet_check():
     print("wahoo error: No internet. Aborted.")
     sys.exit(1)
   
-  # IMPORTANT: THIS FUNCTION DOESN'T HAVE A PROMPT! I'll add a prompt when I finish the 'prompt()' function but for now this will run by itself. I'm not responsible if you break your system with this.
-  print("wahoo: Updating all packages...")
-  wahooroot = Path.home() / ".wahoo" / "source"
-  print("wahoo: To update wahoo itself, run 'wahoo update wahoo' or 'wahoo -Sy wahoo'.")
+  # 12/6/2025: added the prompt
+  if prompt("wahoo: Start upgrade?", yolo, exit_on_abort=False):
+    print("wahoo: Updating all packages...")
+    wahooroot = Path.home() / ".wahoo" / "source"
+    print("wahoo: To update wahoo itself, run 'wahoo update wahoo' or 'wahoo -Sy wahoo'.")
   
-  for pkg in wahooroot.iterdir():
-    if pkg.is_dir():
-      pkg_name = pkg.name
-      print(f"wahoo: Updating {pkg_name}...")
-      update(pkg_name, yolo=True) # note: this assumes that you already went through the prompt at the start of the function, but that isn't implemented so this will run without confirmation. i know.
-  
-  ## run("sudo pacman -Syu --noconfirm", yolo=True) # i didn't implement this because i didn't finish the prompt() function yet, and i don't want to run this without confirmation. could break system packages if run willy nilly. maybe i'll change this to run pacman -Sy instead of -Syu. if you want to update the system, just run the pacman command directly. cmon, you're a big boy.
-  # holy shit that above comment is long af, anyway
-  print("wahoo! Upgrade finished.")
+    for pkg in wahooroot.iterdir():
+      if pkg.is_dir() and pkg.name() != "wahoo": # don't update wahoo itself here.
+        pkg_name = pkg.name
+        print(f"wahoo: Updating {pkg_name}...")
+        update(pkg_name, yolo=True) # note: this assumes that you already went through the prompt at the start of the function
+
+    prompt("wahoo: Would you like to do a system update as well? (with pacman -Sy)", yolo, True) # if the user says no, then it will exit the program, which is why i didn't put this in an if block. lazy code i know.
+    run("sudo pacman -Sy --noconfirm", yolo=True) # 12/6/2025 # since there's a prompt already for this, the prompt is ignored here. i also made it run with --noconfirm since if you said yes to the prompt then you probably know what you're doing.
+    print("wahoo! Upgrade finished.")
 
 def self_update():
   print("wahoo: Self update requested. Updating with install.sh...")
@@ -353,43 +374,52 @@ def main():
   
   if os.geteuid() == 0:
     print("wahoo error: Don't run wahoo as root. Otherwise, wahoo will exit unexpectedly.")
+    # well this is kinda stupid
+    # technically, some commands require sudo to be run (like uninstalling a package)
+    # i should probably add the sudo check to the functions that require to be run without sudo instead of slapping it here in the CLI
+    # v0.5?
     sys.exit(1)
   
   if len(sys.argv) < 2:
     help()
     sys.exit(1)
 
-  cmd = sys.argv[1] if len(sys.argv) >= 2 else "help"
+  cmd = sys.argv[1] if len(sys.argv) >= 2 else "help" # if no command is given, then it just gives you the help message. good UX methinks
   pkg = sys.argv[2] if len(sys.argv) >= 3 else None
   flags = sys.argv[3:] if len(sys.argv) >= 4 else None
   cmd = cmd.lower() # i know there's going to be someone stupid enough to type wahoo iNstALL
   parsed_flags = flagparsing(flags) if flags else {}
 
-  match cmd: # i love match case
-    # this is literally the laziest code i have ever written lmfao
-    # match-case is literally just nested if-else statements
-    # i wonder if thats how they implemented it in the interpreter lol
-    # food for thought ig
-
+  match cmd:
+    # while wahoo is not intended to be a wrapper for pacman, it does have some commands that point straight to pacman (info and list)
+    # if i were to stay true to the "wahoo is not a pacman wrapper" philosophy, i would have removed these commands
+    # but i figure they're essential enough to keep (good UX, and they make wahoo more useful)
+    # that said, wahoo is not a replacement for pacman, never has, never will. if you want that, just use archapt or pacman straight up
+    # hell you can just add random aliases to your .bashrc or .zshrc if you REALLY want to use apt syntax with pacman and don't want to install anything
+    
     case ("install" | "-S"):
       if not pkg:
         print("wahoo error: No package or invalid package specified.")
         sys.exit(1)
       
       install(pkg, yolo=parsed_flags.get("flag_yolo", False))  
+
     case ("remove" | "uninstall" | "-R" | "-Rns"):
       if not pkg:
         print("wahoo error: No package or invalid package specified.")
         sys.exit(1)
       
       uninstall(pkg, yolo=parsed_flags.get("flag_yolo", False))
+
     case ("help" | "-H" | "--help" | "--h"):
       help()
       sys.exit(1)
+
     case ("version" | "--version"):
       print(f"wahoo v{version}")
       print("made with <3 by spark")
       print("tip: run 'wahoo update wahoo' or 'wahoo -Sy wahoo' to update wahoo to the latest version.")
+
     case ("update" | "-Sy"):
       if not pkg:
         print("wahoo error: No package or invalid package specified.")
@@ -399,23 +429,28 @@ def main():
         self_update()
       else:
         update(pkg)
+
     case ("list" | "-Q" | "-Qs"):
       if pkg:
         run(f"sudo pacman -Qs {pkg}", yolo=True)
         return
 
       run("sudo pacman -Q", yolo=True)
-    case ("show" | "-Qi"):
+
+    case ("show" | "-Qi" | "info"): # i forgot to add the "info" alias lmao
       if not pkg:
         print("wahoo error: No package or invalid package specified.")
         return
 
-      run(f"sudo pacman -Qi {pkg}", yolo=True)
+      run(f"sudo pacman -Qi {pkg}", yolo=True) # this literally just runs a pacman command lmao
+
     case ("search" | "-Ss"):
       search(pkg)
+
     case ("upgrade" | "-Syu"):
-      print("wahoo warn: Upgrade command is still a WIP.")
-      upgrade()
+      ## print("wahoo warn: Upgrade command is still a WIP.")
+      upgrade(yolo=parsed_flags.get("flag_yolo", False))
+
     case _:
       print("wahoo: Invalid command.")
       help()

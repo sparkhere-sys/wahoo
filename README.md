@@ -33,7 +33,7 @@ wahoo uninstall neofetch
 ## to do for v0.4 stable
 
 - [ ] add coloring with something like `colorama`
-- [ ] add an `upgrade` command that updates every AUR package *installed with wahoo* and (maybe as a prompt) runs `pacman -Syu`
+- [x] add an `upgrade` command that updates every AUR package *installed with wahoo* and (maybe as a prompt) runs `pacman -Syu`
 
 ## installation
 ### from source
@@ -63,18 +63,22 @@ run:
 ```bash
 wahoo update wahoo
 ```
-yeah yeah i know, recursive syntax, but it works
-
+or,
+```bash
+wahoo -Sy wahoo
+```
 or you can run `./install.sh update` if you have that downloaded
 
 ## [contributing](https://github.com/sparkhere-sys/wahoo/blob/main/CONTRIBUTING.md)
+
 if you'd like to contribute, then feel free to do so!
 just follow these basic guidelines:
 
-- use pull requests like a normal human being
+- use pull requests for major changes
 - if you're fixing a bug *describe what it did* and *how you fixed it* so everyone can be on the same page
 - just don't be a dick, follow the [code of conduct](https://github.com/sparkhere-sys/wahoo/blob/main/CODE_OF_CONDUCT.md)
 - remember that this has the [MIT license](https://github.com/sparkhere-sys/wahoo/blob/main/LICENSE). modified sure, but its the MIT license.
+- (optional) make funny commit messages
 
 # uhhh bye
 made with <3 by spark

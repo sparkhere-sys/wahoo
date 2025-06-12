@@ -2,7 +2,7 @@
 
 > tl;dr
 >
-> don't be an asshole, if you see someone being a jerk, report them.
+> don't be an asshole, if you see someone being a jerk, let us know.
 
 ***Be excellent to each other.*** No harassment, discrimination, or toxic behavior allowed. Period. If you want to dick around and mess with people, go to Reddit.
 
