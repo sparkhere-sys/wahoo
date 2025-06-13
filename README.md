@@ -16,10 +16,11 @@ if you got a complaint, pull up an issue or yell at me about it in my email.
 | Command | Aliases | What it does | Usage |
 |---------|---------|--------------|-------|
 | `install` | `-S` | Installs a package from the AUR. | `wahoo install foo` |
-| `uninstall` | `-R`, `-remove` | Uninstalls a package (AUR or not) | `wahoo uninstall foo` |
+| `uninstall` | `-R`, `-remove` | Uninstalls a package. (this just calls pacman lol) | `wahoo uninstall foo` |
 | `list` | `-Q`, `-Qs` | Lists all your installed packages. | `wahoo list`, `wahoo list foo` (which searches for an installed package) |
 | `show` | `-Qi`, `info` | Shows package information for an installed package. | `wahoo show foo`
 | `update` | `-Sy` | Updates an AUR package. | `wahoo update foo`, and to update wahoo itself, `wahoo update wahoo` |
+| `upgrade` | `-Syu` | Updates all installed AUR packages *installed by wahoo* | `wahoo upgrade` |
 | `search` | `-Ss` | Searches for a package from the AUR. | `wahoo search foo` |
 | `version` | none :/ | I- What the hell do you want me to say? | `wahoo version` |
 | `help` | none :/ | Again, what the hell do you want me to say? | `wahoo help`, will also trigger if you run wahoo with no arguments. |
