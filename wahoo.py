@@ -23,7 +23,17 @@
 # that being said, i will change v0.4 alpha to v0.4 beta
 # stable will release when i add colored output :D
 
-version = "0.4 alpha"
+version = "0.4 release candidate 1"
+
+# ANSI COLORS
+allow_coloring = True # will add a config file in v0.5 or v0.6
+reset = "\033[0m"
+wahoo_message = "\033[97m" if allow_coloring else reset # white
+# one little thought that i had is that i should add colors for the [Y/n] things you see often
+# not now though. programmer laziness at its finest
+wahoo_error = "\033[31m" if allow_coloring else reset # red
+wahoo_warn = "\033[33m" if allow_coloring else reset # yellow
+wahoo_success = "\033[32m" if allow_coloring else reset # green
 
 # LIBRARIES AND MODULES
 import sys
@@ -83,22 +93,22 @@ def run(cmd, dir=None, yolo=False, exit_on_abort=False):
   '''
   # see the prompt() function on my thoughts on exit_on_abort's ridiculous name
   
-  if prompt(f"wahoo: Running {cmd}", yolo, exit_on_abort):    
+  if prompt(f"{wahoo_message}wahoo: {reset}Running {cmd}", yolo, exit_on_abort):    
     try:
       subprocess.run(cmd, shell=True, check=True, cwd=dir)
     except subprocess.CalledProcessError:
       # here comes the error handling. this took a while to write but it was worth it
       # TODO: rewrite this to use match-case
       if cmd.startswith("git"):
-        print("wahoo error: Git ran into an error. Is the package name correct?")
+        print(f"{wahoo_error}wahoo error: {reset}Git ran into an error. Is the package name correct?")
       elif cmd.startswith("makepkg"):
-        print("wahoo error: Failed to build package. Is there an error in the PKGBUILD?")
+        print(f"{wahoo_error}wahoo error: {reset}Failed to build package. Is there an error in the PKGBUILD?")
       elif "pacman" in cmd and "-Rns" not in cmd:
-        print("wahoo error: pacman failed to install package.")
+        print(f"{wahoo_error}wahoo error: {reset}pacman failed to install package.")
       elif "pacman" in cmd:
-        print("wahoo error: pacman failed to uninstall package. Are you sure it exists on your system?")
+        print(f"{wahoo_error}wahoo error: {reset}pacman failed to uninstall package. Are you sure it exists on your system?")
       else:
-        print("wahoo error: Command failed.")
+        print(f"{wahoo_error}wahoo error: {reset}Command failed.")
       sys.exit(2)
   else:
     pass # i have no clue what to put here i can't lie. is this a bad dev habit? yes. do i care? def no lmao
@@ -120,12 +130,12 @@ def install(pkg, source="https://aur.archlinux.org", build=True, segfault=True, 
   '''
   
   if pkg == "wahoo" and segfault:
-    print("wahoo: Bold of you for trying to install wahoo with wahoo.")
+    print(f"{wahoo_message}wahoo: {reset}Bold of you for trying to install wahoo with wahoo.")
     print("Segmentation fault (core dumped)") # originally, it ran os.kill(os.getpid(), 11) but i removed it in case some strict AUR mod decides to kill me.
     sys.exit(11) # hehe
     
   if not internet_check():
-    print("wahoo error: No internet. Aborted.")
+    print(f"{wahoo_error}wahoo error: {reset}No internet. Aborted.")
     sys.exit(1)
   
   wahooroot = Path.home() / ".wahoo" / "source"
@@ -134,32 +144,32 @@ def install(pkg, source="https://aur.archlinux.org", build=True, segfault=True, 
   sourcedir = wahooroot / pkg
 
   if not sourcedir.exists():
-    print("wahoo: Starting install")
+    print(f"{wahoo_message}wahoo: {reset}Starting install")
     if source == "https://aur.archlinux.org":
-      print(f"wahoo: Downloading {pkg} from AUR...")
+      print(f"{wahoo_message}wahoo: {reset}Downloading {pkg} from AUR...")
     else:
-      print(f"wahoo: Downloading {pkg}...")
+      print(f"{wahoo_message}wahoo: {reset}Downloading {pkg}...")
 
     if yolo:
       run(f"git clone {source}/{pkg}.git", wahooroot, yolo)
     else:
       run(f"git clone {source}/{pkg}.git", wahooroot, False)
-    print(f"wahoo! {pkg} Downloaded.")
+    print(f"{wahoo_success}wahoo! {reset}{pkg} Downloaded.")
 
   else:
-    print(f"wahoo warn: {pkg} source already exists at {sourcedir}.")
+    print(f"{wahoo_warn}wahoo warn: {reset}{pkg} source already exists at {sourcedir}.")
 
   if build:
-    print(f"wahoo: Trying to install {pkg}...")
-    prompt = input("Build package without installing? [y/N]").strip().lower()
+    print(f"{wahoo_message}wahoo: {reset}Installing {pkg}...")
+    prompt = input(f"{wahoo_message}wahoo: {reset}Build package without installing? [y/N]").strip().lower()
     if prompt == "y":
-      print("wahoo: Building...")
+      print(f"{wahoo_message}wahoo: {reset}Building...")
       run("makepkg -s --noconfirm", sourcedir, True) # -s is used to install missing dependencies
     else:
-      print("wahoo: Building and installing...")
+      print(f"{wahoo_message}wahoo: {reset}Building and installing...")
       run("makepkg -si --noconfirm", sourcedir, True) # -si both installs missing dependencies and the built package
     
-    print(f"wahoo! {pkg} installed.")
+    print(f"{wahoo_success}wahoo! {reset}{pkg} installed.")
 
 def ensure_install_sh():
   '''
@@ -170,10 +180,10 @@ def ensure_install_sh():
   install_sh = wahooroot / "install.sh"
 
   if not install_sh.exists():
-    print("wahoo warn: install.sh does not exist in the wahoo directory. Downloading...")
+    print(f"{wahoo_warn}wahoo warn: {reset}install.sh does not exist in the wahoo directory. Downloading...")
     install("wahoo", "https://github.com/sparkhere-sys/", False, segfault=False) # since this uses install() and that chekcks for internet when its called, i don't need to add an internet check in ensure_install_sh()
-    print("wahoo! Latest update fetched, and install.sh has been downloaded.")
-    print("wahoo: Making install.sh executable...")
+    print(f"{wahoo_success}wahoo! {reset}Latest update fetched, and install.sh has been downloaded.")
+    print(f"{wahoo_message}wahoo: {reset}Making install.sh executable...")
     run("chmod +x install.sh", wahooroot)
 
 def uninstall(pkg, yolo=False):
@@ -186,17 +196,17 @@ def uninstall(pkg, yolo=False):
   
   ## print(f"wahoo: Running 'sudo pacman -Rns {pkg}'...")
   if pkg == "wahoo":
-    print("wahoo error: Trying to uninstall wahoo while wahoo is running isn't a good idea.")
+    print(f"{wahoo_error}wahoo error: {reset}Trying to uninstall wahoo while wahoo is running isn't a good idea.")
     print("Uninstall it manually with pacman.")
     sys.exit(1)
   
   sourcedir = Path.home() / ".wahoo" / "source" / pkg
   
   run(f"sudo pacman -Rns {pkg} --noconfirm", yolo=yolo) # the print above was commented out since run() already shows what command is being run, so its redundant to have two of them.
-  print(f"wahoo! {pkg} uninstalled.")
-  print("wahoo: Cleaning up source directory...")
+  print(f"{wahoo_success}wahoo! {reset}{pkg} uninstalled.")
+  print(f"{wahoo_message}wahoo: {reset}Cleaning up source directory...")
   run(f"rm -rf {sourcedir}", yolo=yolo, exit_on_abort=True)
-  print("wahoo! Source directory cleaned.")
+  print(f"{wahoo_success}wahoo! {reset}Source directory cleaned.")
   
 
 def help():
@@ -205,17 +215,18 @@ def help():
   '''
 
   # my least favorite part of the code YAHOO
+  # TODO: add colors to the help message
 
   print("[Available commands]")
   print("install, -S:                  Installs a package from the AUR.")
   print("uninstall, remove, -R, -Rns:  Uninstalls an existing package.")
-  print("help, -H, --help:             Prints this message.")
+  print("help:                         Prints this message.")
   print("update, -Sy:                  Updates an existing AUR package. You can also update wahoo by running this with wahoo as the package.")
   print("list, -Q, -Qs                 Shows all packages installed. If used with a second argument, it'll search for packages of the same name on your system.")
   print("info, show, -Qi               Shows info for a specific package.")
-  print("version, --version:           Prints the version of wahoo you're running.")
+  print("version:                      Prints the version of wahoo you're running.")
   print("[Available flags]")
-  print("Nothing yet.")
+  print("--yolo, --noconfirm:          Skips all confirmation prompts. Use with caution.")
   print("[Usage]")
   print("wahoo <command> <pkg> <flags> (for commands like install, uninstall, etc)")
 
@@ -238,7 +249,7 @@ def flagparsing(flags):
       case ("--yolo" | "--noconfirm"):
         parsed_flags["flag_yolo"] = True
       case _:
-        print(f"wahoo warn: Unknown flag: '{flag}'. Ignoring.")
+        print(f"{wahoo_warn}wahoo warn: {reset}Unknown flag: '{flag}'. Ignoring.")
 
   return parsed_flags
 
@@ -257,37 +268,39 @@ def update(pkg, yolo=False):
   '''
   
   if not internet_check():
-    print("wahoo error: No internet. Aborted.")
+    print(f"{wahoo_error}wahoo error: {reset}No internet. Aborted.")
     sys.exit(1)
+  
   wahooroot = Path.home() / ".wahoo" / "source" / pkg
 
   if not wahooroot.exists():
-    print(f"wahoo error: {pkg} doesn't exist on your system. Install it with wahoo install {pkg}.") # might make it call install() here since maybe people are using wahoo with the pacman command syntax. if i do that, this will change from a 'wahoo error' to a 'wahoo warn'. v0.5 maybe.
+    print(f"{wahoo_error}wahoo error: {reset}{pkg} doesn't exist on your system. Install it with wahoo install {pkg}.") # might make it call install() here since maybe people are using wahoo with the pacman command syntax. if i do that, this will change from a 'wahoo error' to a 'wahoo warn'. v0.5 maybe.
+    # note: this above line isn't foolproof since the user can just rename the directory to something else. i WOULD put a file named smth like .wahoo but that would be a waste of time and effort.
     return
 
-  print(f"wahoo: Starting update")
-  print("wahoo: Pulling latest update from AUR...")
+  print(f"{wahoo_message}wahoo: {reset}Starting update.")
+  print(f"{wahoo_message}wahoo: {reset}Pulling latest update from AUR...")
   try:
     run("git pull", wahooroot)
   except Exception as e:
-    print(f"wahoo error: Pull failed. ({e})")
+    print(f"{wahoo_error}wahoo error: {reset}Pull failed. {wahoo_error}({e}){reset}") # this looks like {} soup
     return
 
   if not yolo:
-    prompt = input(f"wahoo: Rebuild and install {pkg}? [Y/n]").strip().lower()
+    prompt = input(f"{wahoo_message}wahoo: {reset}Rebuild and install {pkg}? [Y/n]").strip().lower()
     if prompt == "n":
       print("wahoo: Skipping reinstall.")
       return
 
   try:
-    print("wahoo: Starting rebuild...")
-    print("wahoo: Removing old package...")
+    print(f"wahoo: Starting rebuild...")
+    print(f"wahoo: Removing old package...")
     uninstall(pkg, True) # runs with yolo regardless of --yolo. bad UX? maybe. but i just want to push this update
-    print("wahoo: Building and installing...")
+    print(f"wahoo: Building and installing...")
     run("makepkg -si", wahooroot, True) # ditto
-    print(f"wahoo! {pkg} updated.")
+    print(f"wahoo! {reset}{pkg} updated.")
   except Exception as e:
-    print(f"wahoo error: Update failed. ({e})")
+    print(f"{wahoo_error}wahoo error: {reset}Update failed. {wahoo_error}({e}){reset}")
     sys.exit(1)
 
 def upgrade(yolo=False):
@@ -302,34 +315,34 @@ def upgrade(yolo=False):
 
   # remind me never to write long comments again.
   if not internet_check():
-    print("wahoo error: No internet. Aborted.")
+    print(f"{wahoo_error}wahoo error: {reset}No internet. Aborted.")
     sys.exit(1)
   
   # 12/6/2025: added the prompt
-  if prompt("wahoo: Start upgrade?", yolo, exit_on_abort=False):
-    print("wahoo: Updating all packages...")
+  if prompt(f"{wahoo_message}wahoo: {reset}Start upgrade? [Y/n] ", yolo, exit_on_abort=False):
+    print(f"{wahoo_message}wahoo: {reset}Updating all packages...")
     wahooroot = Path.home() / ".wahoo" / "source"
-    print("wahoo: To update wahoo itself, run 'wahoo update wahoo' or 'wahoo -Sy wahoo'.")
+    print(f"{wahoo_message}wahoo: {reset}To update wahoo itself, run {wahoo_warn}'wahoo update wahoo'{reset} or {wahoo_warn}'wahoo -Sy wahoo'{reset}.") # using {wahoo_warn} as highlighting, no warn here :)
   
     for pkg in wahooroot.iterdir():
       if pkg.is_dir() and pkg.name != "wahoo": # don't update wahoo itself here.
         pkg_name = pkg.name
-        print(f"wahoo: Updating {pkg_name}...")
+        print(f"{wahoo_message}wahoo: {reset}Updating {pkg_name}...")
         update(pkg_name, yolo=True) # note: this assumes that you already went through the prompt at the start of the function
 
-    prompt("wahoo: Would you like to do a system update as well? (with pacman -Sy)", yolo, True) # if the user says no, then it will exit the program, which is why i didn't put this in an if block. lazy code i know.
+    prompt(f"{wahoo_message}wahoo: {reset}Would you like to do a system update as well? (with pacman -Sy) [Y/n]", yolo, True) # if the user says no, then it will exit the program, which is why i didn't put this in an if block. lazy code i know.
     run("sudo pacman -Sy --noconfirm", yolo=True) # 12/6/2025 # since there's a prompt already for this, the prompt is ignored here. i also made it run with --noconfirm since if you said yes to the prompt then you probably know what you're doing.
-    print("wahoo! Upgrade finished.")
+    print(f"{wahoo_success}wahoo! {reset}Upgrade finished.")
 
 def self_update():
-  print("wahoo: Self update requested. Updating with install.sh...")
+  print(f"{wahoo_message}wahoo: {reset}Self update requested. Updating with install.sh...")
   ensure_install_sh()
   ## os.chdir(Path.home() / ".wahoo/source/wahoo/")
   wahooroot = Path.home() / ".wahoo" / "source" / "wahoo"
   try:
     subprocess.run("./install.sh update", shell=True, check=True, cwd=wahooroot)
-  except subprocess.CalledProcessError:
-    print("wahoo error: install.sh failed.")
+  except subprocess.CalledProcessError as e:
+    print(f"{wahoo_error}wahoo error: {reset}install.sh failed. {wahoo_error}({e}){reset}")
     sys.exit(3)
 
 def search(pkg):
@@ -345,7 +358,7 @@ def search(pkg):
   '''
   
   if not internet_check():
-    print("wahoo error: No internet. Aborted.")
+    print(f"{wahoo_error}wahoo error: {reset}No internet. Aborted.")
     sys.exit(1)
 
   url = f"https://aur.archlinux.org/rpc/?v=5&type=search&arg={pkg}"
@@ -391,6 +404,8 @@ def main():
   flags = sys.argv[3:] if len(sys.argv) >= 4 else None
   cmd = cmd.lower() # i know there's going to be someone stupid enough to type wahoo iNstALL
   parsed_flags = flagparsing(flags) if flags else {}
+  flag_yolo = parsed_flags.get("flag_yolo", False)
+  ## no_pkg_error = # i will define this later, hence why its commented out.
 
   match cmd:
     # while wahoo is not intended to be a wrapper for pacman, it does have some commands that point straight to pacman (info and list)
@@ -404,27 +419,27 @@ def main():
         print("wahoo error: No package or invalid package specified.")
         sys.exit(1)
       
-      install(pkg, yolo=parsed_flags.get("flag_yolo", False))  
+      install(pkg, yolo=flag_yolo) 
 
     case ("remove" | "uninstall" | "-R" | "-Rns"):
       if not pkg:
-        print("wahoo error: No package or invalid package specified.")
+        print(f"{wahoo_error}wahoo error: {reset}No package or invalid package specified.")
         sys.exit(1)
       
-      uninstall(pkg, yolo=parsed_flags.get("flag_yolo", False))
+      uninstall(pkg, yolo=flag_yolo)
 
     case ("help" | "-H" | "--help" | "--h"):
       help()
       sys.exit(1)
 
     case ("version" | "--version"):
-      print(f"wahoo v{version}")
+      print(f"{wahoo_success}wahoo{reset} v{version}")
       print("made with <3 by spark")
-      print("tip: run 'wahoo update wahoo' or 'wahoo -Sy wahoo' to update wahoo to the latest version.")
+      print(f"{wahoo_warn}tip: {reset}run {wahoo_warn}'wahoo update wahoo'{reset} or {wahoo_warn}'wahoo -Sy wahoo'{reset} to update wahoo to the latest version.") # i think the yellow looks cool
 
     case ("update" | "-Sy"):
       if not pkg:
-        print("wahoo error: No package or invalid package specified.")
+        print(f"{wahoo_error}wahoo error: {reset}No package or invalid package specified.")
         return
 
       if pkg == "wahoo":
@@ -434,27 +449,27 @@ def main():
 
     case ("list" | "-Q" | "-Qs"):
       if pkg:
-        run(f"sudo pacman -Qs {pkg}", yolo=True)
+        run(f"pacman -Qs {pkg}", yolo=True)
         return
 
-      run("sudo pacman -Q", yolo=True)
+      run("pacman -Q", yolo=True)
 
     case ("show" | "-Qi" | "info"): # i forgot to add the "info" alias lmao
       if not pkg:
-        print("wahoo error: No package or invalid package specified.")
+        print(f"{wahoo_error}wahoo error: {reset}No package or invalid package specified.")
         return
 
-      run(f"sudo pacman -Qi {pkg}", yolo=True) # this literally just runs a pacman command lmao
+      run(f"pacman -Qi {pkg}", yolo=True) # this literally just runs a pacman command lmao
 
     case ("search" | "-Ss"):
       search(pkg)
 
     case ("upgrade" | "-Syu"):
       ## print("wahoo warn: Upgrade command is still a WIP.")
-      upgrade(yolo=parsed_flags.get("flag_yolo", False))
+      upgrade(yolo=flag_yolo)
 
     case _:
-      print("wahoo: Invalid command.")
+      print(f"{wahoo_warn}wahoo: {reset}Invalid command.") # it uses the wahoo warn color despite not being a wahoo warn, but that's because its not really that big of a deal. 
       help()
       sys.exit(1)
 
@@ -464,4 +479,5 @@ if __name__ == "__main__":
   try:
     main() # this doesn't run main if wahoo is imported as a module
   except KeyboardInterrupt:
-    print("wahoo: Interrupted by Ctrl+C, see you next time") # lol
+    print(f"{wahoo_message}wahoo: {reset}Interrupted by Ctrl+C, see you next time") # lol
+    # yes i even added ansi colors here, deal with it

@@ -1,4 +1,6 @@
-# wahoo! (v0.4 alpha)
+# wahoo!
+(version 0.4rc1)
+
 a funny AUR helper i made in python :D
 
 this README is informal by design, if you have any questions pull up an issue or contact me
@@ -33,7 +35,7 @@ if you got a complaint, pull up an issue or yell at me about it in my email.
 
 ## to do for v0.4 stable
 
-- [ ] add coloring with something like `colorama`
+- [ ] add some coloring to wahoo's messages (currently its just plain text)
 - [x] add an `upgrade` command that updates every AUR package *installed with wahoo* and (as a prompt) runs `pacman -Sy`
 - [ ] add more flags (suggest flags to add [here](https://github.com/sparkhere-sys/wahoo/issues/1))
 
@@ -45,7 +47,7 @@ git clone https://github.com/sparkhere-sys/wahoo.git
 cd wahoo
 makepkg -si
 ```
-you can replace `makepkg -si` with just `makepkg` if you'd like
+you can replace `makepkg -si` with just `makepkg` if you'd like.
 
 ### with install.sh
 run this:
