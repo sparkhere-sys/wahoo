@@ -17,10 +17,10 @@ fi
 set -euo pipefail
 
 wahooroot="$HOME/.wahoo/source/"
-localrepo="$wahooroot/wahoo" # i swear to god if you make this empty in your fork...
+localrepo="$wahooroot/wahoo" # don't even think about making this root.
 mkdir -p "$wahooroot"
 
-depends=("git" "python-requests") # excluding makepkg
+depends=("git" "python-requests" "sudo") # excluding makepkg
 repo="https://github.com/sparkhere-sys/wahoo.git"
 dir="wahoo"
 countdown=5
@@ -64,7 +64,7 @@ if [[ "${1-}" == "update" ]]; then
   makepkg -si --noconfirm
   echo "wahoo! Successfully updated wahoo."
 else
-  if [ -d "$localrepo" ]; then
+  if [[ -d "$localrepo" && "$localrepo" != "/" ]]; then # safeguard
     echo "wahoo warn: Existing source directory found. Removing to avoid conflicts..."
     echo "wahoo: Clearing old directory in 5 seconds. Press Ctrl+C to interrupt."
     
