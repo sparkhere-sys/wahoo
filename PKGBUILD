@@ -10,7 +10,7 @@ license=("Custom") # modified MIT license, no commercial usage clause added
 depends=("python>=3.10" "git" "bash" "python-requests" "sudo" "python-colorama") # added colorama for colored output
 source=("$SCRIPTNAME" "LICENSE")
 provides=("wahoo")
-sha256sums=('2ef886a6d06f36f5827f0ff5bab2d7ae71444cb1c4001a9995549b02eb8bf4ab'
+sha256sums=('50f27d6029c2f022bfcb826342025d31d02a40d6b58cb1cf587a4fe9f5dcfc45'
             '7d58c0581544a88060b883012151056fb309da2dc74eaa2ee5de2b57c0897029')
 
 package() {
