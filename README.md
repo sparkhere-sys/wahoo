@@ -35,7 +35,7 @@ if you got a complaint, pull up an issue or yell at me about it in my email.
 
 ## to do for v0.4 stable
 
-- [ ] add some coloring to wahoo's messages (currently its just plain text)
+- [x] add some coloring to wahoo's messages (currently its just plain text)
 - [x] add an `upgrade` command that updates every AUR package *installed with wahoo* and (as a prompt) runs `pacman -Sy`
 - [ ] add more flags (suggest flags to add [here](https://github.com/sparkhere-sys/wahoo/issues/1))
 
