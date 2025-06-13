@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 ## wahoo!
-## v0.4 alpha
+## v0.4 release candidate 1
 ## made with <3 by spark
 ## certain lines of code will be commented out with ##. thats an intentional decision, a.k.a. me trying to speedrun coding
 ## feel free to replace the docstrings with things that make more sense. just don't touch my comments. or anyone's comments, really. just remove TODO comments if you see that they're implemented. a clean codebase is a happy codebase :)
