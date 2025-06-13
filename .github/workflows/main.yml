@@ -45,7 +45,7 @@ jobs:
           git add -u
           if ! git diff --cached --quiet; then
             git commit -m "GitHub Actions: Update .SRCINFO and PKGBUILD"
-            git push https://${{ secrets.GITHUB_TOKEN }}@github.com/sparkhere-sys/wahoo.git HEAD || { echo "Push failed."; exit 255; }
+            git push origin HEAD || { echo "Push failed."; exit 255; }
           else
             echo "No changes in .SRCINFO, not commiting."
           fi
