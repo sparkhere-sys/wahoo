@@ -10,7 +10,6 @@ pkgbase = wahoo-dev
 	depends = bash
 	depends = python-requests
 	depends = sudo
-	depends = python-colorama
 	provides = wahoo
 	source = wahoo.py
 	source = LICENSE
