@@ -5,10 +5,11 @@ a funny AUR helper i made in python :D
 
 this README is informal by design, if you have any questions pull up an issue or contact me
 
-## DISCLAIMER
-me and any contributors are NOT responsible if you break your system using wahoo. that includes the github actions bot.
-
-if you got a complaint, pull up an issue or yell at me about it in my email.
+> DISCLAIMER
+> 
+> me and any contributors are NOT responsible if you break your system using wahoo. that includes the github actions bot.
+>
+> if you got a complaint, pull up an issue or yell at me about it in my email.
 
 **wahoo is *not* a wrapper for** `pacman` **commands. if you want that, use [archapt](https://github.com/sparkhere-sys/archapt/)**
 
