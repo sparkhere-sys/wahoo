@@ -3,6 +3,7 @@
 ## wahoo! install.sh
 ## v1.0 (yes the install.sh is on a different version than the python script, deal with it)
 ## installs and updates wahoo
+# TODO: add ansi colors to the output
 
 if [[ $EUID -eq 0 ]]; then
   echo "wahoo error: don't run this as root, or else makepkg will fail."
