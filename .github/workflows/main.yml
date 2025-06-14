@@ -8,6 +8,7 @@ on:
       - main
     paths:
       - 'PKGBUILD'
+      - 'wahoo.py' # if i keep updating wahoo.py, then the checksums won't match. i've ran into this issue in the past, never again.
   workflow_dispatch:
 
 jobs:
