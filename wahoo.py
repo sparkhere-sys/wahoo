@@ -110,11 +110,8 @@ def run(cmd, dir=None, yolo=False, exit_on_abort=False):
       else:
         print(f"{wahoo_error}wahoo error: {reset}Command failed.")
       sys.exit(2)
-  else:
-    pass # i have no clue what to put here i can't lie. is this a bad dev habit? yes. do i care? def no lmao
-    ## sys.exit(0) # maybe? i have no clue. the pass will remain until v0.4 stable (i hope)
 
-def install(pkg, source="https://aur.archlinux.org", build=True, segfault=True, yolo=False):
+def install(pkg, source="https://aur.archlinux.org/packages", build=True, segfault=True, yolo=False):
   '''
   Downloads, builds, and installs a package.
   Flow:
@@ -145,7 +142,7 @@ def install(pkg, source="https://aur.archlinux.org", build=True, segfault=True, 
 
   if not sourcedir.exists():
     print(f"{wahoo_message}wahoo: {reset}Starting install")
-    if source == "https://aur.archlinux.org":
+    if source == "https://aur.archlinux.org/packages":
       print(f"{wahoo_message}wahoo: {reset}Downloading {pkg} from AUR...")
     else:
       print(f"{wahoo_message}wahoo: {reset}Downloading {pkg}...")
@@ -209,26 +206,113 @@ def uninstall(pkg, yolo=False):
   print(f"{wahoo_success}wahoo! {reset}Source directory cleaned.")
   
 
-def help():
+def help(cmd=None):
   '''
   CLI component. does exactly what it says on the tin.
   '''
 
   # my least favorite part of the code YAHOO
   # TODO: add colors to the help message
+  # IN PROGRESS: adding help messages for each command (i.e, wahoo help install will print the help message for the install command)
+  if not cmd:
+    print("""
+    [Available commands]
+    install, -S:                  Installs a package from the AUR.
+    uninstall, remove, -R:        Uninstalls an existing package.
+    update, -Sy:                  Updates an existing AUR package. You can also update wahoo by running this with wahoo as the package.
+    upgrade, -Syu:                Updates all packages installed with wahoo. Does not update packages installed with other AUR helpers.
+    list, -Q, -Qs:                Shows all packages installed. If you specify a package, it'll search for packages of the same name that are installed on your system.
+    info, show, -Qi:              Shows info for a specific package.
+    search, -Ss:                  Searches for a package in the AUR.
+    help:                         This message.
+    version:                      Prints the version of wahoo you're running.
+    [Available flags]
+    --yolo, --noconfirm:          Skips all confirmation prompts. Use with caution.
+    [Example usage]
+    wahoo install <pkg>
+    wahoo -Sy <pkg>
+    wahoo remove <pkg>
+    wahoo -Syu --yolo
+    wahoo -Ss <pkg>
+    """)
+    # you're welcome, future me
+  else:
+    match cmd:
+      ## pass # later.
+      # long ass match-case block
+      case ("install" | "-S"):
+        print(f"""
+        [Usage]
+        wahoo {cmd} <pkg> <flags>
 
-  print("[Available commands]")
-  print("install, -S:                  Installs a package from the AUR.")
-  print("uninstall, remove, -R, -Rns:  Uninstalls an existing package.")
-  print("help:                         Prints this message.")
-  print("update, -Sy:                  Updates an existing AUR package. You can also update wahoo by running this with wahoo as the package.")
-  print("list, -Q, -Qs                 Shows all packages installed. If used with a second argument, it'll search for packages of the same name on your system.")
-  print("info, show, -Qi               Shows info for a specific package.")
-  print("version:                      Prints the version of wahoo you're running.")
-  print("[Available flags]")
-  print("--yolo, --noconfirm:          Skips all confirmation prompts. Use with caution.")
-  print("[Usage]")
-  print("wahoo <command> <pkg> <flags> (for commands like install, uninstall, etc)")
+        Installs a package from the AUR.
+        """)
+
+      case ("uninstall" | "remove" | "-R"):
+        print(f"""
+        [Usage]
+        wahoo {cmd} <pkg> <flags>
+
+        Uninstalls a package from your system. Note that this just runs "pacman -R" so this command will work with ALL packages, AUR or not.
+        """)
+
+      case ("update" | "-Sy"):
+        print(f"""
+        [Usage]
+        wahoo {cmd} <pkg> <flags>
+
+        Updates a package from the AUR. If you run "wahoo {cmd} wahoo", it will update wahoo itself.
+        """)
+
+      case ("upgrade" | "-Syu"):
+        print(f"""
+        [Usage]
+        wahoo {cmd} <flags>
+
+        Updates all packages installed with wahoo. Does not update packages installed with other AUR helpers.
+        This command can also upgrade pacman packages, but it is up to you to decide if you want to do that.
+        Does not update wahoo itself. Use "wahoo update wahoo" for that.
+        """)
+
+      case ("list" | "-Q" | "-Qs"):
+        print(f"""
+        [Usage]
+        wahoo {cmd} (optional: <pkg>)
+
+        Lists all packages. This just runs "pacman -Q", so it will work with all packages, AUR or not.
+        If you specify a package, it will search for packages of the same name that are installed on your system.
+        """)
+
+      case ("info" | "show" | "-Qi"):
+        print(f"""
+        [Usage]
+        wahoo {cmd} <pkg>
+
+        Shows information about a specific package. This just runs "pacman -Qi", so it will work with all packages, AUR or not.
+        """)
+
+      case ("search" | "-Ss"):
+        print(f"""
+        [Usage]
+        wahoo {cmd} <pkg>
+
+        Searches for a package from the AUR.
+        """)
+
+      case ("--yolo" | "--noconfirm"):
+        print("""
+        Skips any confirmation prompts in a command. If the command doesn't have any confirmation prompts, then save yourself the effort of typing this and don't use it.
+        Use with caution.
+        """)
+
+      case "version":
+        print("Shows you the version of wahoo you're running.")
+
+      case "help":
+        print("help-ception")
+
+      case "moo":
+        print("Have you mooed today?") # you thought the segfault easter egg was the only one? pathetic.
 
 def flagparsing(flags):
   '''
@@ -412,7 +496,7 @@ def main():
     # if i were to stay true to the "wahoo is not a pacman wrapper" philosophy, i would have removed these commands
     # but i figure they're essential enough to keep (good UX, and they make wahoo more useful)
     # that said, wahoo is not a replacement for pacman, never has, never will. if you want that, just use archapt or pacman straight up
-    # hell you can just add random aliases to your .bashrc or .zshrc if you REALLY want to use apt syntax with pacman and don't want to install anything
+    # hell you can just add random aliases to your .bashrc or .zshrc if you REALLY want to use apt syntax with pacman and don't want to install a wrapper
     
     case ("install" | "-S"):
       if not pkg:
@@ -421,7 +505,7 @@ def main():
       
       install(pkg, yolo=flag_yolo) 
 
-    case ("remove" | "uninstall" | "-R" | "-Rns"):
+    case ("remove" | "uninstall" | "-R"):
       if not pkg:
         print(f"{wahoo_error}wahoo error: {reset}No package or invalid package specified.")
         sys.exit(1)
@@ -429,7 +513,7 @@ def main():
       uninstall(pkg, yolo=flag_yolo)
 
     case ("help" | "-H" | "--help" | "--h"):
-      help()
+      help(pkg) # okay i understand if this looks weird, but pkg is = sys.argv[2] and in this case, that would be the command that you want help with. as in, wahoo help install. see what im getting at?
       sys.exit(1)
 
     case ("version" | "--version"):
