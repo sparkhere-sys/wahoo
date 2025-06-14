@@ -158,8 +158,8 @@ def install(pkg, source="https://aur.archlinux.org/packages", build=True, segfau
 
   if build:
     print(f"{wahoo_message}wahoo: {reset}Installing {pkg}...")
-    prompt = input(f"{wahoo_message}wahoo: {reset}Build package without installing? [y/N]").strip().lower()
-    if prompt == "y":
+    build_only = prompt(f"{wahoo_message}wahoo: {reset}Build package without installing? [y/N]", yolo)
+    if build_only:
       print(f"{wahoo_message}wahoo: {reset}Building...")
       run("makepkg -s --noconfirm", sourcedir, True) # -s is used to install missing dependencies
     else:
@@ -178,7 +178,7 @@ def ensure_install_sh():
 
   if not install_sh.exists():
     print(f"{wahoo_warn}wahoo warn: {reset}install.sh does not exist in the wahoo directory. Downloading...")
-    install("wahoo", "https://github.com/sparkhere-sys/", False, segfault=False) # since this uses install() and that chekcks for internet when its called, i don't need to add an internet check in ensure_install_sh()
+    install("wahoo", "https://github.com/sparkhere-sys", False, segfault=False) # since this uses install() and that chekcks for internet when its called, i don't need to add an internet check in ensure_install_sh()
     print(f"{wahoo_success}wahoo! {reset}Latest update fetched, and install.sh has been downloaded.")
     print(f"{wahoo_message}wahoo: {reset}Making install.sh executable...")
     run("chmod +x install.sh", wahooroot)
@@ -200,9 +200,15 @@ def uninstall(pkg, yolo=False):
   sourcedir = Path.home() / ".wahoo" / "source" / pkg
   
   run(f"sudo pacman -Rns {pkg} --noconfirm", yolo=yolo) # the print above was commented out since run() already shows what command is being run, so its redundant to have two of them.
+  # TODO: add a flag that runs pacman with -R instead of -Rns so it doesn't remove orphaned dependencies
   print(f"{wahoo_success}wahoo! {reset}{pkg} uninstalled.")
-  print(f"{wahoo_message}wahoo: {reset}Cleaning up source directory...")
-  run(f"rm -rf {sourcedir}", yolo=yolo, exit_on_abort=True)
+
+  if sourcedir.exists():
+    print(f"{wahoo_message}wahoo: {reset}Cleaning up source directory...")
+    run(f"rm -rf {sourcedir}", yolo=yolo, exit_on_abort=True)
+  else:
+    print(f"{wahoo_message}wahoo: {reset}No source directory found for {pkg}, skipping cleanup.")
+
   print(f"{wahoo_success}wahoo! {reset}Source directory cleaned.")
   
 
@@ -213,7 +219,6 @@ def help(cmd=None):
 
   # my least favorite part of the code YAHOO
   # TODO: add colors to the help message
-  # IN PROGRESS: adding help messages for each command (i.e, wahoo help install will print the help message for the install command)
   if not cmd:
     print("""
     [Available commands]
@@ -415,7 +420,7 @@ def upgrade(yolo=False):
         update(pkg_name, yolo=True) # note: this assumes that you already went through the prompt at the start of the function
 
     prompt(f"{wahoo_message}wahoo: {reset}Would you like to do a system update as well? (with pacman -Sy) [Y/n]", yolo, True) # if the user says no, then it will exit the program, which is why i didn't put this in an if block. lazy code i know.
-    run("sudo pacman -Sy --noconfirm", yolo=True) # 12/6/2025 # since there's a prompt already for this, the prompt is ignored here. i also made it run with --noconfirm since if you said yes to the prompt then you probably know what you're doing.
+    run("sudo pacman -Syu --noconfirm", yolo=True) # 12/6/2025 # since there's a prompt already for this, the prompt is ignored here. i also made it run with --noconfirm since if you said yes to the prompt then you probably know what you're doing.
     print(f"{wahoo_success}wahoo! {reset}Upgrade finished.")
 
 def self_update():
@@ -453,18 +458,18 @@ def search(pkg):
     results = data.get("results", [])
 
     if not results:
-      print(f"wahoo: No results found for {pkg}.")
-      print("wahoo: If it's not an AUR package, try searching for it with pacman.")
+      print(f"{wahoo_message}wahoo: {reset}No results found for {pkg}.")
+      print(f"{wahoo_message}wahoo: {reset}If it's not an AUR package, try searching for it with pacman.")
       return
 
-    print(f"wahoo! Found {len(results)} results for '{pkg}'.")
+    print(f"{wahoo_success}wahoo! {reset}Found {len(results)} results for '{pkg}'.")
     for entry in results:
       name = entry.get("Name", "unknown")
       desc = entry.get("Description", "no description")
       votes = entry.get("NumVotes", 0)
-      print(f" - {name} ({votes} votes): {desc}")
+      print(f" - {wahoo_success}{name} {reset}({wahoo_warn}{votes} {reset}votes): {desc}")
   except Exception as e:
-    print(f"wahoo error: Failed to fetch search results. ({e})")
+    print(f"{wahoo_error}wahoo error: {reset}Failed to fetch search results. ({wahoo_error}{e}{reset})")
   
 def main():
   '''
