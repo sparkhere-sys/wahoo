@@ -10,7 +10,7 @@ if [[ $EUID -eq 0 ]]; then
   exit 1
 fi
 
-if ! curl -s --head https://google.com | grep "200 OK" > /dev/null; then
+if ! curl --silent --fail --head https://archlinux.org > /dev/null; then
   echo "wahoo error: No internet. install.sh requires internet in order to install or update wahoo. If you have already cloned wahoo's GitHub repo, then run makepkg there."
   exit 1
 fi
