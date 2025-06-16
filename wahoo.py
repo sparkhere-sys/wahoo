@@ -491,7 +491,7 @@ def main():
   cmd = sys.argv[1] if len(sys.argv) >= 2 else "help" # if no command is given, then it just gives you the help message. good UX methinks
   pkg = sys.argv[2] if len(sys.argv) >= 3 else None
   flags = sys.argv[3:] if len(sys.argv) >= 4 else None
-  cmd = cmd.lower() # i know there's going to be someone stupid enough to type wahoo iNstALL
+  ## cmd = cmd.lower() # removed this because it checks for -S but it sees -s instead
   parsed_flags = flagparsing(flags) if flags else {}
   flag_yolo = parsed_flags.get("flag_yolo", False)
   ## no_pkg_error = # i will define this later, hence why its commented out.
