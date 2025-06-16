@@ -21,28 +21,28 @@ wahooroot="$HOME/.wahoo/source/"
 localrepo="$wahooroot/wahoo" # don't even think about making this root.
 mkdir -p "$wahooroot"
 
-depends=("git" "python-requests" "sudo") # excluding makepkg
+## depends=("git" "python-requests" "sudo") # excluding makepkg
 repo="https://github.com/sparkhere-sys/wahoo.git"
 dir="wahoo"
 countdown=5
 
-for dep in "${depends[@]}"; do
-  if ! command -v "$dep" >/dev/null 2>&1; then
-    echo "wahoo error: Missing dependency: $dep"
-    ## echo "wahoo: Installing $dep..."
-    ## sudo pacman -Sy --needed $dep --noconfirm
-    ## echo "wahoo: $dep installed. Proceeding with installation..."
-    exit 1
-  fi
-done
+## for dep in "${depends[@]}"; do
+  ## if ! command -v "$dep" >/dev/null 2>&1; then
+    ## echo "wahoo error: Missing dependency: $dep"
+      ## echo "wahoo: Installing $dep..."
+      ## sudo pacman -Sy --needed $dep --noconfirm
+      ## echo "wahoo: $dep installed. Proceeding with installation..."
+    ## exit 1
+  ## fi
+## done
 
-if ! command -v makepkg &>/dev/null; then
-  echo "wahoo error: Missing dependency: makepkg"
+## if ! command -v makepkg &>/dev/null; then
+  ## echo "wahoo error: Missing dependency: makepkg"
   ## echo "wahoo: Installing base-devel..."
   ## sudo pacman -Sy -needed base-devel --noconfirm
   ## echo "wahoo: base-devel installed. Proceeding with installation..."
-  exit 1
-fi
+  ## exit 1
+## fi
 
 if [[ "${1-}" == "update" ]]; then
   echo "wahoo: Updating wahoo..."
