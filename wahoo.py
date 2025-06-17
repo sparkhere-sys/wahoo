@@ -68,9 +68,10 @@ def prompt(msg, yolo=False, exit_on_abort=False, use_msg_as_prompt=False, show_a
   # i should probably rename it to dont_exit or smth like that?
   # that will probably be for the stable release of v0.4, because laziness
 
-  print(msg)
+
   if not yolo:
     if not use_msg_as_prompt:
+      print(msg)
       user_input = input("Proceed? [Y/n] ").strip().lower()
     else:
       user_input = input(msg).strip().lower()
@@ -135,7 +136,7 @@ def run(cmd, dir=None, yolo=False, exit_on_abort=False, verbose=True):
 
       sys.exit(2)
 
-def install(pkg, source="https://aur.archlinux.org/packages", build=True, segfault=True, yolo=False):
+def install(pkg, source="https://aur.archlinux.org", build=True, segfault=True, yolo=False):
   '''
   Downloads, builds, and installs a package.
   Flow:
@@ -166,7 +167,7 @@ def install(pkg, source="https://aur.archlinux.org/packages", build=True, segfau
 
   if not sourcedir.exists():
     print(f"{wahoo_message}wahoo: {reset}Starting install")
-    if source == "https://aur.archlinux.org/packages":
+    if source == "https://aur.archlinux.org":
       print(f"{wahoo_message}wahoo: {reset}Downloading {pkg} from AUR...")
     else:
       print(f"{wahoo_message}wahoo: {reset}Downloading {pkg}...")
@@ -187,7 +188,8 @@ def install(pkg, source="https://aur.archlinux.org/packages", build=True, segfau
       run("makepkg -si --noconfirm", sourcedir, yolo=True)
       sys.exit(0) # too lazy to do an else branch, here's a hard exit for now. no, i will not make it a return call.
 
-    build_only = prompt(f"{wahoo_message}wahoo: {reset}Build package without installing? [y/N]", yolo, False, True, False)
+    build_only = prompt(f"{wahoo_message}wahoo: {reset}Build package without installing? [y/N] ", yolo, True, True, False) # i really should rename exit_on_abort
+
     if build_only:
       print(f"{wahoo_message}wahoo: {reset}Building...")
       run("makepkg -s --noconfirm", sourcedir, True) # -s is used to install missing dependencies
@@ -207,7 +209,7 @@ def ensure_install_sh():
 
   if not install_sh.exists():
     print(f"{wahoo_warn}wahoo warn: {reset}install.sh does not exist in the wahoo directory. Downloading...")
-    install("wahoo", "https://github.com/sparkhere-sys", False, segfault=False) # since this uses install() and that chekcks for internet when its called, i don't need to add an internet check in ensure_install_sh()
+    install("wahoo", "https://github.com/sparkhere-sys", False, segfault=False) # since this uses install() and that checks for internet when its called, i don't need to add an internet check in ensure_install_sh()
     print(f"{wahoo_success}wahoo! {reset}Latest update fetched, and install.sh has been downloaded.")
     print(f"{wahoo_message}wahoo: {reset}Making install.sh executable...")
     run("chmod +x install.sh", wahooroot)
