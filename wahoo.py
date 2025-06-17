@@ -45,11 +45,11 @@ import requests # depends on python-requests
 # FUNCTIONS
 def internet_check():
   '''
-  Pings google.com to check for internet. Returns <True> if internet is available, and <False> if not.
+  Pings archlinux.org to check for internet. Returns <True> if internet is available, and <False> if not.
   '''
   
   try:
-    requests.get("https://google.com", timeout=3)
+    requests.get("https://archlinux.org", timeout=3)
     return True
   except requests.RequestException: # which usually means no internet
     return False
@@ -119,7 +119,8 @@ def run(cmd, dir=None, yolo=False, exit_on_abort=False, verbose=True):
         case _:
           print("??????????????")
           print("Congratulations, you managed to break wahoo's error handling. A winner is you!") # the easter eggs never end
-
+          print("Did you try turning it on and back off again?")
+          
           if verbose:
             print(f"details: {wahoo_error}{e}{reset}")
 
