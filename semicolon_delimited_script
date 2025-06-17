@@ -1,9 +1,0 @@
-pacman -Sy --noconfirm base-devel git pacman-contrib
-useradd -m builder
-echo "builder ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/builder
-chown -R builder:builder /repo
-sudo -u builder bash -c "cd /repo && \
-updpkgsums && \
-makepkg --printsrcinfo > .SRCINFO && \
-cat .SRCINFO"
-
