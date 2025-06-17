@@ -10,7 +10,7 @@ license=("Custom") # modified MIT license, no commercial usage clause added
 depends=("python>=3.10" "git" "bash" "python-requests" "sudo")
 source=("$SCRIPTNAME" "LICENSE")
 provides=("wahoo")
-sha256sums=('3149ee493c569ce55290896dd5e193e8e61249061e5c25d5e36c9263df1ec28a'
+sha256sums=('4ae742bcca204f6b4ef5bcf43cefb195f8aa79d487231bc86abea955a9c40e19'
             '7d58c0581544a88060b883012151056fb309da2dc74eaa2ee5de2b57c0897029')
 
 package() {
