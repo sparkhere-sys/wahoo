@@ -1,15 +1,15 @@
 # wahoo!
-(version 0.4rc1)
+(version 0.4rc2)
 
 a funny AUR helper i made in python :D
 
 this README is informal by design, if you have any questions pull up an issue or contact me
 
-> DISCLAIMER
-> 
-> me and any contributors are NOT responsible if you break your system using wahoo. that includes the github actions bot.
->
-> if you got a complaint, pull up an issue or yell at me about it in my email.
+## mandatory disclaimers bc i have to
+
+me and the contributors are NOT responsible if you break your system using wahoo. that includes the github actions bot.
+
+if you got a complaint, pull up an issue or yell at me about it in my email.
 
 **wahoo is *not* a wrapper for** `pacman` **commands. if you want that, use [archapt](https://github.com/sparkhere-sys/archapt/)**
 
@@ -19,7 +19,7 @@ this README is informal by design, if you have any questions pull up an issue or
 | `install` | `-S` | Installs a package from the AUR. | `wahoo install foo` |
 | `uninstall` | `-R`, `-remove` | Uninstalls a package. (this just calls pacman lol) | `wahoo uninstall foo` |
 | `list` | `-Q`, `-Qs` | Lists all your installed packages. | `wahoo list`, `wahoo list foo` (which searches for an installed package) |
-| `show` | `-Qi`, `info` | Shows package information for an installed package. | `wahoo show foo`
+| `show` | `-Qi`, `info` | Shows package information for an installed package. | `wahoo show foo` |
 | `update` | `-Sy` | Updates an AUR package. | `wahoo update foo`, and to update wahoo itself, `wahoo update wahoo` |
 | `upgrade` | `-Syu` | Updates all installed AUR packages *installed by wahoo* | `wahoo upgrade` |
 | `search` | `-Ss` | Searches for a package from the AUR. | `wahoo search foo` |
@@ -39,8 +39,11 @@ this README is informal by design, if you have any questions pull up an issue or
 
 - [x] add some coloring to wahoo's messages (used to be just plain text)
 - [x] add an `upgrade` command that updates every AUR package *installed with wahoo* and (as a prompt) runs `pacman -Sy`
-- [ ] add pagination to `search`
+- [x] add pagination to `search` (okay so this is not fully implemented yet, but close enough)
 - [ ] add more flags - suggest flags to add [here!](https://github.com/sparkhere-sys/wahoo/issues/1)
+- [ ] add something like `rapidfuzz` to help make `search` cleaner
+- [ ] clean up the code a bit (its very messy)
+
 
 ## installation
 ### from source
@@ -58,6 +61,7 @@ curl -fsSL https://raw.githubusercontent.com/sparkhere-sys/wahoo/refs/heads/main
 chmod +x install.sh
 ./install.sh
 ```
+or, y'know, just download it.
 
 ### from AUR
 soon™️

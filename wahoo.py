@@ -23,7 +23,7 @@
 # that being said, i will change v0.4 alpha to v0.4 beta
 # stable will release when i add colored output :D
 
-version = "0.4 release candidate 1"
+version = "0.4 release candidate 2"
 
 # ANSI COLORS
 allow_coloring = True # will add a config file in v0.5 or v0.6
@@ -54,7 +54,7 @@ def internet_check():
   except requests.RequestException: # which usually means no internet
     return False
 
-def prompt(msg, yolo=False, exit_on_abort=False):
+def prompt(msg, yolo=False, exit_on_abort=False, use_msg_as_prompt=False, show_abort_msg=True):
   '''
   CLI component. (also used outside of the CLI for safety reasons)
   Prompts the user for confirmation. Returns <False> if the user aborts, and <True> if the user confirms.
@@ -70,18 +70,25 @@ def prompt(msg, yolo=False, exit_on_abort=False):
 
   print(msg)
   if not yolo:
-    user_input = input("Proceed? [Y/n] ").strip().lower()
+    if not use_msg_as_prompt:
+      user_input = input("Proceed? [Y/n] ").strip().lower()
+    else:
+      user_input = input(msg).strip().lower()
+
     if user_input == "n":
-      print("Aborted.")
+      if show_abort_msg:
+        print("Aborted.")
       if exit_on_abort:
         return False
       else:
         sys.exit(0)
-    
-    return True
+  else:
+    print(msg)
+
+  return True
 
   
-def run(cmd, dir=None, yolo=False, exit_on_abort=False):
+def run(cmd, dir=None, yolo=False, exit_on_abort=False, verbose=True):
   '''
   Runs a shell command.
   Arguments:
@@ -96,19 +103,36 @@ def run(cmd, dir=None, yolo=False, exit_on_abort=False):
   if prompt(f"{wahoo_message}wahoo: {reset}Running {cmd}", yolo, exit_on_abort):    
     try:
       subprocess.run(cmd, shell=True, check=True, cwd=dir)
-    except subprocess.CalledProcessError:
+    except subprocess.CalledProcessError as e:
       # here comes the error handling. this took a while to write but it was worth it
       # TODO: rewrite this to use match-case
-      if cmd.startswith("git"):
-        print(f"{wahoo_error}wahoo error: {reset}Git ran into an error. Is the package name correct?")
-      elif cmd.startswith("makepkg"):
-        print(f"{wahoo_error}wahoo error: {reset}Failed to build package. Is there an error in the PKGBUILD?")
-      elif "pacman" in cmd and "-Rns" not in cmd:
-        print(f"{wahoo_error}wahoo error: {reset}pacman failed to install package.")
-      elif "pacman" in cmd:
-        print(f"{wahoo_error}wahoo error: {reset}pacman failed to uninstall package. Are you sure it exists on your system?")
-      else:
-        print(f"{wahoo_error}wahoo error: {reset}Command failed.")
+      error = cmd.split()[0] if cmd else "???"
+
+      match error:
+        case "git":
+          print(f"{wahoo_error}wahoo error: {reset}Git ran into an error. ({wahoo_error}{e}{reset})")
+        case "makepkg":
+          print(f"{wahoo_error}wahoo error: {reset}Failed to build package. ({wahoo_error}{e}{reset})")
+        case "pacman":
+          print(f"{wahoo_error}wahoo error: {reset}pacman ran into an error. ({wahoo_error}{e}{reset})")
+        case _:
+          print("??????????????")
+          print("Congratulations, you managed to break wahoo's error handling. A winner is you!") # the easter eggs never end
+
+          if verbose:
+            print(f"details: {wahoo_error}{e}{reset}")
+
+      ## if cmd.startswith("git"):
+      ##   print(f"{wahoo_error}wahoo error: {reset}Git ran into an error. Is the package name correct?")
+      ## elif cmd.startswith("makepkg"):
+      ##   print(f"{wahoo_error}wahoo error: {reset}Failed to build package. Is there an error in the PKGBUILD?")
+      ## elif "pacman" in cmd and "-Rns" not in cmd:
+      ##   print(f"{wahoo_error}wahoo error: {reset}pacman failed to install package.")
+      ## elif "pacman" in cmd:
+      ##   print(f"{wahoo_error}wahoo error: {reset}pacman failed to uninstall package. Are you sure it exists on your system?")
+      ## else:
+      ##   print(f"{wahoo_error}wahoo error: {reset}Command failed.")
+
       sys.exit(2)
 
 def install(pkg, source="https://aur.archlinux.org/packages", build=True, segfault=True, yolo=False):
@@ -158,15 +182,20 @@ def install(pkg, source="https://aur.archlinux.org/packages", build=True, segfau
 
   if build:
     print(f"{wahoo_message}wahoo: {reset}Installing {pkg}...")
-    build_only = prompt(f"{wahoo_message}wahoo: {reset}Build package without installing? [y/N]", yolo)
+
+    if yolo:
+      run("makepkg -si --noconfirm", sourcedir, yolo=True)
+      sys.exit(0) # too lazy to do an else branch, here's a hard exit for now. no, i will not make it a return call.
+
+    build_only = prompt(f"{wahoo_message}wahoo: {reset}Build package without installing? [y/N]", yolo, False, True, False)
     if build_only:
       print(f"{wahoo_message}wahoo: {reset}Building...")
       run("makepkg -s --noconfirm", sourcedir, True) # -s is used to install missing dependencies
+      print(f"{wahoo_success}wahoo! {reset}{pkg} built successfully.")
     else:
       print(f"{wahoo_message}wahoo: {reset}Building and installing...")
       run("makepkg -si --noconfirm", sourcedir, True) # -si both installs missing dependencies and the built package
-    
-    print(f"{wahoo_success}wahoo! {reset}{pkg} installed.")
+      print(f"{wahoo_success}wahoo! {reset}{pkg} installed.")
 
 def ensure_install_sh():
   '''
@@ -434,7 +463,7 @@ def self_update():
     print(f"{wahoo_error}wahoo error: {reset}install.sh failed. {wahoo_error}({e}){reset}")
     sys.exit(3)
 
-def search(pkg):
+def search(pkg, limit=20):
   '''
   Searches for a package from the AUR.
   Flow:
@@ -462,8 +491,11 @@ def search(pkg):
       print(f"{wahoo_message}wahoo: {reset}If it's not an AUR package, try searching for it with pacman.")
       return
 
-    print(f"{wahoo_success}wahoo! {reset}Found {len(results)} results for '{pkg}'.")
-    for entry in results:
+    if len(results) > limit:
+      print(f"wahoo! Found {len(results)} results for '{pkg}', showing the first {limit} results.")
+    else:
+      print(f"{wahoo_success}wahoo! {reset}Found {len(results)} results for '{pkg}'.")
+    for entry in results[:limit]:
       name = entry.get("Name", "unknown")
       desc = entry.get("Description", "no description")
       votes = entry.get("NumVotes", 0)
@@ -477,7 +509,7 @@ def main():
   '''
   
   if os.geteuid() == 0:
-    print("wahoo error: Don't run wahoo as root. Otherwise, wahoo will exit unexpectedly.")
+    print(f"{wahoo_error}wahoo error: {reset}Don't run wahoo as root. Otherwise, wahoo will exit unexpectedly.")
     # well this is kinda stupid
     # technically, some commands require sudo to be run (like uninstalling a package)
     # i should probably add the sudo check to the functions that require to be run without sudo instead of slapping it here in the CLI
