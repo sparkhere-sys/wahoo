@@ -1,5 +1,5 @@
 # wahoo!
-(version 0.4rc2)
+(version 0.4rc3)
 
 a funny AUR helper i made in python :D
 
