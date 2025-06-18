@@ -10,7 +10,7 @@ license=("Custom") # modified MIT license, no commercial usage clause added
 depends=("python>=3.10" "git" "bash" "python-requests" "python-rapidfuzz" "sudo")
 source=("$SCRIPTNAME" "LICENSE")
 provides=("wahoo")
-sha256sums=('26af6627627f571b5ece735d2e406deb235e3a88ac8d20076df0947989af1419'
+sha256sums=('83621217653de8547a5e4f55d78405f6559b27b18710fbbf1a7567476a04f37c'
             '7d58c0581544a88060b883012151056fb309da2dc74eaa2ee5de2b57c0897029')
 
 package() {
