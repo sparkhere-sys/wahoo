@@ -506,7 +506,7 @@ def search(pkg, limit=20, sort=True):
       return
 
     # nice quality of life feature that i added
-    if pkg in results and not sort:
+    if any(entry["Name"] == pkg for entry in results) and not sort:
       print(f"{wahoo_success}wahoo! {reset}Found an exact match for {pkg}.")
       name = results("Name", "unknown")
       desc = results("Description", "no description")
