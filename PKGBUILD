@@ -7,7 +7,7 @@ pkgdesc="an AUR helper made in python because why not? made with <3 by spark"
 arch=("x86_64") # sorry ARM users
 url="https://github.com/sparkhere-sys/wahoo"
 license=("Custom") # modified MIT license, no commercial usage clause added
-depends=("python>=3.10" "git" "bash" "python-requests" "sudo")
+depends=("python>=3.10" "git" "bash" "python-requests" "python-rapidfuzz" "sudo")
 source=("$SCRIPTNAME" "LICENSE")
 provides=("wahoo")
 sha256sums=('78da6d32fde1c4b24d9e2b245f680e2e6b104c1597f21337fb82b9b754bf01c0'
@@ -17,3 +17,5 @@ package() {
   install -Dm755 "$srcdir/$SCRIPTNAME" "$pkgdir/usr/bin/wahoo"
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
+
+# i obviously do not write commit messages when i update the PKGBUILD, since it'll just get overwritten by github actions updating it lol

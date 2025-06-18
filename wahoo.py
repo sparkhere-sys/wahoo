@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 ## wahoo!
-## v0.4 release candidate 1
+## v0.4 release candidate 3
 ## made with <3 by spark
 ## certain lines of code will be commented out with ##. thats an intentional decision, a.k.a. me trying to speedrun coding
 ## feel free to replace the docstrings with things that make more sense. just don't touch my comments. or anyone's comments, really. just remove TODO comments if you see that they're implemented. a clean codebase is a happy codebase :)
@@ -23,7 +23,7 @@
 # that being said, i will change v0.4 alpha to v0.4 beta
 # stable will release when i add colored output :D
 
-version = "0.4 release candidate 2"
+version = "0.4rc3"
 
 # ANSI COLORS
 allow_coloring = True # will add a config file in v0.5 or v0.6
@@ -41,6 +41,7 @@ from pathlib import Path
 import subprocess
 import os
 import requests # depends on python-requests
+from rapidfuzz import fuzz
 
 # FUNCTIONS
 def internet_check():
@@ -106,7 +107,6 @@ def run(cmd, dir=None, yolo=False, exit_on_abort=False, verbose=True):
       subprocess.run(cmd, shell=True, check=True, cwd=dir)
     except subprocess.CalledProcessError as e:
       # here comes the error handling. this took a while to write but it was worth it
-      # TODO: rewrite this to use match-case
       error = cmd.split()[0] if cmd else "???"
 
       match error:
@@ -251,8 +251,7 @@ def help(cmd=None):
 
   # my least favorite part of the code YAHOO
   # TODO: add colors to the help message
-  if not cmd:
-    print("""
+  main_help = """
     [Available commands]
     install, -S:                  Installs a package from the AUR.
     uninstall, remove, -R:        Uninstalls an existing package.
@@ -271,11 +270,13 @@ def help(cmd=None):
     wahoo remove <pkg>
     wahoo -Syu --yolo
     wahoo -Ss <pkg>
-    """)
+    """
+  
+  if not cmd:
+    print(main_help)
     # you're welcome, future me
   else:
     match cmd:
-      ## pass # later.
       # long ass match-case block
       case ("install" | "-S"):
         print(f"""
@@ -350,6 +351,9 @@ def help(cmd=None):
 
       case "moo":
         print("Have you mooed today?") # you thought the segfault easter egg was the only one? pathetic.
+
+      case _:
+        print(main_help)
 
 def flagparsing(flags):
   '''
@@ -456,6 +460,11 @@ def upgrade(yolo=False):
     print(f"{wahoo_success}wahoo! {reset}Upgrade finished.")
 
 def self_update():
+  '''
+  TODO: add docstring
+  '''
+
+  # TODO: update self updating feature
   print(f"{wahoo_message}wahoo: {reset}Self update requested. Updating with install.sh...")
   ensure_install_sh()
   ## os.chdir(Path.home() / ".wahoo/source/wahoo/")
@@ -466,7 +475,7 @@ def self_update():
     print(f"{wahoo_error}wahoo error: {reset}install.sh failed. {wahoo_error}({e}){reset}")
     sys.exit(3)
 
-def search(pkg, limit=20):
+def search(pkg, limit=20, sort=True):
   '''
   Searches for a package from the AUR.
   Flow:
@@ -476,6 +485,8 @@ def search(pkg, limit=20):
   - prints the details of each package (name, description, and votes)
   Arguments:
   - pkg (the package to be searched for)
+  - limit (how many packages to show)
+  - sort (if <True>, then will use rapidfuzz's string matching, otherwise will use old sorting)
   '''
   
   if not internet_check():
@@ -494,14 +505,31 @@ def search(pkg, limit=20):
       print(f"{wahoo_message}wahoo: {reset}If it's not an AUR package, try searching for it with pacman.")
       return
 
+    # nice quality of life feature that i added
+    if pkg in results and not sort:
+      print(f"{wahoo_success}wahoo! {reset}Found an exact match for {pkg}.")
+      name = results("Name", "unknown")
+      desc = results("Description", "no description")
+      votes = results.get("NumVotes", "???")
+      print(f"- {wahoo_success}{name} {reset} ({wahoo_warn}{votes} {reset}votes): {desc} \n") 
+
+    if sort:
+      results.sort(
+        key=lambda entry: fuzz.WRatio(pkg, entry.get("Name", "unknown")), 
+        reverse=True
+      )
+
+    shown = results[:limit]
+
     if len(results) > limit:
-      print(f"wahoo! Found {len(results)} results for '{pkg}', showing the first {limit} results.")
+      print(f"{wahoo_success}wahoo! {reset}Found {len(results)} results for '{pkg}', showing the first {limit} results.")
     else:
       print(f"{wahoo_success}wahoo! {reset}Found {len(results)} results for '{pkg}'.")
-    for entry in results[:limit]:
+    
+    for entry in shown:
       name = entry.get("Name", "unknown")
       desc = entry.get("Description", "no description")
-      votes = entry.get("NumVotes", 0)
+      votes = entry.get("NumVotes", "???")
       print(f" - {wahoo_success}{name} {reset}({wahoo_warn}{votes} {reset}votes): {desc}")
   except Exception as e:
     print(f"{wahoo_error}wahoo error: {reset}Failed to fetch search results. ({wahoo_error}{e}{reset})")
@@ -528,8 +556,9 @@ def main():
   flags = sys.argv[3:] if len(sys.argv) >= 4 else None
   ## cmd = cmd.lower() # removed this because it checks for -S but it sees -s instead
   parsed_flags = flagparsing(flags) if flags else {}
+
+  # FLAGS
   flag_yolo = parsed_flags.get("flag_yolo", False)
-  ## no_pkg_error = # i will define this later, hence why its commented out.
 
   match cmd:
     # while wahoo is not intended to be a wrapper for pacman, it does have some commands that point straight to pacman (info and list)
@@ -595,7 +624,7 @@ def main():
     case _:
       print(f"{wahoo_warn}wahoo: {reset}Invalid command.") # it uses the wahoo warn color despite not being a wahoo warn, but that's because its not really that big of a deal. 
       help()
-      sys.exit(1)
+      return
 
 # MAIN
 

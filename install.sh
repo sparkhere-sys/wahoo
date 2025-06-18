@@ -3,7 +3,11 @@
 ## wahoo! install.sh
 ## v1.0 (yes the install.sh is on a different version than the python script, deal with it)
 ## installs and updates wahoo
+
 # TODO: add ansi colors to the output
+
+# HACK: currently the whole self-updater is being outsourced to this script (it would be awkward to update it while its running)
+#       but this does have its downsides, since this isn't installed when you just casually run `makepkg`
 
 if [[ $EUID -eq 0 ]]; then
   echo "wahoo error: don't run this as root, or else makepkg will fail."
@@ -21,28 +25,9 @@ wahooroot="$HOME/.wahoo/source/"
 localrepo="$wahooroot/wahoo" # don't even think about making this root.
 mkdir -p "$wahooroot"
 
-## depends=("git" "python-requests" "sudo") # excluding makepkg
 repo="https://github.com/sparkhere-sys/wahoo.git"
 dir="wahoo"
 countdown=5
-
-## for dep in "${depends[@]}"; do
-  ## if ! command -v "$dep" >/dev/null 2>&1; then
-    ## echo "wahoo error: Missing dependency: $dep"
-      ## echo "wahoo: Installing $dep..."
-      ## sudo pacman -Sy --needed $dep --noconfirm
-      ## echo "wahoo: $dep installed. Proceeding with installation..."
-    ## exit 1
-  ## fi
-## done
-
-## if ! command -v makepkg &>/dev/null; then
-  ## echo "wahoo error: Missing dependency: makepkg"
-  ## echo "wahoo: Installing base-devel..."
-  ## sudo pacman -Sy -needed base-devel --noconfirm
-  ## echo "wahoo: base-devel installed. Proceeding with installation..."
-  ## exit 1
-## fi
 
 if [[ "${1-}" == "update" ]]; then
   echo "wahoo: Updating wahoo..."
@@ -84,5 +69,9 @@ else
   cd "$localrepo"
   makepkg -si --noconfirm
   echo "wahoo! Successfully installed."
-  wahoo version
+  if [ command -v wahoo ]; then
+    wahoo version
+  else
+    echo "wahoo: Restart your shell."
+  fi
 fi
