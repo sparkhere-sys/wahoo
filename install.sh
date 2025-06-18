@@ -69,7 +69,7 @@ else
   cd "$localrepo"
   makepkg -si --noconfirm
   echo "wahoo! Successfully installed."
-  if [ command -v wahoo ]; then
+  if command -v wahoo > /dev/null; then
     wahoo version
   else
     echo "wahoo: Restart your shell."
