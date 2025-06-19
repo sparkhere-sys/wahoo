@@ -166,39 +166,42 @@ def install(pkg, source="https://aur.archlinux.org", build=True, segfault=True, 
 
   sourcedir = wahooroot / pkg
 
-  if not sourcedir.exists():
-    print(f"{wahoo_message}wahoo: {reset}Starting install")
-    if source == "https://aur.archlinux.org":
-      print(f"{wahoo_message}wahoo: {reset}Downloading {pkg} from AUR...")
+  try:
+    if not sourcedir.exists():
+      print(f"{wahoo_message}wahoo: {reset}Starting install")
+      if source == "https://aur.archlinux.org":
+        print(f"{wahoo_message}wahoo: {reset}Downloading {pkg} from AUR...")
+      else:
+        print(f"{wahoo_message}wahoo: {reset}Downloading {pkg}...")
+
+      if yolo:
+        run(f"git clone {source}/{pkg}.git", wahooroot, yolo)
+      else:
+        run(f"git clone {source}/{pkg}.git", wahooroot, False)
+      print(f"{wahoo_success}wahoo! {reset}{pkg} Downloaded.")
+
     else:
-      print(f"{wahoo_message}wahoo: {reset}Downloading {pkg}...")
+      print(f"{wahoo_warn}wahoo warn: {reset}{pkg} source already exists at {sourcedir}.")
 
-    if yolo:
-      run(f"git clone {source}/{pkg}.git", wahooroot, yolo)
-    else:
-      run(f"git clone {source}/{pkg}.git", wahooroot, False)
-    print(f"{wahoo_success}wahoo! {reset}{pkg} Downloaded.")
+    if build:
+      print(f"{wahoo_message}wahoo: {reset}Installing {pkg}...")
 
-  else:
-    print(f"{wahoo_warn}wahoo warn: {reset}{pkg} source already exists at {sourcedir}.")
+      if yolo:
+        run("makepkg -si --noconfirm", sourcedir, yolo=True)
+        sys.exit(0) # too lazy to do an else branch, here's a hard exit for now. no, i will not make it a return call.
 
-  if build:
-    print(f"{wahoo_message}wahoo: {reset}Installing {pkg}...")
+        build_only = prompt(f"{wahoo_message}wahoo: {reset}Build package without installing? [y/N] ", yolo, True, True, False) # i really should rename exit_on_abort
 
-    if yolo:
-      run("makepkg -si --noconfirm", sourcedir, yolo=True)
-      sys.exit(0) # too lazy to do an else branch, here's a hard exit for now. no, i will not make it a return call.
-
-    build_only = prompt(f"{wahoo_message}wahoo: {reset}Build package without installing? [y/N] ", yolo, True, True, False) # i really should rename exit_on_abort
-
-    if build_only:
-      print(f"{wahoo_message}wahoo: {reset}Building...")
-      run("makepkg -s --noconfirm", sourcedir, True) # -s is used to install missing dependencies
-      print(f"{wahoo_success}wahoo! {reset}{pkg} built successfully.")
-    else:
-      print(f"{wahoo_message}wahoo: {reset}Building and installing...")
-      run("makepkg -si --noconfirm", sourcedir, True) # -si both installs missing dependencies and the built package
-      print(f"{wahoo_success}wahoo! {reset}{pkg} installed.")
+        if build_only:
+          print(f"{wahoo_message}wahoo: {reset}Building...")
+          run("makepkg -s --noconfirm", sourcedir, True) # -s is used to install missing dependencies
+          print(f"{wahoo_success}wahoo! {reset}{pkg} built successfully.")
+        else:
+          print(f"{wahoo_message}wahoo: {reset}Building and installing...")
+          run("makepkg -si --noconfirm", sourcedir, True) # -si both installs missing dependencies and the built package
+          print(f"{wahoo_success}wahoo! {reset}{pkg} installed.")
+  except Exception as e:
+    print(f"{wahoo_error}wahoo error: {reset}Install failed. ({wahoo_error}{e}{reset})")
 
 def ensure_install_sh():
   '''
