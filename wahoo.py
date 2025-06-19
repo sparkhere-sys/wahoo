@@ -6,23 +6,6 @@
 ## certain lines of code will be commented out with ##. thats an intentional decision, a.k.a. me trying to speedrun coding
 ## feel free to replace the docstrings with things that make more sense. just don't touch my comments. or anyone's comments, really. just remove TODO comments if you see that they're implemented. a clean codebase is a happy codebase :)
 
-# quick developer's note,
-# i haven't implemented this yet but im leaving this note here for future me
-# an exit code of 0: command went off without a hitch, no problems here.
-# an exit code of 1: CLI error. nothing to worry about (i think)
-# an exit code of 2: something went wrong in the run() function, like a subprocess error
-# an exit code of 3: something went wrong somewhere else in the code.
-# an exit code of 11: yeah thats the segfault easter egg lol
-# an exit code of anything else: god knows what happened
-# an exit code of 255: i have no fucking clue why this would happen but if it does then something went catastrophically wrong
-
-# also im never using classes. never. not until i get used to them at the very least.
-
-# developer's note again (12/6/2025)
-# v0.4 is basically done! the road to v1.0 looks clearer now!
-# that being said, i will change v0.4 alpha to v0.4 beta
-# stable will release when i add colored output :D
-
 version = "0.4rc3"
 
 # ANSI COLORS
