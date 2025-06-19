@@ -39,11 +39,15 @@ if you got a complaint, pull up an issue or yell at me about it in my email.
 
 - [x] add some coloring to wahoo's messages (used to be just plain text)
 - [x] add an `upgrade` command that updates every AUR package *installed with wahoo* and (as a prompt) runs `pacman -Sy`
-- [x] add pagination to `search` (okay so this is not fully implemented yet, but close enough)
 - [ ] add more flags - suggest flags to add [here!](https://github.com/sparkhere-sys/wahoo/issues/1)
-- [ ] add something like `rapidfuzz` to help make `search` cleaner
+- [x] add `rapidfuzz` to make `search` cleaner
 - [ ] clean up the code a bit (its very messy)
 
+### planned features for v0.5
+
+- overhauled argparser (without using `argparse` because screw you)
+- new flags
+- bugfixes (duh)
 
 ## installation
 ### from source
