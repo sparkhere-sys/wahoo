@@ -9,7 +9,10 @@
 - [ ] clean up the code a bit
 
 ## future releases
-### v0.5-v0.9
+### v0.5
+- custom config support
+
+### v0.6-v0.9
 nothing planned
 
 ### v1.0
