@@ -12,8 +12,11 @@
 ### v0.5
 - custom config support
 
-### v0.6-v0.9
+### v0.6
 - progress bars
+
+### v0.7-v0.9
+nothing planned
 
 ### v1.0
 - AUR release
