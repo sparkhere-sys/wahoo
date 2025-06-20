@@ -490,8 +490,10 @@ def search(pkg, limit=20, sort=True):
       print(f"{wahoo_message}wahoo: {reset}No results found for {pkg}.")
       print(f"{wahoo_message}wahoo: {reset}If it's not an AUR package, try searching for it with pacman.")
       return
-
-    # nice quality of life feature that i added
+      
+    # HACK: THIS IF BLOCK DOWN THERE IS A BUG
+    # the only reason i haven't fixed this yet, is because this function NEVER runs with sort=False
+    # remind future me to fix this
     if any(entry["Name"] == pkg for entry in results) and not sort:
       print(f"{wahoo_success}wahoo! {reset}Found an exact match for {pkg}.")
       name = results("Name", "unknown")
