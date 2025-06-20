@@ -14,6 +14,7 @@ if you got a complaint, pull up an issue or yell at me about it in my email.
 **wahoo is *not* a wrapper for** `pacman` **commands. if you want that, use [archapt](https://github.com/sparkhere-sys/archapt/)**
 
 ## available commands
+
 | Command | Aliases | What it does | Usage |
 |---------|---------|--------------|-------|
 | `install` | `-S` | Installs a package from the AUR. | `wahoo install foo` |
@@ -31,23 +32,29 @@ if you got a complaint, pull up an issue or yell at me about it in my email.
 > This is just an easter egg, so don't email me about this.
 
 ### available flags
+
+suggest flags to add [here!](https://github.com/sparkhere-sys/wahoo/issues/1)
+
 | Flag | Aliases | What it does |
 |------|---------|--------------|
 | `--yolo` | `--noconfirm` | Skips all confirmation prompts. |
 
-## to do for v0.4 stable
+## dependencies
+
+- Python 3.10+ (you probably already have this)
+- `git`
+- `bash`
+- `sudo`
+- Requests (`python-requests` from pacman)
+- Rapidfuzz (`python-rapidfuzz` from pacman)
+
+## [to do for v0.4 stable](./ROADMAP.md)
 
 - [x] add some coloring to wahoo's messages (used to be just plain text)
 - [x] add an `upgrade` command that updates every AUR package *installed with wahoo* and (as a prompt) runs `pacman -Sy`
-- [ ] add more flags - suggest flags to add [here!](https://github.com/sparkhere-sys/wahoo/issues/1)
+- [ ] add more flags
 - [x] add `rapidfuzz` to make `search` cleaner
-- [ ] clean up the code a bit (its very messy)
-
-### planned features for v0.5
-
-- overhauled argparser (without using `argparse` because screw you)
-- new flags
-- bugfixes (duh)
+- [ ] clean up the code a bit
 
 ## installation
 ### from source
