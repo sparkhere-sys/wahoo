@@ -13,7 +13,7 @@
 - custom config support
 
 ### v0.6-v0.9
-nothing planned
+- progress bars
 
 ### v1.0
 - AUR release
