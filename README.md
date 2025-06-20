@@ -1,5 +1,5 @@
-# wahoo!
-(version 0.4rc3)
+# wahoo! v0.4rc3
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/sparkhere-sys/wahoo/main.yml?branch=main&logo=github&logoColor=white&label=build&labelColor=blue&color=black)
 
 a funny AUR helper i made in python :D
 
