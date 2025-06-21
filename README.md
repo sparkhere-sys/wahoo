@@ -1,15 +1,3 @@
-<!-- god, github flavored markdown is such a mess
-     how the hell does one make centered text bruh -->
-<!-- <p align="center">
-  <strong><big><big><big>wahoo! v0.4rc3</big></big></big></strong><br><br>
-
-  <img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/sparkhere-sys/wahoo/main.yml?branch=main&style=for-the-badge&logo=github-actions&logoColor=black&label=build&labelColor=white&color=%23b7bdf8&link=https%3A%2F%2Fgithub.com%2Fsparkhere-sys%2Fwahoo%2Fblob%2Fmain%2F.github%2Fworkflows%2Fmain.yml">
-  <br><br>
-  a funny AUR helper i made in python :D <br>
-  this README is informal by design, if you have any questions pull up an issue or contact me
-
-</p> -->
-
 # wahoo! v0.4rc3
 
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/sparkhere-sys/wahoo/main.yml?branch=main&style=for-the-badge&logo=github-actions&logoColor=black&label=build&labelColor=white&color=%23b7bdf8&link=https%3A%2F%2Fgithub.com%2Fsparkhere-sys%2Fwahoo%2Fblob%2Fmain%2F.github%2Fworkflows%2Fmain.yml)
@@ -22,11 +10,12 @@ this README is informal my design, if you have any questions, pull up an issue o
 
 ## mandatory disclaimers bc i have to
 
-me and the contributors are NOT responsible if you break your system using wahoo. that includes the github actions bot.
+me and the contributors are NOT responsible if you break your system using wahoo. that includes the github actions bot. read the [license](./LICENSE), my friend
 
 if you got a complaint, pull up an issue or yell at me about it in my email.
 
 **wahoo is *not* a wrapper for** `pacman` **commands. if you want that, use [archapt](https://github.com/sparkhere-sys/archapt/)**
+
 
 ## available commands
 
@@ -112,8 +101,7 @@ just follow these basic guidelines:
 
 - use pull requests for major changes
 - if you're fixing a bug *describe what it did* and *how you fixed it* so everyone can be on the same page
-- just don't be a dick, follow the [code of conduct](https://github.com/sparkhere-sys/wahoo/blob/main/CODE_OF_CONDUCT.md)
-- remember that this has the [MIT license](https://github.com/sparkhere-sys/wahoo/blob/main/LICENSE). modified sure, but its the MIT license.
+- just don't be a dick, follow the [code of conduct](./CODE_OF_CONDUCT.md)
 - (optional) make funny commit messages
 
 # uhhh bye
@@ -124,12 +112,14 @@ contact me:
 - [my email](mailto:spark-aur@proton.me)
 - my discord: **spark-sys**
 
-> I think its important to mention this:
+> [!IMPORTANT]
 > 
 > Please, for the love of all that is holy, do NOT sell my work.
 > 
 > I'm fine with you doing anything with my stuff, I won't yell at you.
 > 
 > But if you are trying to use `wahoo` for commercial purposes then I will have to politely ask you to cease.
+>
+> Read the [License](./LICENSE), please.
 > 
 > Bye! :D
