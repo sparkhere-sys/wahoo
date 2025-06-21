@@ -9,21 +9,32 @@
 version = "0.4rc3"
 
 # ANSI COLORS
-allow_coloring = True # will add a config file in v0.5 or v0.6
-reset = "\033[0m"
-wahoo_message = "\033[97m" if allow_coloring else reset # white
+colors = {
+  "white": "\033[97m",
+  "green": "\033[32m",
+  "yellow": "\033[33m",
+  "red": "\033[31m",
+  "blue": "\033[34m"
+}
+
 # one little thought that i had is that i should add colors for the [Y/n] things you see often
 # not now though. programmer laziness at its finest
-wahoo_error = "\033[31m" if allow_coloring else reset # red
-wahoo_warn = "\033[33m" if allow_coloring else reset # yellow
-wahoo_success = "\033[32m" if allow_coloring else reset # green
+
+allow_coloring = True # will add a config file in v0.5 or v0.6
+reset = "\033[0m"
+wahoo_message = colors["white"] if allow_coloring else reset
+wahoo_error = colors["red"] if allow_coloring else reset
+wahoo_warn = colors["yellow"] if allow_coloring else reset
+wahoo_success = colors["green"] if allow_coloring else reset # green
 
 # LIBRARIES AND MODULES
 import sys
 from pathlib import Path
 import subprocess
-import os
-import requests # depends on python-requests
+from os import getuid
+
+## pip packages
+import requests
 from rapidfuzz import fuzz
 
 # FUNCTIONS
@@ -190,16 +201,17 @@ def ensure_install_sh():
   '''
   CLI component. checks if wahoo's install.sh is present in the source directory. if not, then it downloads it straight from source.
   '''
+  # TODO: rewrite this
   
   wahooroot = Path.home() / ".wahoo" / "source" / "wahoo"
   install_sh = wahooroot / "install.sh"
 
   if not install_sh.exists():
-    print(f"{wahoo_warn}wahoo warn: {reset}install.sh does not exist in the wahoo directory. Downloading...")
+    print(f"{wahoo_warn}wahoo warn: {reset}install.sh does not exist in the wahoo directory.")
     install("wahoo", "https://github.com/sparkhere-sys", False, segfault=False) # since this uses install() and that checks for internet when its called, i don't need to add an internet check in ensure_install_sh()
     print(f"{wahoo_success}wahoo! {reset}Latest update fetched, and install.sh has been downloaded.")
     print(f"{wahoo_message}wahoo: {reset}Making install.sh executable...")
-    run("chmod +x install.sh", wahooroot)
+    run("chmod +x install.sh > /dev/null", wahooroot)
 
 def uninstall(pkg, yolo=False):
   '''
@@ -451,7 +463,8 @@ def self_update():
   '''
 
   # TODO: update self updating feature
-  print(f"{wahoo_message}wahoo: {reset}Self update requested. Updating with install.sh...")
+  
+  print(f"{wahoo_message}wahoo: {reset}Starting self-update")
   ensure_install_sh()
   ## os.chdir(Path.home() / ".wahoo/source/wahoo/")
   wahooroot = Path.home() / ".wahoo" / "source" / "wahoo"
@@ -527,7 +540,7 @@ def main():
   CLI component. has a match case block which runs the functions above. if you read the code then this will be easy to understand.
   '''
   
-  if os.geteuid() == 0:
+  if geteuid() == 0:
     print(f"{wahoo_error}wahoo error: {reset}Don't run wahoo as root. Otherwise, wahoo will exit unexpectedly.")
     # well this is kinda stupid
     # technically, some commands require sudo to be run (like uninstalling a package)
