@@ -1,6 +1,8 @@
-Modified MIT License (No Commercial Use)
+-- Modified MIT License (No Commercial Use) --
 
 Copyright (c) 2025 _SparkHere
+
+-- Terms --
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -10,11 +12,11 @@ publish, distribute, and/or sublicense copies of the Software,
 and to permit persons to whom the Software is furnished to do so, 
 subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+1. The above copyright notice and this permission notice shall be included in all
+   copies or substantial portions of the Software.
 
-**Commercial use or selling of the Software, in whole or in part, is prohibited 
-without explicit prior written permission from the copyright holder.**
+2. **Commercial use or selling of the Software, in whole or in part, is prohibited 
+     without explicit prior written permission from the copyright holder.**
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -23,3 +25,37 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+--- Third-Party Packages Disclaimer ---
+
+The Software ("wahoo") may facilitate the installation, retrieval, and/or management
+of third-party software packages ("Third-Party Packages"). These Third-Party Packages
+are not a part of "wahoo" and are *not* covered by this license. Each Third-Party
+Package is governed by its own respective license, terms of use, and distribution
+conditions as mandated by its original author(s) and/or rights holder(s).
+
+The inclusion, mention, or handling of any Third-Party Package by "wahoo" does not
+imply endorsement, authorship, or responsibility on the part of the author of "wahoo",
+unless stated otherwise. The author of "wahoo" makes no claim to the ownership,
+licensing, legality, reliability, and/or functionality of any Third-Party Package
+unless stated otherwise.
+
+Users of "wahoo" are solely responsible for ensuring that their use of any
+Third-Party Package complies with the applicable license and legal requirements
+set by its respective maintainers or rights holders.
+
+-- System Usage Disclaimer --
+
+The author of "wahoo" shall not be held liable for any damage, data loss,
+misconfiguration, or system failure (permanent or otherwise) resulting
+from the misuse of "wahoo". This includes, but is not limited to:
+- Running "wahoo" on unsupported systems (such as Debian GNU/Linux)
+- Incorrect usage
+- Unintended interactions with critical system components
+
+By using "wahoo", you acknowledge that you do so at your own risk, and you
+are solely responsible for understanding the consequences of its operation
+on your system.
+
+If any damage is caused by a software glitch in the source code of "wahoo",
+please inform the maintainers and/or contributors.
