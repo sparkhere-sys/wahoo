@@ -11,7 +11,7 @@ depends=("python>=3.10" "git" "bash" "python-requests" "python-rapidfuzz" "sudo"
 source=("$SCRIPTNAME" "LICENSE")
 provides=("wahoo")
 sha256sums=('2a2217fb843fd2cdb4b06f13785567bf24232652dd5fbfe634aa59527b34b05a'
-            '7d58c0581544a88060b883012151056fb309da2dc74eaa2ee5de2b57c0897029')
+            'bbc484812ca4415ffb8b99877c105d919601cf32ebda82578fc1e7f11c02020c')
 
 package() {
   install -Dm755 "$srcdir/$SCRIPTNAME" "$pkgdir/usr/bin/wahoo"
