@@ -1,12 +1,15 @@
-<!-- # wahoo! v0.4rc3 -->
-<h1 style="text-align: center;">wahoo!</h1>
-<h2 style="text-align: center;">v0.4rc3</h2>
+<!-- god, github flavored markdown is such a mess
+     how the hell does one make centered text bruh -->
+<p align="center">
+  <strong><big>wahoo! v0.4rc3</big></strong><br><br>
+  
+  <!-- ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/sparkhere-sys/wahoo/main.yml?branch=main&logo=github&logoColor=white&label=build&labelColor=blue&color=black) -->
+  <img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/sparkhere-sys/wahoo/main.yml?branch=main&style=for-the-badge&logo=github-actions&logoColor=black&label=build&labelColor=white&color=%23b7bdf8&link=https%3A%2F%2Fgithub.com%2Fsparkhere-sys%2Fwahoo%2Fblob%2Fmain%2F.github%2Fworkflows%2Fmain.yml">
+  <br><br>
+  a funny AUR helper i made in python :D <br>
+  this README is informal by design, if you have any questions pull up an issue or contact me
 
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/sparkhere-sys/wahoo/main.yml?branch=main&logo=github&logoColor=white&label=build&labelColor=blue&color=black)
-
-a funny AUR helper i made in python :D
-
-this README is informal by design, if you have any questions pull up an issue or contact me
+</p>
 
 ## mandatory disclaimers bc i have to
 
