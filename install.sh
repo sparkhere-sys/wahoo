@@ -49,6 +49,9 @@ if [[ "${1-}" == "update" ]]; then
   cd "$localrepo"
   makepkg -si --noconfirm
   echo "wahoo! Successfully updated wahoo."
+elif [[ "${1-}" == "test" ]]; then
+  echo "Working..."
+  exit 0
 else
   if [[ -d "$localrepo" && "$localrepo" != "/" ]]; then # safeguard
     echo "wahoo warn: Existing source directory found. Removing to avoid conflicts..."
