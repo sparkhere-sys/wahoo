@@ -1,15 +1,13 @@
 #!/usr/bin/python3
 
 ## wahoo!
-## v0.4 stable
+## v0.5 alpha
 ## made with <3 by spark
 ## certain lines of code will be commented out with ##. thats an intentional decision, a.k.a. me trying to speedrun coding
 ## feel free to replace the docstrings with things that make more sense. just don't touch my comments. or anyone's comments, really.
 ## just remove satisfied TODO comments. a clean codebase is a happy codebase :)
 
-version = "0.4"
-
-# ANSI COLORS
+version = "0.4" # NOTE: i didn't update this because the config loading hasn't been fully implemented yet.
 colors = {
   "white": "\033[97m",
   "green": "\033[32m",
@@ -18,27 +16,82 @@ colors = {
   "blue": "\033[34m"
 }
 
-# one little thought that i had is that i should add colors for the [Y/n] things you see often
-# not now though. programmer laziness at its finest
+# LIBRARIES AND MODULES
 
-allow_coloring = True # will add a config file in v0.5 or v0.6
+import sys
+from pathlib import Path
+import subprocess
+from os import getuid
+import tomllib # requires python 3.11+
+
+## pip packages
+import requests
+from rapidfuzz import fuzz
+
+# CLASSES
+
+class config: # unused currently. will be used later i promise
+  # NOTE: this doesn't use the ANSI colors
+
+  def __init__(self):
+    self.config_path = self.find_config_file
+
+  def load_config(self):
+    if not self.config_path:
+      return
+
+    try:
+      with open(self.config_path, "rb") as f:
+        return tomllib.load(f)
+
+    except Exception as e:
+      print(f"wahoo error: Failed to load config from {self.config_path}. ({e})")
+
+  def parse_config(self):
+    self.config_data = self.load_config
+    data = self.config_data
+
+    print("not implemented :/")
+    print("here's all the data in your config though:")
+    print(data)
+
+  def find_config_file(force=None):
+    wahoo_config = Path.home() / ".wahoo" / "config.toml"
+    linux_config = Path.home() / ".config" / "wahoo" / "config.toml"
+    default_config = Path.home() / ".wahoo" / "default.toml"
+    
+    # priority: ~/.wahoo/config.toml -> ~/.config/wahoo/config.toml -> ~/.wahoo/default.toml
+    # will throw an error if none of them are found.
+    if not force:
+      if wahoo_config.exists():
+        return wahoo_config
+      elif linux_config.exists():
+        return linux_config
+      elif default_config.exists():
+        return default_config
+      else:
+        print("fatal: No config file not found. Not even the default one.")
+        print("""Fix by running this in your terminal:
+            curl -fsSL https://raw.githubusercontent.com/sparkhere-sys/wahoo/refs/heads/main/default.toml -o ~/.wahoo/default.toml
+            Once you do that, wahoo will be able to load the default config next time you launch it.""")
+        return None
+    else:
+      return force
+
+# ANSI COLORS
+
+# one little thought that i had is that i should add colors for the [Y/n] things you see often
+# not now though. programmer laziness at its finest (insert smug face here)
+
+allow_coloring = True
 reset = "\033[0m"
 wahoo_message = colors["white"] if allow_coloring else reset
 wahoo_error = colors["red"] if allow_coloring else reset
 wahoo_warn = colors["yellow"] if allow_coloring else reset
 wahoo_success = colors["green"] if allow_coloring else reset # green
 
-# LIBRARIES AND MODULES
-import sys
-from pathlib import Path
-import subprocess
-from os import getuid
-
-## pip packages
-import requests
-from rapidfuzz import fuzz
-
 # FUNCTIONS
+
 def internet_check():
   '''
   Pings archlinux.org to check for internet. Returns <True> if internet is available, and <False> if not.
@@ -541,7 +594,7 @@ def main():
   CLI component. has a match case block which runs the functions above. if you read the code then this will be easy to understand.
   '''
   
-  if geteuid() == 0:
+  if getuid() == 0:
     print(f"{wahoo_error}wahoo error: {reset}Don't run wahoo as root. Otherwise, wahoo will exit unexpectedly.")
     # well this is kinda stupid
     # technically, some commands require sudo to be run (like uninstalling a package)

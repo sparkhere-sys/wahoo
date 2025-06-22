@@ -7,7 +7,7 @@ pkgdesc="an AUR helper made in python because why not? made with <3 by spark"
 arch=("x86_64") # sorry ARM users
 url="https://github.com/sparkhere-sys/wahoo"
 license=("Custom") # modified MIT license, no commercial usage clause added
-depends=("python>=3.10" "git" "bash" "python-requests" "python-rapidfuzz" "sudo")
+depends=("python>=3.11" "git" "bash" "python-requests" "python-rapidfuzz" "sudo")
 source=("$SCRIPTNAME" "LICENSE")
 provides=("wahoo")
 sha256sums=('17e51536e40dc509ce57cfb1a0e134af7d9511a937aa4e49cbdb83a18e2e977b'
