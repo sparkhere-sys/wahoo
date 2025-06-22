@@ -1,22 +1,19 @@
 # roadmap
 
-## next release: v0.4 stable
-
-- [x] add some coloring to wahoo's messages (used to be just plain text)
-- [x] add an `upgrade` command that updates every AUR package *installed with wahoo* and (as a prompt) updates the system with pacman
-- [ ] add more flags
-- [x] add `rapidfuzz` to make `search` cleaner
-- [ ] clean up the code a bit
+## next release: v0.5
+- [ ] custom config support
+- [ ] code-cleanup
+- [ ] [more flags](https://github.com/sparkhere-sys/wahoo/issues/1)
 
 ## future releases
-### v0.5
-- custom config support
-
 ### v0.6
 - progress bars
 
-### v0.7-v0.9
-nothing planned
+### v0.7
+- plugin support
+
+### v0.8 and v0.9
+nothing planned :/
 
 ### v1.0
-- AUR release
+- AUR release :D
