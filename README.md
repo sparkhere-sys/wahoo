@@ -9,6 +9,8 @@ this README is informal by design, if you have any questions, pull up an issue o
 
 wahoo isn't intended to be used as a wrapper for pacman. fork it if you want that
 
+roadmap: [click me](./ROADMAP.md)
+
 > [!IMPORTANT]
 > me and the contributors are NOT responsible if you break your system using wahoo. that includes the github actions bot. read the [license](./LICENSE), my friend
 > 
@@ -44,20 +46,12 @@ suggest flags to add [here!](https://github.com/sparkhere-sys/wahoo/issues/1)
 
 ## dependencies
 
-- Python 3.10+ (you probably already have this)
+- Python 3.11+ (you probably already have this)
 - `git`
 - `bash`
 - `sudo`
 - Requests (`python-requests` from pacman)
 - Rapidfuzz (`python-rapidfuzz` from pacman)
-
-## [to do for v0.4 stable](./ROADMAP.md)
-
-- [x] add some coloring to wahoo's messages (used to be just plain text)
-- [x] add an `upgrade` command that updates every AUR package *installed with wahoo* and (as a prompt) runs `pacman -Sy`
-- [ ] add more flags
-- [x] add `rapidfuzz` to make `search` cleaner
-- [ ] clean up the code a bit
 
 ## installation
 ### from source
