@@ -1,21 +1,20 @@
-# wahoo! v0.4rc3
-
+# wahoo! v0.4 stable
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/sparkhere-sys/wahoo/main.yml?branch=main&style=for-the-badge&logo=github-actions&logoColor=black&label=build&labelColor=white&color=%23b7bdf8&link=https%3A%2F%2Fgithub.com%2Fsparkhere-sys%2Fwahoo%2Fblob%2Fmain%2F.github%2Fworkflows%2Fmain.yml)
 
 yet another AUR helper.
 
 written in python for :sparkles:vibes:sparkles:
 
-this README is informal my design, if you have any questions, pull up an issue or contact me.
+this README is informal by design, if you have any questions, pull up an issue or contact me.
 
+wahoo isn't intended to be used as a wrapper for pacman. fork it if you want that
 
-> [!WARNING]
+> [!IMPORTANT]
 > me and the contributors are NOT responsible if you break your system using wahoo. that includes the github actions bot. read the [license](./LICENSE), my friend
 > 
-> if you got a complaint, pull up an issue or yell at me about it in my email.
+> if you got a complaint, pull up an [issue](https://github.com/sparkhere-sys/wahoo/issues) or yell at me about it in my [email](mailto:spark-aur@proton.me).
 >
-> wahoo is *not* a wrapper for `pacman` commands. if you want that, use [archapt](https://github.com/sparkhere-sys/archapt/).
-
+> also, any packages you install with wahoo are not under the same license as wahoo unless its explicitly stated. follow others' licenses, please.
 
 ## available commands
 
