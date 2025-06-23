@@ -1,0 +1,16 @@
+# wahoo!
+# default config (default.toml)
+
+[ui]
+
+allow_coloring = true
+
+[colors]
+
+# use ANSI escape codes for this
+
+error = "\033[31m" # red
+success = "\033[32m" # green
+message = "\033[97m" # white
+warning = "\033[33m" # yellow
+prompt = "\033[34m" # blue
