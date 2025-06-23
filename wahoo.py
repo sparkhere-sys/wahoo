@@ -9,11 +9,11 @@
 
 version = "0.4" # NOTE: i didn't update this because the config loading hasn't been fully implemented yet.
 colors = {
-  "white": "\033[97m",
-  "green": "\033[32m",
-  "yellow": "\033[33m",
-  "red": "\033[31m",
-  "blue": "\033[34m"
+  "white": "\u001b[97m",
+  "green": "\u001b[32m",
+  "yellow": "\u001b[33m",
+  "red": "\u001b[31m",
+  "blue": "\u001b[34m"
 }
 
 # LIBRARIES AND MODULES
@@ -34,7 +34,8 @@ class config: # unused currently. will be used later i promise
   # NOTE: this doesn't use the ANSI colors
 
   def __init__(self):
-    self.config_path = self.find_config_file
+    self.config_path = self.find_config_file()
+    self.config_data = None
 
   def load_config(self):
     if not self.config_path:
@@ -48,7 +49,7 @@ class config: # unused currently. will be used later i promise
       print(f"wahoo error: Failed to load config from {self.config_path}. ({e})")
 
   def parse_config(self):
-    self.config_data = self.load_config
+    self.config_data = self.load_config()
     data = self.config_data
 
     print("not implemented :/")
