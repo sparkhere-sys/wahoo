@@ -14,7 +14,7 @@ pkgbase = wahoo-dev
 	provides = wahoo
 	source = wahoo.py
 	source = LICENSE
-	sha256sums = cbec700c8a84c52796608b5b2d891a3a53a59980c0a0dabb616abfb4bea7dcb0
+	sha256sums = 1ed9ecb97727157033f7d84bb927dd3ffa2c1bc36d9202b11289df869cd646e5
 	sha256sums = 5185e0b407183c9879d4cda5a6c2db8b442616ec4bf3a654c5cb3da68ce92404
 
 pkgname = wahoo-dev
