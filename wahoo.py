@@ -240,16 +240,16 @@ def install(pkg, source="https://aur.archlinux.org", build=True, segfault=True, 
         run("makepkg -si --noconfirm", sourcedir, yolo=True)
         sys.exit(0) # too lazy to do an else branch, here's a hard exit for now. no, i will not make it a return call.
 
-        build_only = prompt(f"{wahoo_message}wahoo: {reset}Build package without installing? [y/N] ", yolo, True, True, False) # i really should rename exit_on_abort
+      build_only = prompt(f"{wahoo_message}wahoo: {reset}Build package without installing? [y/N] ", yolo, True, True, False) # i really should rename exit_on_abort
 
-        if build_only:
-          print(f"{wahoo_message}wahoo: {reset}Building...")
-          run("makepkg -s --noconfirm", sourcedir, True) # -s is used to install missing dependencies
-          print(f"{wahoo_success}wahoo! {reset}{pkg} built successfully.")
-        else:
-          print(f"{wahoo_message}wahoo: {reset}Building and installing...")
-          run("makepkg -si --noconfirm", sourcedir, True) # -si both installs missing dependencies and the built package
-          print(f"{wahoo_success}wahoo! {reset}{pkg} installed.")
+      if build_only:
+        print(f"{wahoo_message}wahoo: {reset}Building...")
+        run("makepkg -s --noconfirm", sourcedir, True) # -s is used to install missing dependencies
+        print(f"{wahoo_success}wahoo! {reset}{pkg} built successfully.")
+      else:
+        print(f"{wahoo_message}wahoo: {reset}Building and installing...")
+        run("makepkg -si --noconfirm", sourcedir, True) # -si both installs missing dependencies and the built package
+        print(f"{wahoo_success}wahoo! {reset}{pkg} installed.")
   except Exception as e:
     print(f"{wahoo_error}wahoo error: {reset}Install failed. ({wahoo_error}{e}{reset})")
 
