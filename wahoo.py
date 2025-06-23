@@ -83,7 +83,8 @@ class config: # unused currently. will be used later i promise
 # one little thought that i had is that i should add colors for the [Y/n] things you see often
 # not now though. programmer laziness at its finest (insert smug face here)
 
-allow_coloring = True
+## allow_coloring = True
+allow_coloring = sys.stdout.isatty()
 reset = "\033[0m"
 wahoo_message = colors["white"] if allow_coloring else reset
 wahoo_error = colors["red"] if allow_coloring else reset
