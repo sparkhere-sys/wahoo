@@ -10,8 +10,8 @@ license=("Custom") # modified MIT license, no commercial usage clause added
 depends=("python>=3.11" "git" "bash" "python-requests" "python-rapidfuzz" "sudo")
 source=("$SCRIPTNAME" "LICENSE")
 provides=("$SCRIPTNAME")
-sha256sums=('1ed9ecb97727157033f7d84bb927dd3ffa2c1bc36d9202b11289df869cd646e5'
-            '5185e0b407183c9879d4cda5a6c2db8b442616ec4bf3a654c5cb3da68ce92404')
+sha256sums=('4dc6991561c03bfe2591cda9ccf5200964e46b24f0ca3610dadf2ebd363061ea'
+            '7b6fc71d0cb7b1d84aecffcc5dcc9d13673d18d39e0a140fb3cbd23221671d0a')
 
 package() {
   install -Dm755 "$srcdir/$SCRIPTNAME" "$pkgdir/usr/bin/wahoo"

@@ -1,4 +1,4 @@
-pkgbase = wahoo-dev
+pkgbase = wahoo
 	pkgdesc = an AUR helper made in python because why not? made with <3 by spark
 	pkgver = 0.4
 	pkgrel = 1
@@ -11,10 +11,10 @@ pkgbase = wahoo-dev
 	depends = python-requests
 	depends = python-rapidfuzz
 	depends = sudo
-	provides = wahoo
+	provides = wahoo.py
 	source = wahoo.py
 	source = LICENSE
-	sha256sums = 1ed9ecb97727157033f7d84bb927dd3ffa2c1bc36d9202b11289df869cd646e5
-	sha256sums = 5185e0b407183c9879d4cda5a6c2db8b442616ec4bf3a654c5cb3da68ce92404
+	sha256sums = 4dc6991561c03bfe2591cda9ccf5200964e46b24f0ca3610dadf2ebd363061ea
+	sha256sums = 7b6fc71d0cb7b1d84aecffcc5dcc9d13673d18d39e0a140fb3cbd23221671d0a
 
-pkgname = wahoo-dev
+pkgname = wahoo
