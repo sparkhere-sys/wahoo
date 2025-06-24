@@ -1,7 +1,7 @@
 # roadmap
 
 ## next release: v0.5
-- [ ] custom config support
+- [ ] custom config support (in progress!)
 - [ ] code-cleanup
 - [ ] [more flags](https://github.com/sparkhere-sys/wahoo/issues/1)
 

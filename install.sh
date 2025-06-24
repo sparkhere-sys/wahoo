@@ -8,6 +8,7 @@
 
 # HACK: currently the whole self-updater is being outsourced to this script (it would be awkward to update it while its running)
 #       but this does have its downsides, since this isn't installed when you just casually run `makepkg`
+#       i *could* put this in the PKGBUILD, but im not really sure.
 
 if [[ $EUID -eq 0 ]]; then
   echo "wahoo error: don't run this as root, or else makepkg will fail."
@@ -49,9 +50,7 @@ if [[ "${1-}" == "update" ]]; then
   cd "$localrepo"
   makepkg -si --noconfirm
   echo "wahoo! Successfully updated wahoo."
-elif [[ "${1-}" == "test" ]]; then
-  echo "Working..."
-  exit 0
+  wahoo version
 else
   if [[ -d "$localrepo" && "$localrepo" != "/" ]]; then # safeguard
     echo "wahoo warn: Existing source directory found. Removing to avoid conflicts..."
@@ -63,7 +62,7 @@ else
       countdown=$((countdown - 1))
     done
     
-    rm -rf "$localrepo/" # scary!
+    rm -rf "$localrepo" # scary!
   fi
   
   echo "wahoo: Downloading wahoo..."
@@ -75,6 +74,6 @@ else
   if command -v wahoo > /dev/null; then
     wahoo version
   else
-    echo "wahoo: Restart your shell."
+    echo "wahoo: Restart your shell to use wahoo."
   fi
 fi
