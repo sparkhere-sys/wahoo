@@ -1,5 +1,14 @@
 # wahoo! v0.4
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/sparkhere-sys/wahoo/main.yml?branch=main&style=for-the-badge&logo=github-actions&logoColor=black&label=build&labelColor=white&color=%23b7bdf8&link=https%3A%2F%2Fgithub.com%2Fsparkhere-sys%2Fwahoo%2Fblob%2Fmain%2F.github%2Fworkflows%2Fmain.yml)
+
+<p align=center>
+<img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/sparkhere-sys/wahoo/main.yml?branch=main&style=for-the-badge&logo=github-actions&logoColor=black&label=build&labelColor=white&color=%23b7bdf8&link=https%3A%2F%2Fgithub.com%2Fsparkhere-sys%2Fwahoo%2Fblob%2Fmain%2F.github%2Fworkflows%2Fmain.yml">
+<img alt="GitHub Issues or Pull Requests" src="https://img.shields.io/github/issues/sparkhere-sys/wahoo?style=for-the-badge&logo=github&logoColor=black&label=issues&labelColor=white&color=%23f38ba8">
+<img alt="GitHub Issues or Pull Requests" src="https://img.shields.io/github/issues-pr/sparkhere-sys/wahoo?style=for-the-badge&logo=git&logoColor=black&label=pull%20requests&labelColor=white&color=%23a6e3a1">
+</p>
+
+<!--
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/sparkhere-sys/wahoo/main.yml?branch=main&style=for-the-badge&logo=github-actions&logoColor=black&label=build&labelColor=white&color=%23b7bdf8&link=https%3A%2F%2Fgithub.com%2Fsparkhere-sys%2Fwahoo%2Fblob%2Fmain%2F.github%2Fworkflows%2Fmain.yml) ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/sparkhere-sys/wahoo?style=for-the-badge&logo=github&logoColor=black&label=issues&labelColor=white&color=%23f38ba8) ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues-pr/sparkhere-sys/wahoo?style=for-the-badge&logo=git&logoColor=black&label=pull%20requests&labelColor=white&color=%23a6e3a1)
+-->
 
 yet another AUR helper.
 
@@ -117,3 +126,5 @@ contact me:
 > Read the [License](./LICENSE), please.
 > 
 > Bye! :D
+
+![Static Badge](https://img.shields.io/badge/license-mit-blue?style=for-the-badge&labelColor=white&color=%2374c7ec)
