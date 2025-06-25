@@ -97,7 +97,19 @@ wahoo -Sy wahoo
 ```
 or you can run `./install.sh update` if you have that downloaded
 
-## [contributing](https://github.com/sparkhere-sys/wahoo/blob/main/CONTRIBUTING.md)
+## why wahoo?
+
+Short answer: Because yes
+
+### the long answer
+
+because wahoo is lightweight, doesn't depend on much, and has *personality*
+
+honestly i wrote this for fun, it doesn't matter to me if you use this or not.
+
+give it a shot and see if it works for you :)
+
+## [contributing](./CONTRIBUTING.md)
 
 if you'd like to contribute, then feel free to do so!
 just follow these basic guidelines:
