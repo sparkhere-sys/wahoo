@@ -6,13 +6,13 @@
 <img alt="GitHub Issues or Pull Requests" src="https://img.shields.io/github/issues-pr/sparkhere-sys/wahoo?style=for-the-badge&logo=git&logoColor=black&label=pull%20requests&labelColor=white&color=%23a6e3a1">
 </p>
 
-<!--
-![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/sparkhere-sys/wahoo/main.yml?branch=main&style=for-the-badge&logo=github-actions&logoColor=black&label=build&labelColor=white&color=%23b7bdf8&link=https%3A%2F%2Fgithub.com%2Fsparkhere-sys%2Fwahoo%2Fblob%2Fmain%2F.github%2Fworkflows%2Fmain.yml) ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/sparkhere-sys/wahoo?style=for-the-badge&logo=github&logoColor=black&label=issues&labelColor=white&color=%23f38ba8) ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues-pr/sparkhere-sys/wahoo?style=for-the-badge&logo=git&logoColor=black&label=pull%20requests&labelColor=white&color=%23a6e3a1)
--->
+___
 
-yet another AUR helper.
+<p align=center>yet another AUR helper.</p>
 
-written in python for :sparkles:vibes:sparkles:
+<p align=center>written in python for :sparkles:vibes:sparkles:</p>
+
+___
 
 this README is informal by design, if you have any questions, pull up an issue or contact me.
 
@@ -127,4 +127,6 @@ contact me:
 > 
 > Bye! :D
 
-![Static Badge](https://img.shields.io/badge/license-mit-blue?style=for-the-badge&labelColor=white&color=%2374c7ec)
+___
+
+<p align=center><img alt="License: MIT" src="https://img.shields.io/badge/license-mit-blue?style=for-the-badge&labelColor=white&color=%2374c7ec"></img></p>
