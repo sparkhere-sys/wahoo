@@ -4,7 +4,8 @@ Copyright (c) 2025 _SparkHere
 
 -- Summary --
 
-- You are free, free as in freedom, to copy, modify, and share the software free of charge, but commercial use or selling is prohibited without permission from me (the Author)
+- You are free, free as in freedom, to copy, modify, and share the software free of charge,
+  but commercial use or selling is prohibited without permission from me (the Author)
 - This software is provided as-is, without warranty. I am not liable for any damages or issues.
 - Third-party packages managed by wahoo are not covered by this license and have their own licenses.
 - I am not responsible if you break your system using wahoo. Use at your own risk.
@@ -24,7 +25,7 @@ subject to the following conditions:
    copies or substantial portions of the Software.
 
 2. **Commercial use or selling of the Software, in whole or in part, is prohibited 
-     without explicit prior written permission from the copyright holder.**
+   without explicit prior written permission from the copyright holder.**
 
 -- Warranty --
 
@@ -68,4 +69,4 @@ are solely responsible for understanding the consequences of its operation
 on your system.
 
 If any damage is caused by a software glitch in the source code of "wahoo",
-please inform the maintainers and/or contributors.
+please inform the maintainer(s) and/or contributor(s).
