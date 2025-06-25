@@ -258,7 +258,7 @@ def ensure_install_sh():
     # most likely, the install.sh file is not executable after already updating wahoo with it
     run("chmod +x install.sh > /dev/null", wahooroot, silent=True) # so this just runs silently
 
-def uninstall(pkg, yolo=False, Rns=True):
+def uninstall(pkg, yolo=False, Rns=True, cleanup=True):
   '''
   uses pacman to uninstall a package, AUR or not.
   Arguments:
@@ -279,7 +279,7 @@ def uninstall(pkg, yolo=False, Rns=True):
     run(f"sudo pacman -R {pkg} --noconfirm", yolo=yolo)
   print(f"{wahoo_success}wahoo! {reset}{pkg} uninstalled.")
 
-  if sourcedir.exists():
+  if sourcedir.exists() and cleanup:
     print(f"{wahoo_message}wahoo: {reset}Cleaning up source directory...")
     run(f"rm -rf {sourcedir}", yolo=yolo, exit_on_abort=True)
   else:
@@ -467,7 +467,7 @@ def update(pkg, yolo=False):
   try:
     print(f"wahoo: Starting rebuild...")
     print(f"wahoo: Removing old package...")
-    uninstall(pkg, True) # runs with yolo regardless of --yolo. bad UX? maybe. but i just want to push this update
+    uninstall(pkg, True, False, False) # runs with yolo regardless of --yolo. bad UX? maybe.
     print(f"wahoo: Building and installing...")
     run("makepkg -si", wahooroot, True) # ditto
     print(f"wahoo! {reset}{pkg} updated.")
