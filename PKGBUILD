@@ -9,7 +9,7 @@ url="https://github.com/sparkhere-sys/wahoo"
 license=("Custom") # modified MIT license, no commercial usage clause added
 depends=("python>=3.11" "git" "bash" "python-requests" "python-rapidfuzz" "sudo")
 source=("$SCRIPTNAME" "LICENSE")
-provides=("$SCRIPTNAME")
+provides=("wahoo")
 sha256sums=('4dc6991561c03bfe2591cda9ccf5200964e46b24f0ca3610dadf2ebd363061ea'
             'fb5d9a672ee9f4b5669d263652adaba135ec35ce1d0a693767caa0a8048f930a')
 
