@@ -15,7 +15,7 @@ sha256sums=('b4102fd2cd5135e66c1314d5325b39e6054cbe4e39ec0cabe4ec286604cf9065'
 
 package() {
   install -Dm755 "$srcdir/$SCRIPTNAME" "$pkgdir/usr/bin/wahoo"
-  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 "$srcdir/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
 # i obviously do not write commit messages when i update the PKGBUILD, since it'll just get overwritten by github actions updating it lol
