@@ -63,7 +63,7 @@ class cli:
     TODO: write proper docstrings
     '''
     if not yolo:
-      usrinput = input(f"{cli.echo(msg, color=None, return=True)} {" " + prompt if use_msg_as_prompt else f"\nProceed? {prompt} "})
+      usrinput = input(f"{cli.echo(msg, color=None, return=True)} {" " + prompt if use_msg_as_prompt else "\nProceed? " + prompt + " "})
       if usrinput.lower() == "n":
         return False
       elif not usrinput.split():
