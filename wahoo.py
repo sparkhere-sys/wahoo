@@ -29,6 +29,8 @@ import requests
 from rapidfuzz import fuzz
 
 # CLASSES
+class plugin:
+  pass
 
 class config: # unused currently. will be used later i promise
   # NOTE: this doesn't use the ANSI colors
@@ -189,7 +191,7 @@ def install(pkg, source="https://aur.archlinux.org", build=True, segfault=True, 
   '''
   
   if pkg == "wahoo" and segfault:
-    print(f"{wahoo_message}wahoo: {reset}Bold of you for trying to install wahoo with wahoo.")
+    print(f"{wahoo_message}wahoo: {reset}Bold of you to trying to install wahoo with wahoo.")
     print("Segmentation fault (core dumped)") # originally, it ran os.kill(os.getpid(), 11) but i removed it in case some strict AUR mod decides to kill me.
     sys.exit(11) # hehe
     
