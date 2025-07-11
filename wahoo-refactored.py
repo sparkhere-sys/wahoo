@@ -60,6 +60,7 @@ reset = "\u001b[0m" if allow_colors else ""
 import sys
 from pathlib import Path # we love python 3
 import subprocess
+from os import getuid
 
 ## PIP PACKAGES (aka, dependencies.)
 
@@ -198,7 +199,7 @@ class utils:
     
   @staticmethod
   def sudo_check():
-    if os.getuid() == 0:
+    if getuid() == 0:
       cli.echo("Please do not run wahoo as root.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
       sys.exit(2)
 
