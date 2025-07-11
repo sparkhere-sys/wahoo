@@ -75,8 +75,17 @@ from rapidfuzz import fuzz
 class cli:
   @staticmethod
   def find_args():
-    flags = [arg for arg in sys.argv[1:] if arg.startswith("--")]
-    positional = [arg for arg in sys.argv[1:] if not arg.startswith("--")]
+    ## flags = [arg for arg in sys.argv[1:] if arg.startswith("--")]
+    ## positional = [arg for arg in sys.argv[1:] if not arg.startswith("--")]
+    flags = []
+    positional = []
+
+    for arg in sys.argv[1:]:
+      if arg.startswith("--"):
+        flags.append(arg)
+      else:
+        positional.append(arg)
+
     return flags, positional
   
   @staticmethod
@@ -102,8 +111,10 @@ class cli:
     prompt. what more do you want me to say?
     TODO: write proper docstrings
     '''
+    promptmsg_used = wahoo_colors["wahoo_yn"] + promptmsg
+
     if not yolo:
-      usrinput = input(f"{cli.echo(msg, color=None, do_return=True)}{(' ' + promptmsg) if use_msg_as_prompt else ('\nProceed? ' + promptmsg + ' ')}")
+      usrinput = input(f"{cli.echo(msg, color=None, do_return=True)}{(' ' + promptmsg_used) if use_msg_as_prompt else ('\nProceed? ' + promptmsg_used + ' ')}")
       if usrinput.lower() == "n":
         if show_abort_msg:
           cli.echo("Aborted.", color=None, prefix=None)
@@ -118,7 +129,7 @@ class cli:
       elif usrinput.lower() == "y":
         return True
       else:
-        cli.echo(f"Taking '{usrinput}' as {"yes" if default else "no"}.", "wahoo warn", None)
+        cli.echo(f"Taking '{usrinput}' as {'yes' if default else 'no'}.", "wahoo warn", None)
         return default
     else:
       # TODO: add a cli.echo() that shows what the message was (along with the [Y/n] prompt if use_msg_as_prompt was true)
@@ -135,7 +146,9 @@ class cli:
   def flagparsing(flags):
     parsed_flags = {
       "flag_yolo": False,
-      "flag_rns": False
+      "flag_rns": False,
+      "flag_verbose": True,
+      "flag_silent": False
     }
     
     for flag in flags:
@@ -144,6 +157,10 @@ class cli:
           parsed_flags["flag_yolo"] = True
         case ("--dont-remove-depends" | "--dontremovedepends"):
           parsed_flags["flag_rns"] = True
+        case "--no-error-details":
+          parsed_flags["flag_verbose"] = False
+        case "--silent":
+          parsed_flags["flag_silent"] = True
         case "--help":
           cli.help()
           sys.exit(0)
@@ -153,6 +170,11 @@ class cli:
         case _:
           cli.echo(f"Unknown flag: '{flag}'. Ignoring.", prefix="wahoo warn", color=wahoo_colors["wahoo_warn"])
     
+    # yes, this means that wahoo supports running with --verbose and --silent at the same time
+    # verbose technically just shows error details. i will just make it the default.
+    # true silence is done by doing the classic `> /dev/null`. running wahoo with --silent won't just magically make all
+    # of wahoo's messages disappear.
+
     return parsed_flags
   
   @staticmethod
@@ -185,24 +207,44 @@ class cli:
 
     flag_yolo = parsed_flags["flag_yolo"]
     flag_rns = parsed_flags["flag_rns"]
-    # new flags soon!
+    flag_verb = parsed_flags["flag_verbose"]
+    flag_silent = parsed_flags["flag_silent"]
 
     # PARSING
 
     match cmd:
       case ("install" | "-S"):
         cli.no_pkg(pkg)
-        install(pkg, yolo=flag_yolo)
+        install(pkg, yolo=flag_yolo, verbose=flag_verb, silent=flag_silent)
+
       case ("uninstall" | "remove" | "-R" | "purge" | "autoremove" | "-Rns"): # apt syntax my beloathed
         if "-Rns purge autoremove" in cmd:
           flag_rns = False
         
         cli.no_pkg(pkg)
-        uninstall(pkg, yolo=flag_yolo, rns=flag_rns)
+        uninstall(pkg, yolo=flag_yolo, rns=flag_rns, verbose=flag_verb, silent=flag_silent)
+
+      case ("clean" | "cleanup" | "-Rc" | "-C"):
+        cleanup(yolo=flag_yolo, verbose=flag_verb, silent=flag_silent)
+
+      case ("update" | "-Sy"):
+        update(pkg, yolo=flag_yolo, silent=flag_silent, verbose=flag_verb)
+      
+      case ("upgrade" | "updateall" | "-Syu"):
+        pass
+
+      case "-Su":
+        cli.echo("wahoo is confused", color=None, prefix=None)
+        cli.echo("If you meant to update a package, use -Sy.", color=None, prefix=None)
+        cli.echo("If you meant to do an upgrade, use -Syu.", color=None, prefix=None)
+        sys.exit(2)
+    
       case ("version" | "-V"):
         cli.version()
+
       case ("help" | "-H"):
         cli.help()
+
       case _:
         cli.echo(f"Unknown command: '{cmd}'.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
         cli.help()
@@ -256,6 +298,21 @@ class utils:
     if getuid() == 0:
       cli.echo("Please do not run wahoo as root.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
       sys.exit(2)
+  
+  @staticmethod
+  def ensure_install_sh():
+    # vestigial? structure from the old version of wahoo
+    # i say vestigial with a ? because i am not sure how to implement
+    # the self-updating feature without outsourcing it to a separate script
+    # and tbh using bash for that install script is just kinda dumb
+    # it would be easier to just use python for everything
+
+    # PROPOSED SOLUTION:
+    # 1. install.sh stays and can still be used to update wahoo, however it will not be used by wahoo itself. (neither the old version nor this one)
+    # 2. two scripts are added to PATH when wahoo is installed:
+    #    - wahoo (this one)
+    #    - wahoo-update (the self-updater, wahoo requires this for self-updating and if it is removed then you'll be stuck with the version of wahoo you already have, which could potentially be buggy)
+    pass
 
 # FUNCTIONS
 
@@ -330,11 +387,104 @@ def uninstall(pkg, yolo=False, silent=False, verbose=False, rns=False):
   utils.run(f"rm -rf {sourcedir}", yolo=yolo, verbose=verbose, silent=silent)
   cli.echo("Cleanup finished!", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
 
-# everything else will come later
-# also holy crap as of writing this comment (11/7/2025),
-# this refactored wahoo is already 349 lines long
-# im waiting for the day when future me will look at this and say
-# "if only you knew"
+def update(pkg, yolo=False, silent=False, verbose=False):
+  utils.internet_check(print_and_exit=True)
+  utils.sudo_check()
+
+  sourcedir = Path.home() / ".wahoo" / "source" / pkg
+  if not sourcedir.exists():
+    cli.echo(f"No source directory found for {pkg}.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
+    cli.echo("If it was installed with pacman, try updating it with pacman instead.", color=None, prefix=None)
+    cli.echo("Otherwise, it may have been cleaned up. Try uninstalling it with pacman, then installing it with wahoo.", color=None, prefix=None)
+    cli.echo("This will reinstall the latest version of the package from the AUR.", color=None, prefix=None)
+
+  cli.prompt("Starting update...", yolo=yolo, dont_exit=False)
+  cli.echo(f"Updating {pkg}...")
+  try:
+    utils.run("git reset --hard HEAD", dir=sourcedir, yolo=yolo, dont_exit=False, silent=silent, verbose=verbose)
+    utils.run("git pull", dir=sourcedir, yolo=yolo, dont_exit=False, silent=silent, verbose=verbose)
+    cli.echo(f"{pkg} updated successfully!", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
+  except subprocess.CalledProcessError as e:
+    cli.echo(f"Update failed.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
+    if verbose:
+      cli.echo(f"Details: {e}", color=None, prefix=None)
+    
+    sys.exit(1)
+
+def upgrade():
+  cli.echo("Not implemented yet.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
+
+def search(query, limit=20, use_fuzz=True, timeout=3, exit_on_fail=False, verbose=False):
+  utils.internet_check(print_and_exit=True)
+
+  url = f"https://aur.archlinux.org/rpc/?v=5&type=search&arg={query}"
+
+  # NOTE: pagination will not be implemented (for now)
+  #       expect it to either not *ever* be implemented or implemented in a future version
+
+  try:
+    response = requests.get(url, timeout=timeout)
+    response.raise_for_status()  # raises an HTTPError for bad responses (4xx and 5xx)
+
+    data = response.json()
+    results = data.get("results", [])
+    if not results:
+      cli.echo(f"No results found for '{query}'.", color=wahoo_colors["wahoo_warn"], prefix="wahoo warn") # i should probably make this a wahoo error instead, but since its non-fatal im not sure what to do here
+      cli.echo(f"Try searching for {query} with pacman instead.", color=None, prefix=None)
+      if exit_on_fail:
+        sys.exit(0)
+      else:
+        return
+    
+    if use_fuzz:
+      results.sort(
+        key=lambda entry: fuzz.WRatio(query, entry.get("Name", "unknown")), reverse=True
+      )
+      # why is this not a one-liner?
+      # because y e s
+
+    shown = results[:limit]
+
+    if len(results) > limit:
+      cli.echo(f"Found {len(results)} results for '{query}', showing the first {limit} results.", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
+    else:
+      cli.echo(f"Found {len(results)} results for '{query}'.", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
+    
+    for entry in shown:
+      name = entry.get("Name", "unknown")
+      desc = entry.get("Description", "no description")
+      votes = entry.get("NumVotes", "???")
+      cli.echo(f" - {colors['green']}{name} {reset}({colors['yellow']}{votes} {reset} votes): {desc}", color=None, prefix=None) # "color=None" how ironic
+      # in plain english,
+      # it does this:
+      ## cli.echo(f" - {name} ({votes} votes): {desc}", color=None, prefix=None)
+      # which would give you this output:
+      ##  - foo (100 votes): this is where she writes a description
+
+  except Exception as e:
+    cli.echo("Search failed.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
+    if verbose:
+      cli.echo(f"Details: {e}", color=None, prefix=None)
+
+    sys.exit(1)
+
+def cleanup(yolo=False, verbose=True, silent=True):
+  wahooroot = Path.home() / ".wahoo" / "source"
+
+  cli.echo("Cleaning up wahoo's source directory will make it impossible to update a package with wahoo.", color=wahoo_colors["wahoo_warn"], prefix="wahoo warn")
+  cli.prompt("Are you sure?", dont_exit=False, use_msg_as_prompt=True)
+
+  cli.echo("Cleaning up everything...")
+  try:
+    utils.run(f"rm -rf {wahooroot}/*", yolo=yolo, verbose=verbose, silent=silent)
+    # would it be better to use rmdir instead of rm -rf?
+    # eh... im not sure.
+    # it should delete everything INSIDE the source dir, not nuke it completely.
+    cli.echo("Clean up finished!", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
+  except Exception as e:
+    cli.echo("Clean up failed.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
+    if verbose:
+      cli.echo(f"Details: {e}", color=None, prefix=None)
 
 # INIT
 
