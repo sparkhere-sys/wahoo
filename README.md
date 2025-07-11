@@ -41,7 +41,9 @@ roadmap: [click me](./ROADMAP.md)
 | `version` | none :/ | I- What the hell do you want me to say? | `wahoo version` |
 | `help` | none :/ | Again, what the hell do you want me to say? | `wahoo help`, will also trigger if you run wahoo with no arguments. |
 
-> Note: Running `wahoo install wahoo` causes a *fake* segmentation fault. `wahoo` didn't actually crash.
+> [!NOTE] 
+>
+> Running `wahoo install wahoo` causes a *fake* segmentation fault. `wahoo` didn't actually crash.
 >
 > This is just an easter egg, so don't email me about this.
 
@@ -54,7 +56,8 @@ suggest flags to add [here!](https://github.com/sparkhere-sys/wahoo/issues/1)
 | `--yolo` | `--noconfirm` | Skips all confirmation prompts. |
 | `--dont-remove-depends` | none :/ | Doesn't remove orphaned dependencies when running `wahoo uninstall`. |
 
-## dependencies
+## installation
+### dependencies
 
 - Python 3.11+ (you probably already have this)
 - `git`
@@ -63,7 +66,6 @@ suggest flags to add [here!](https://github.com/sparkhere-sys/wahoo/issues/1)
 - Requests (`python-requests` from pacman)
 - Rapidfuzz (`python-rapidfuzz` from pacman)
 
-## installation
 ### from source
 open up your terminal, then:
 ```bash
@@ -72,7 +74,7 @@ cd wahoo
 makepkg -si
 ```
 
-### with install.sh
+### with the install.sh
 run this:
 ```
 curl -fsSL https://raw.githubusercontent.com/sparkhere-sys/wahoo/refs/heads/main/install.sh -o install.sh
@@ -103,7 +105,7 @@ Short answer: Because yes
 
 ### the long answer
 
-because wahoo is lightweight, doesn't depend on much, and has *personality*
+because wahoo is lightweight, doesn't depend on much, and has :sparkles:personality:sparkles:
 
 honestly i wrote this for fun, it doesn't matter to me if you use this or not.
 
@@ -125,7 +127,7 @@ made with <3 by spark
 contact me:
 
 - [my email](mailto:spark-aur@proton.me)
-- my discord: **spark-sys**
+- my discord: `spark_sys` feel free to shoot me a DM!
 
 > [!IMPORTANT]
 > 

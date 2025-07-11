@@ -1,30 +1,33 @@
 #!/usr/bin/python3
 
-# wahoo!
-# rewritten!
-# this will be the v0.5 of wahoo.
-# certain lines of code will be commented out with two #s.
-# that is an intentional decision :)
-# feel free to improve the docstrings, just leave the commments alone
+# wahoo! (but more gooder)
+# this will be the v0.5 release of wahoo.
 
-# BASIC GUIDE TO THE STYLING
+# certain lines of code will be commented out with two #s,
+# that is an intentional decision, aka me trying to speedrun coding :)
+# you can remove those comments if you like, they are just padding at the end of the day
+
+# STYLE GUIDE
 # * cli.echo() is used instead of raw print()
 # * section headers are in all caps (i.e, "# THIS IS A SECTION HEADER")
 # * everything is in snake_case (yes, even the class names. screw capitalization.)
 # * this version of wahoo is built modular (not in the sense of python modules) meaning that
 #   it should be easier to add new features.
 # * do not use emojis anywhere. in strings, in docstrings, in comments, just please don't.
+# * feel free to improve the docstrings, just leave the comments alone
 
 # NOTE: do not try to use this script as a python module (i.e, "import wahoo")
 #       this is a CLI tool, not a library.
 #       if you must use it as a module, then it is recommended to just make it yourself
 #       (meaning, copy the code and replace all the CLI related stuff with your own)
+#       also this won't work on anything that isn't arch-based. its an AUR helper after all.
 
 # EXIT CODE GUIDE
 # 0 = success
 # 1 = general error
 # 2 = cli error
 # 3 = self-update error
+# 4 = no internet
 # 11 = segfault easter egg
 # everything else: i have no idea what happened but it was so catastrophic 
 #                  that it exitted with an unidentified exit code
@@ -58,7 +61,7 @@ reset = "\u001b[0m" if allow_colors else ""
 # LIBRARIES AND MODULES
 
 import sys
-from pathlib import Path # we love python 3
+from pathlib import Path
 import subprocess
 from os import getuid
 
@@ -69,16 +72,13 @@ from rapidfuzz import fuzz
 
 # CLASSES
 
-# NOTE: idk why this is here since i could just move findflags() to outside this class?
-#       ig its here for organization (which was much needed, especially for something like wahoo)
-
-class argparser:
-  @staticmethod
-  def findflags():
-    flags = [arg for arg in sys.argv[1:] if arg.startswith("--")]
-    return flags
-
 class cli:
+  @staticmethod
+  def find_args():
+    flags = [arg for arg in sys.argv[1:] if arg.startswith("--")]
+    positional = [arg for arg in sys.argv[1:] if not arg.startswith("--")]
+    return flags, positional
+  
   @staticmethod
   def echo(msg, color=wahoo_colors["wahoo_message"], prefix="wahoo", do_return=False):
     '''
@@ -121,8 +121,8 @@ class cli:
         cli.echo(f"Taking '{usrinput}' as {"yes" if default else "no"}.", "wahoo warn", None)
         return default
     else:
+      # TODO: add a cli.echo() that shows what the message was (along with the [Y/n] prompt if use_msg_as_prompt was true)
       return default
-
 
   @staticmethod
   def flagparsing(flags):
@@ -137,8 +137,14 @@ class cli:
           parsed_flags["flag_yolo"] = True
         case ("--dont-remove-depends" | "--dontremovedepends"):
           parsed_flags["flag_rns"] = True
+        case "--help":
+          cli.help()
+          sys.exit(0)
+        case "--version":
+          cli.version()
+          sys.exit(0)
         case _:
-          cli.echo(f"Unknown flag: '{flag}'. Ignoring.", "wahoo warn", None)
+          cli.echo(f"Unknown flag: '{flag}'. Ignoring.", prefix="wahoo warn", color=wahoo_colors["wahoo_warn}"])
     
     return parsed_flags
   
@@ -154,20 +160,51 @@ class cli:
   @staticmethod
   def main():
     '''
-    WOHOHOHOHOHOHOHO
     TODO: add docstrings
     '''
-    pass
+
+    # ARGUMENTS
+
+    flags, positional = cli.find_args()
+    parsed_flags = cli.flagparsing(flags)
+
+    cmd = positional[0] if len(positional) >= 2 else "help"
+    pkg = positional[1] if len(positional) >= 3 else None
+
+    cmd = cmd if not cmd.startswith("-") else cmd.lower() # i.e, if command is "iNsTaLL" then it will become "install"
+    # this ignores "-S" and other pacman-style commands, since the capital letters are intentional there
+
+    # FLAG ALIASES
+
+    flag_yolo = parsed_flags["flag_yolo"]
+    flag_rns = parsed_flags["flag_rns"]
+
+    # PARSING
+    match cmd:
+      case ("install" | "-S"):
+        install()
+      case ("version" | "-V"):
+        cli.version()
+      case ("help" | "-H"):
+        cli.help()
+      case _:
+        cli.echo(f"Unknown command: '{cmd}'.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
+        cli.help()
+
 
 class utils:
   @staticmethod
-  def internet_check(timeout=3):
+  def internet_check(timeout=3, print_and_exit=False):
     '''
     TODO: add docstrings
     '''
     try:
       requests.get("https://archlinux.org", timeout=timeout)
     except requests.RequestException: # meaning no internet
+      if print_and_exit:
+        cli.echo("No internet, aborting.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
+        sys.exit(4)
+      
       return False
     
     return True
@@ -183,7 +220,9 @@ class utils:
           sys.exit(0)
         else:
           return # doesn't need to return anything, just exits the function.
-        
+    else:
+      if not silent:
+        cli.echo(f"Running command: {cmd}", color=None, prefix=None)
     try:
       subprocess.run(cmd + "> /dev/null 2>&1" if silent else '', shell=True, check=True, cwd=dir)
       return # doesn't need to return anything, just exits the function.
@@ -204,9 +243,77 @@ class utils:
       sys.exit(2)
 
 # FUNCTIONS
-def install():
-  # im gonna recycle the old install() function from the old version of wahoo
-  pass
+
+def install(pkg, source="https://aur.archlinux.org", yolo=False, build=True, segfault=True, silent=False, verbose=False):
+  '''
+  TODO: add docstrings
+  '''
+  utils.sudo_check()
+
+  if segfault and pkg == "wahoo":
+    # muahahahahahaha
+    cli.echo("Bold of you to try to install wahoo with wahoo.", color=None, prefix=None)
+    cli.echo("Segmentation fault (core dumped)", color=None, prefix=None)
+    sys.exit(11)
+
+  wahooroot = Path.home() / ".wahoo" / "source"
+  wahooroot.mkdir(parents=True, exist_ok=True)
+  sourcedir = wahooroot / pkg
+
+  try:
+    if utils.internet_check(print_and_exit=True):
+      cli.prompt("Starting install...", yolo=yolo, dont_exit=False, use_msg_as_prompt=False)
+      cli.echo(f"Installing {pkg}" + f" from {source}" if source != "https://aur.archlinux.org" else "...")
+      if not sourcedir.exists():
+        if verbose:
+          cli.echo(f"Cloning {pkg} git repo ({source}/{pkg}.git) to {sourcedir}")
+
+        utils.run(f"git clone {source}/{pkg}.git", dir=wahooroot, yolo=yolo, dont_exit=False, silent=silent)
+      else:
+        cli.echo(f"Source directory for {pkg} already exists, skipping clone.", color=wahoo_colors["wahoo_warn"], prefix="wahoo warn")
+    
+      if build:
+        if yolo:
+          # assume the user wants to build and install the package (-si)
+          cli.echo("Building and installing package...")
+          utils.run("makepkg -si --noconfirm", dir=sourcedir, yolo=yolo, dont_exit=True, silent=silent, verbose=verbose)
+          cli.echo(f"Successfully installed {pkg}!", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
+          return
+      
+        if cli.prompt(f"Build {pkg} without installing?", use_msg_as_prompt=True, default=False, promptmsg="[y/N]"):
+          cli.echo("Building package...")
+          utils.run("makepkg -s", dir=sourcedir, silent=silent, verbose=verbose)
+          cli.echo(f"{pkg} built successfully!", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
+          sys.exit(0)
+        
+        cli.echo("Building and installing package...")
+        utils.run("makepkg -si", dir=sourcedir, silent=silent, verbose=verbose)
+  except Exception as e:
+    cli.echo(f"Installation failed.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
+    if verbose:
+      cli.echo(f"Details: {e}", color=None, prefix=None)
+    
+    sys.exit(1)
+
+def uninstall(pkg, yolo=False, silent=False, verbose=False, rns=False):
+  '''
+  TODO: add docstrings
+  '''
+  # no need for a sudo check here, pacman will require sudo anyway
+  # also no need for an internet check, since pacman isn't installing anything
+
+  cli.prompt(f"Uninstall {pkg}?", yolo=yolo, dont_exit=False, use_msg_as_prompt=True)
+  utils.run(f"sudo pacman {'-Rns' if rns else '-R'} {'--noconfirm' if yolo else ''} {pkg}", silent=silent, verbose=verbose)
+  cli.echo(f"{pkg} uninstalled successfully!", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
+  if not rns and not yolo and not silent: # woah thats a lot of conditions
+    cli.echo("Heads up, you may have some orphaned dependencies left over.", prefix="wahoo warn", color=wahoo_colors["wahoo_warn"])
+    cli.echo("You can remove them with `sudo pacman -Rns $(pacman -Qdtq)`.", prefix=None, color=None)
+
+# everything else will come later
+# also holy crap as of writing this comment (11/7/2025),
+# this refactored wahoo is already 331 lines long
+# im waiting for the day when future me will look at this and say
+# "if only you knew"
 
 # INIT
 
@@ -215,4 +322,10 @@ if __name__ == "__main__":
     cli.main()
   except KeyboardInterrupt:
     cli.echo("Interrupted by Ctrl+C, see ya next time")
-    sys.exit(0)
+    ## sys.exit(130)
+    # HACK: 130 is the exit code for Ctrl+C, but i dont want to use it since
+    #       the "KeyboardInterrupt" exception has already been handled,
+    #       so i see no need to exit the script with a non-zero exit code
+    #       naturally, this doesn't play well with scripts that use wahoo since
+    #       they expect a non-zero exit code if wahoo is interrupted
+    #       no way to get around this im afraid
