@@ -88,7 +88,7 @@ class cli:
     # its starting to get ironic (yk, given the whole "prints with color" docstring)
     # anyway this is just a developer "lol moment"
 
-    echoed = f"{color}{prefix + ':' if prefix else ''} {reset}{msg}"
+    echoed = f"{color}{prefix + ':' if prefix and prefix != 'wahoo!' else ''} {reset}{msg}"
 
     if not do_return:
       print(echoed)
@@ -123,6 +123,13 @@ class cli:
     else:
       # TODO: add a cli.echo() that shows what the message was (along with the [Y/n] prompt if use_msg_as_prompt was true)
       return default
+    
+  @staticmethod
+  def no_pkg(pkg):
+    if pkg:
+      return
+    
+    cli.echo("No package provided.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
 
   @staticmethod
   def flagparsing(flags):
@@ -144,7 +151,7 @@ class cli:
           cli.version()
           sys.exit(0)
         case _:
-          cli.echo(f"Unknown flag: '{flag}'. Ignoring.", prefix="wahoo warn", color=wahoo_colors["wahoo_warn}"])
+          cli.echo(f"Unknown flag: '{flag}'. Ignoring.", prefix="wahoo warn", color=wahoo_colors["wahoo_warn"])
     
     return parsed_flags
   
@@ -178,11 +185,20 @@ class cli:
 
     flag_yolo = parsed_flags["flag_yolo"]
     flag_rns = parsed_flags["flag_rns"]
+    # new flags soon!
 
     # PARSING
+
     match cmd:
       case ("install" | "-S"):
-        install()
+        cli.no_pkg(pkg)
+        install(pkg, yolo=flag_yolo)
+      case ("uninstall" | "remove" | "-R" | "purge" | "autoremove" | "-Rns"): # apt syntax my beloathed
+        if "-Rns purge autoremove" in cmd:
+          flag_rns = False
+        
+        cli.no_pkg(pkg)
+        uninstall(pkg, yolo=flag_yolo, rns=flag_rns)
       case ("version" | "-V"):
         cli.version()
       case ("help" | "-H"):
@@ -190,7 +206,6 @@ class cli:
       case _:
         cli.echo(f"Unknown command: '{cmd}'.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
         cli.help()
-
 
 class utils:
   @staticmethod
@@ -215,7 +230,7 @@ class utils:
     TODO: add docstrings
     '''
     if not yolo:
-      if not cli.prompt(f"Running command: {cmd}", yolo=yolo, dont_exit=dont_exit, use_msg_as_prompt=False): # use_msg_as_prompt is false for parity with the original version of wahoo
+      if not cli.prompt(f"Running command: {cmd}", yolo=yolo, dont_exit=dont_exit): # use_msg_as_prompt is false (using defaults since it wasn't added to the function call) for parity with the original version of wahoo
         if not dont_exit:
           sys.exit(0)
         else:
@@ -262,7 +277,7 @@ def install(pkg, source="https://aur.archlinux.org", yolo=False, build=True, seg
 
   try:
     if utils.internet_check(print_and_exit=True):
-      cli.prompt("Starting install...", yolo=yolo, dont_exit=False, use_msg_as_prompt=False)
+      cli.prompt("Starting install...", yolo=yolo, dont_exit=False)
       cli.echo(f"Installing {pkg}" + f" from {source}" if source != "https://aur.archlinux.org" else "...")
       if not sourcedir.exists():
         if verbose:
@@ -302,16 +317,22 @@ def uninstall(pkg, yolo=False, silent=False, verbose=False, rns=False):
   # no need for a sudo check here, pacman will require sudo anyway
   # also no need for an internet check, since pacman isn't installing anything
 
+  sourcedir = Path.home() / ".wahoo" / "source" / "pkg"
+
   cli.prompt(f"Uninstall {pkg}?", yolo=yolo, dont_exit=False, use_msg_as_prompt=True)
   utils.run(f"sudo pacman {'-Rns' if rns else '-R'} {'--noconfirm' if yolo else ''} {pkg}", silent=silent, verbose=verbose)
   cli.echo(f"{pkg} uninstalled successfully!", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
   if not rns and not yolo and not silent: # woah thats a lot of conditions
     cli.echo("Heads up, you may have some orphaned dependencies left over.", prefix="wahoo warn", color=wahoo_colors["wahoo_warn"])
     cli.echo("You can remove them with `sudo pacman -Rns $(pacman -Qdtq)`.", prefix=None, color=None)
+  
+  cli.prompt("Starting cleanup...", yolo=yolo, dont_exit=False)
+  utils.run(f"rm -rf {sourcedir}", yolo=yolo, verbose=verbose, silent=silent)
+  cli.echo("Cleanup finished!", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
 
 # everything else will come later
 # also holy crap as of writing this comment (11/7/2025),
-# this refactored wahoo is already 331 lines long
+# this refactored wahoo is already 349 lines long
 # im waiting for the day when future me will look at this and say
 # "if only you knew"
 
