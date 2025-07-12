@@ -32,6 +32,18 @@
 # everything else: i have no idea what happened but it was so catastrophic 
 #                  that it exitted with an unidentified exit code
 
+# LIBRARIES AND MODULES
+
+import sys
+from pathlib import Path
+import subprocess
+from os import getuid
+
+## PIP PACKAGES (aka, dependencies.)
+
+import requests
+from rapidfuzz import fuzz
+
 # CONSTANTS
 
 version = 0.5 # this doesn't need to be a string i just realized
@@ -57,18 +69,6 @@ wahoo_colors = { # since i used `if allow_colors else ""` in the above dict, the
 }
 
 reset = "\u001b[0m" if allow_colors else ""
-
-# LIBRARIES AND MODULES
-
-import sys
-from pathlib import Path
-import subprocess
-from os import getuid
-
-## PIP PACKAGES (aka, dependencies.)
-
-import requests
-from rapidfuzz import fuzz
 
 # CLASSES
 
