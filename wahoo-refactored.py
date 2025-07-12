@@ -73,10 +73,30 @@ reset = "\u001b[0m" if allow_colors else ""
 # CLASSES
 
 class cli:
+  '''
+  CLI components.
+
+  * find_args
+  * echo
+  * prompt
+  * no_pkg
+  * flagparsing
+  * help
+  * version
+  * main
+  '''
+  
   @staticmethod
   def find_args():
+    '''
+    Finds flags and positional arguments.
+    '''
+
     ## flags = [arg for arg in sys.argv[1:] if arg.startswith("--")]
     ## positional = [arg for arg in sys.argv[1:] if not arg.startswith("--")]
+    # these oneliners also work!
+    # i only commented them out for readability.
+
     flags = []
     positional = []
 
@@ -91,10 +111,16 @@ class cli:
   @staticmethod
   def echo(msg, color=wahoo_colors["wahoo_message"], prefix="wahoo", do_return=False):
     '''
-    prints with color
+    prints with color (helper function)
+
+    Args:
+    * msg (string) - the message to be printed
+    * color (string?) - what ANSI escape color should be used on the prefix - default: "wahoo_message" from the wahoo_colors dict
+    * prefix (string) - what prefix should be used before the message - default: "wahoo"
+    * do_return (bool) - if false, print the message. if true, return it. - default: False
     '''
     # with how many times i call this function with "color=None",
-    # its starting to get ironic (yk, given the whole "prints with color" docstring)
+    # its starting to get ironic (yk, given the whole "prints with color" concept)
     # anyway this is just a developer "lol moment"
 
     echoed = f"{color}{prefix + ':' if prefix and prefix != 'wahoo!' else ''} {reset}{msg}"
@@ -108,14 +134,26 @@ class cli:
   @staticmethod
   def prompt(msg, yolo=False, dont_exit=True, use_msg_as_prompt=False, show_abort_msg=True, default=True, promptmsg="[Y/n]"):
     '''
-    prompt. what more do you want me to say?
-    TODO: write proper docstrings
+    prompt helper function
+
+    Flow:
+    TODO: add flow
+
+    Args:
+    * msg (string) - the prompt message
+    * yolo (bool) - yolo mode (skips the prompt) - default: False
+    * dont_exit (bool) - if false, will exit if the user chooses to abort (n) - default: True
+    * use_msg_as_prompt (bool) - if true, will append the variable promptmsg_used to the message. else, promptmsg_used will be in a new line. - default: False
+    * default (bool) - if the user just presses enter without giving an answer, then it will return itself. True is Y, False is N - default: True (y)
+    * show_abort_msg (bool) - self explanatory. - default: True
+    * promptmsg (string) - the [Y/n] bracket. can be anything! - default: "[Y/n]"
     '''
+
     promptmsg_used = wahoo_colors["wahoo_yn"] + promptmsg
 
     if not yolo:
       usrinput = input(f"{cli.echo(msg, color=None, do_return=True)}{(' ' + promptmsg_used) if use_msg_as_prompt else ('\nProceed? ' + promptmsg_used + ' ')}")
-      if usrinput.lower() == "n":
+      if usrinput.lower().split()[0] == "n": # allows for answers like nn, no, nope, nah, etc
         if show_abort_msg:
           cli.echo("Aborted.", color=None, prefix=None)
         
@@ -126,17 +164,22 @@ class cli:
 
       elif not usrinput.split():
         return default
-      elif usrinput.lower() == "y":
+      elif usrinput.lower().split()[0] == "y": # allows for answers like yy, yes, yeah, yea, yep, etc
         return True
       else:
         cli.echo(f"Taking '{usrinput}' as {'yes' if default else 'no'}.", "wahoo warn", None)
         return default
     else:
-      # TODO: add a cli.echo() that shows what the message was (along with the [Y/n] prompt if use_msg_as_prompt was true)
+      # TODO: add a cli.echo() that shows what the message was (along with the [Y/n] prompt)
       return default
     
   @staticmethod
   def no_pkg(pkg):
+    '''
+    Helper function.
+    No docstring needed, used in `cli.main()`
+    '''
+    
     if pkg:
       return
     
@@ -144,6 +187,10 @@ class cli:
 
   @staticmethod
   def flagparsing(flags):
+    '''
+    Parses flags.
+    '''
+    
     parsed_flags = {
       "flag_yolo": False,
       "flag_rns": False,
@@ -179,6 +226,10 @@ class cli:
   
   @staticmethod
   def help():
+    '''
+    does this seriously need a docstring?
+    '''
+    
     # this is the only function where it would be easier to use print() instead of cli.echo()
     # so use print()
     print("no help for u")
@@ -186,6 +237,10 @@ class cli:
 
   @staticmethod
   def version():
+    '''
+    does this seriously need a docstring?
+    '''
+    
     cli.echo(f"{colors["yellow"]}v{version}{reset}", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
     # in plain english,
     # it does this:
@@ -195,7 +250,7 @@ class cli:
   @staticmethod
   def main():
     '''
-    TODO: add docstrings
+    parses the command
     '''
 
     # ARGUMENTS
@@ -203,8 +258,10 @@ class cli:
     flags, positional = cli.find_args()
     parsed_flags = cli.flagparsing(flags)
 
-    cmd = positional[0] if len(positional) >= 2 else "help"
-    pkg = positional[1] if len(positional) >= 3 else None
+    cmd = positional[0] if len(positional) >= 1 else "help"
+    pkg = positional[1] if len(positional) >= 2 else None
+    # TODO: add multi-package support
+    #       so that something like "wahoo -S foo1 foo2" is possible
 
     cmd = cmd if not cmd.startswith("-") else cmd.lower() # i.e, if command is "iNsTaLL" then it will become "install"
     # this ignores "-S" and other pacman-style commands, since the capital letters are intentional there
@@ -219,11 +276,6 @@ class cli:
     # PARSING
 
     match cmd:
-      # remember the little rant about wahoo not being a pacman wrapper?
-      # yeah that's not coming back
-      # but i still stand by my opinion that wahoo will very minimally wrap pacman
-      # i.e, list, info, etc commands
-
       case ("install" | "-S"):
         cli.no_pkg(pkg)
         install(pkg, yolo=flag_yolo, verbose=flag_verb, silent=flag_silent)
@@ -261,6 +313,15 @@ class cli:
         cli.help()
 
 class utils:
+  '''
+  Reusable helper functions organized into one place.
+
+  * internet_check
+  * run
+  * sudo_check
+  * (unused and empty) ensure_install_sh
+  '''
+
   @staticmethod
   def internet_check(timeout=3, print_and_exit=False):
     '''
@@ -280,10 +341,22 @@ class utils:
   @staticmethod
   def run(cmd, dir=None, yolo=False, dont_exit=True, verbose=True, silent=False):
     '''
-    TODO: add docstrings
+    runs a shell command
+
+    Flow:
+    * prompts to run the command
+    * runs the command
+    * should something go wrong and verbose=True, show error details along with the command being ran
+
+    Args:
+    * cmd (string) - the command to be run
+    * dir (string) - where to run the command (passed to subprocess.run()'s cwd paramater) - default: None (i.e, current working directory)
+    * yolo (bool) - yolo mode - default: False
+    * dont_exit (bool) - don't exit if the user 
     '''
+
     if not yolo:
-      if not cli.prompt(f"Running command: {cmd}", yolo=yolo, dont_exit=dont_exit): # use_msg_as_prompt is false (using defaults since it wasn't added to the function call) for parity with the original version of wahoo
+      if not cli.prompt(f"Running command: {cmd}", yolo=yolo, dont_exit=False): # use_msg_as_prompt is false (using defaults since it wasn't added to the function call) for parity with the original version of wahoo
         if not dont_exit:
           sys.exit(0)
         else:
@@ -292,7 +365,7 @@ class utils:
       if not silent:
         cli.echo(f"Running command: {cmd}", color=None, prefix=None)
     try:
-      subprocess.run(cmd + "> /dev/null 2>&1" if silent else '', shell=True, check=True, cwd=dir)
+      subprocess.run(cmd + (" > /dev/null 2>&1" if silent else ""), shell=True, check=True, cwd=dir)
       return # doesn't need to return anything, just exits the function.
     
     except subprocess.CalledProcessError as e:
@@ -306,71 +379,101 @@ class utils:
     
   @staticmethod
   def sudo_check(): # wahoo is flexible now, some commands support running as root, some don't.
+    '''
+    check if wahoo is being run as root
+    '''
+
     if getuid() == 0:
       cli.echo("Please do not run this command as root.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
       sys.exit(2)
   
   @staticmethod
   def ensure_install_sh():
-    # vestigial? structure from the old version of wahoo
-    # i say vestigial with a ? because i am not sure how to implement
-    # the self-updating feature without outsourcing it to a separate script
-    # and tbh using bash for that install script is just kinda dumb
-    # it would be easier to just use python for everything
+    '''
+    vestigial? structure from the old version of wahoo
+    i say vestigial with a ? because i am not sure how to implement
+    the self-updating feature without outsourcing it to a separate script
+    and tbh using bash for that install script is just kinda dumb
+    it would be easier to just use python for everything
 
-    # PROPOSED SOLUTION:
-    # 1. install.sh stays and can still be used to update wahoo, however it will not be used by wahoo itself. (neither the old version nor this one)
-    # 2. two scripts are added to PATH when wahoo is installed:
-    #    - wahoo (this one)
-    #    - wahoo-update (the self-updater, wahoo requires this for self-updating and if it is removed then you'll be stuck with the version of wahoo you already have, which could potentially be buggy)
+    PROPOSED SOLUTION:
+    1. install.sh stays and can still be used to update wahoo, however it will not be used by wahoo itself. (neither the old version nor this one)
+    2. two scripts are added to PATH when wahoo is installed:
+      - wahoo (this one)
+      - wahoo-update (the self-updater, wahoo requires this for self-updating and if it is removed then you'll be stuck with the version of wahoo you already have, which could potentially be buggy)
+    '''
+
     pass
 
 # FUNCTIONS
 
 def install(pkg, source="https://aur.archlinux.org", yolo=False, build=True, segfault=True, silent=False, verbose=False):
   '''
-  TODO: add docstrings
+  installs a package from the AUR
+
+  Flow:
+  * segfault easter egg (if enabled)
+  * sudo check
+  * internet check
+  * prompts to start the cloning
+  * prompts to build and install (or build without installing) the package (if build=True)
+  * fin
+
+  Args:
+  * pkg (string) - the package to be installed
+  * source (string) - where to clone the package from - default: "https://aur.archlinux.org"
+  * yolo (bool) - yolo mode - default: False
+  * build (bool) - enable building - default: True
+  * segfault (bool) - segfault easter egg >:) - default: True
+  * silent (bool) - silences git and makepkg - default: False
+  * verbose (bool) - prints error info should something go wrong - default: False
   '''
-  utils.sudo_check()
 
   if segfault and pkg == "wahoo":
     # muahahahahahaha
     cli.echo("Bold of you to try to install wahoo with wahoo.", color=None, prefix=None)
     cli.echo("Segmentation fault (core dumped)", color=None, prefix=None)
-    sys.exit(11)
+    sys.exit(11) # SIGSEGV
+  
+  utils.sudo_check()
+  utils.internet_check(print_and_exit=True)
 
   wahooroot = Path.home() / ".wahoo" / "source"
   wahooroot.mkdir(parents=True, exist_ok=True)
   sourcedir = wahooroot / pkg
 
   try:
-    if utils.internet_check(print_and_exit=True):
-      cli.prompt("Starting install...", yolo=yolo, dont_exit=False)
-      cli.echo(f"Installing {pkg}" + f" from {source}" if source != "https://aur.archlinux.org" else "...")
-      if not sourcedir.exists():
-        if verbose:
-          cli.echo(f"Cloning {pkg} git repo ({source}/{pkg}.git) to {sourcedir}")
+    cli.prompt("Starting install...", yolo=yolo, dont_exit=False)
+    cli.echo(f"Installing {pkg}" + f" from {source}" if source != "https://aur.archlinux.org" else "...")
+    if not sourcedir.exists():
+      if verbose:
+        cli.echo(f"Cloning {pkg} git repo ({source}/{pkg}.git) to {sourcedir}")
 
-        utils.run(f"git clone {source}/{pkg}.git", dir=wahooroot, yolo=yolo, dont_exit=False, silent=silent)
-      else:
-        cli.echo(f"Source directory for {pkg} already exists, skipping clone.", color=wahoo_colors["wahoo_warn"], prefix="wahoo warn")
-    
-      if build:
-        if yolo:
-          # assume the user wants to build and install the package (-si)
-          cli.echo("Building and installing package...")
-          utils.run("makepkg -si --noconfirm", dir=sourcedir, yolo=yolo, dont_exit=True, silent=silent, verbose=verbose)
-          cli.echo(f"Successfully installed {pkg}!", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
-          return
-      
-        if cli.prompt(f"Build {pkg} without installing?", use_msg_as_prompt=True, default=False, promptmsg="[y/N]"):
-          cli.echo("Building package...")
-          utils.run("makepkg -s", dir=sourcedir, silent=silent, verbose=verbose)
-          cli.echo(f"{pkg} built successfully!", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
-          sys.exit(0)
-        
+      utils.run(f"git clone {source}/{pkg}.git", dir=wahooroot, yolo=yolo, dont_exit=False, silent=silent)
+    else:
+      cli.echo(f"Source directory for {pkg} already exists, skipping clone.", color=wahoo_colors["wahoo_warn"], prefix="wahoo warn")
+
+    # TODO: add dependency resolution for packages that aren't available in the pacman repos
+    # context: i tested out the old version again, tried to install osu-lazer-tachyon-bin (for funsies)
+    #          then when the build started, makepkg freaked out about not being able to find
+    #          `osu-mime`. turns out osu-mime is an AUR package which needed to be installed with pacman.
+
+    if build:
+      if yolo:
+        # assume the user wants to build and install the package (-si)
         cli.echo("Building and installing package...")
-        utils.run("makepkg -si", dir=sourcedir, silent=silent, verbose=verbose)
+        utils.run("makepkg -si --noconfirm", dir=sourcedir, yolo=yolo, dont_exit=True, silent=silent, verbose=verbose)
+        cli.echo(f"Successfully installed {pkg}!", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
+        return
+      
+      if cli.prompt(f"Build {pkg} without installing?", use_msg_as_prompt=True, default=False, promptmsg="[y/N]", show_abort_msg=False):
+        cli.echo("Building package...")
+        utils.run("makepkg -s", dir=sourcedir, silent=silent, verbose=verbose)
+        cli.echo(f"{pkg} built successfully!", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
+        sys.exit(0)
+        
+      cli.echo("Building and installing package...")
+      utils.run("makepkg -si", dir=sourcedir, silent=silent, verbose=verbose)
   except Exception as e:
     cli.echo(f"Installation failed.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
     if verbose:
@@ -380,12 +483,27 @@ def install(pkg, source="https://aur.archlinux.org", yolo=False, build=True, seg
 
 def uninstall(pkg, yolo=False, silent=False, verbose=False, rns=False):
   '''
-  TODO: add docstrings
+  Uninstalls a package with pacman.
+  This means that if a package was installed with any other AUR helper, it can also be uninstalled.
+
+  Flow:
+  * prompt to start the uninstall
+  * gives a little heads up if you ran with rns=false
+  * prompt to start the clean up
+  * fin
+
+  Args:
+  * pkg (string) - the package to be uninstalled
+  * yolo (bool) - yolo mode - default: False
+  * silent (bool) - silences pacman and rm - default: False
+  * verbose (bool) - prints error info should something go wrong - default: False
+  * rns (bool) - removes orphaned dependencies - default: False
   '''
+
   # no need for a sudo check here, pacman will require sudo anyway
   # also no need for an internet check, since pacman isn't installing anything
 
-  sourcedir = Path.home() / ".wahoo" / "source" / "pkg"
+  sourcedir = Path.home() / ".wahoo" / "source" / pkg
 
   cli.prompt(f"Uninstall {pkg}?", yolo=yolo, dont_exit=False, use_msg_as_prompt=True)
   utils.run(f"sudo pacman {'-Rns' if rns else '-R'} {'--noconfirm' if yolo else ''} {pkg}", silent=silent, verbose=verbose)
@@ -423,7 +541,23 @@ def update(pkg, yolo=False, silent=False, verbose=False):
     sys.exit(1)
 
 def upgrade(yolo=False, verbose=False, silent=False):
-  ## cli.echo("Not implemented yet.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
+  '''
+  Updates all packages installed with wahoo.
+  NOTE: wahoo can't update any packages installed with other AUR helpers, such as yay or paru.
+
+  Flow:
+  * internet check
+  * sudo check
+  * prompt to start the upgrade
+  * prompt to update the system with pacman -Syu
+  * fin
+
+  Args:
+  * yolo (bool) - yolo mode - default: False
+  * verbose (bool) - prints error info should something go wrong - default: False
+  * silent (bool) - silences the update process (and pacman) - default: False
+  '''
+
   wahooroot = Path.home() / ".wahoo" / "source"
   
   utils.internet_check(print_and_exit=True)
@@ -454,6 +588,29 @@ def upgrade(yolo=False, verbose=False, silent=False):
   cli.echo(f"Upgrade finished!", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
 
 def search(query, limit=20, use_fuzz=True, timeout=3, exit_on_fail=False, verbose=False):
+  '''
+  Searches for a package from the AUR.
+
+  Flow:
+  * internet check
+  * sends a get request to the AUR RPC API (wow thats a mouthful)
+  * raises an HTTPError for bad responses (4xx and 5xx)
+  * converts the response to JSON
+  * gets the results from the JSON and exits or returns (depending on exit_on_fail) if no results were found
+  * sorts the results with rapidfuzz (if use_fuzz=True)
+  * caps the results to limit
+  * prints the results
+  * fin
+
+  Args:
+  * query (string) - what to search for
+  * limit (int) - maximum no. results should be shown - default: 20
+  * use_fuzz (bool) - toggle to use rapidfuzz's string matching - default: True
+  * timeout (int) - timeout for the get request to the AUR - default: 3
+  * exit_on_fail (bool) - toggle to exit if no results are found - default: False
+  * verbose (bool) - prints error info should something go wrong - default: False
+  '''
+
   utils.internet_check(print_and_exit=True)
 
   url = f"https://aur.archlinux.org/rpc/?v=5&type=search&arg={query}"
@@ -463,7 +620,7 @@ def search(query, limit=20, use_fuzz=True, timeout=3, exit_on_fail=False, verbos
 
   try:
     response = requests.get(url, timeout=timeout)
-    response.raise_for_status()  # raises an HTTPError for bad responses (4xx and 5xx)
+    response.raise_for_status()
 
     data = response.json()
     results = data.get("results", [])
@@ -471,7 +628,7 @@ def search(query, limit=20, use_fuzz=True, timeout=3, exit_on_fail=False, verbos
       cli.echo(f"No results found for '{query}'.", color=wahoo_colors["wahoo_warn"], prefix="wahoo warn") # i should probably make this a wahoo error instead, but since its non-fatal im not sure what to do here
       cli.echo(f"Try searching for {query} with pacman instead.", color=None, prefix=None)
       if exit_on_fail:
-        sys.exit(0)
+        sys.exit(1)
       else:
         return
     
@@ -481,9 +638,11 @@ def search(query, limit=20, use_fuzz=True, timeout=3, exit_on_fail=False, verbos
     shown = results[:limit]
 
     if len(results) > limit:
-      cli.echo(f"Found {len(results)} results for '{query}', showing the first {limit} results.", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
+      cli.echo(f"Found {colors['blue']}{len(results)}{reset} results for '{query}', showing the first {limit} results.", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
+    elif len(results) == 1:
+      cli.echo(f"Found {colors['blue']}1{reset} result for '{query}'.", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
     else:
-      cli.echo(f"Found {len(results)} results for '{query}'.", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
+      cli.echo(f"Found {colors['blue']}{len(results)}{reset} results for '{query}'.", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
     
     for entry in shown:
       name = entry.get("Name", "unknown")
@@ -531,7 +690,10 @@ if __name__ == "__main__":
     ## sys.exit(130)
     # HACK: 130 is the exit code for Ctrl+C, but i dont want to use it since
     #       the "KeyboardInterrupt" exception has already been handled,
-    #       so i see no need to exit the script with a non-zero exit code
+    #       so i see no need to exit the script with a non-zero exit code.
     #       naturally, this doesn't play well with scripts that use wahoo since
-    #       they expect a non-zero exit code if wahoo is interrupted
+    #       they expect a non-zero exit code if wahoo is interrupted.
     #       no way to get around this im afraid
+
+# OH MY GOD THE REWRITE OF WAHOO IS LONGER THAN THE ORIGINAL
+# WHAT HAVE I GOTTEN MYSELF INTO
