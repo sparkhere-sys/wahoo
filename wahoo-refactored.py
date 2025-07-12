@@ -179,11 +179,17 @@ class cli:
   
   @staticmethod
   def help():
-    pass
+    # this is the only function where it would be easier to use print() instead of cli.echo()
+    # so use print()
+    print("no help for u")
+    print("help is in next version of the refactor")
 
   @staticmethod
   def version():
-    cli.echo(f"{colors["yellow"]}v{version}{reset}", color=wahoo_colors["wahoo_success"], prefix="wahoo")
+    cli.echo(f"{colors["yellow"]}v{version}{reset}", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
+    # in plain english,
+    # it does this:
+    ## print(f"wahoo: v{version}")
     cli.echo("Made with <3 by Spark", prefix=None, color=None)
 
   @staticmethod
@@ -213,13 +219,18 @@ class cli:
     # PARSING
 
     match cmd:
+      # remember the little rant about wahoo not being a pacman wrapper?
+      # yeah that's not coming back
+      # but i still stand by my opinion that wahoo will very minimally wrap pacman
+      # i.e, list, info, etc commands
+
       case ("install" | "-S"):
         cli.no_pkg(pkg)
         install(pkg, yolo=flag_yolo, verbose=flag_verb, silent=flag_silent)
 
       case ("uninstall" | "remove" | "-R" | "purge" | "autoremove" | "-Rns"): # apt syntax my beloathed
-        if "-Rns purge autoremove" in cmd:
-          flag_rns = False
+        if cmd in ["purge", "autoremove", "-Rns"]:
+          flag_rns = True
         
         cli.no_pkg(pkg)
         uninstall(pkg, yolo=flag_yolo, rns=flag_rns, verbose=flag_verb, silent=flag_silent)
@@ -294,9 +305,9 @@ class utils:
         cli.echo(f"Details: {e}", color=None, prefix=None)
     
   @staticmethod
-  def sudo_check():
+  def sudo_check(): # wahoo is flexible now, some commands support running as root, some don't.
     if getuid() == 0:
-      cli.echo("Please do not run wahoo as root.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
+      cli.echo("Please do not run this command as root.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
       sys.exit(2)
   
   @staticmethod
@@ -411,8 +422,36 @@ def update(pkg, yolo=False, silent=False, verbose=False):
     
     sys.exit(1)
 
-def upgrade():
-  cli.echo("Not implemented yet.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
+def upgrade(yolo=False, verbose=False, silent=False):
+  ## cli.echo("Not implemented yet.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
+  wahooroot = Path.home() / ".wahoo" / "source"
+  
+  utils.internet_check(print_and_exit=True)
+  utils.sudo_check()
+
+  cli.prompt("Starting upgrade...", yolo=yolo, dont_exit=False)
+  cli.echo("Updating all packages...")
+  cli.echo("This will not update wahoo itself. (self-updating for wahoo refactored has not been implemented yet)")
+  # TODO: add self-updating
+
+  try:
+    for pkg in wahooroot.iterdir():
+      if pkg.is_dir() and pkg.name != "wahoo": # don't update wahoo itself here
+        pkgname = pkg.name # helpful alias
+        cli.echo(f"Updating {pkgname}...")
+        update(pkgname, yolo=True, verbose=verbose, silent=silent)
+
+  except Exception as e:
+    cli.echo("Upgrade failed.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
+    if verbose:
+      cli.echo(f"Details: {e}", color=None, prefix=None)
+
+    sys.exit(1)
+  
+  if cli.prompt("Would you like to do a system update with pacman as well?", default=False, promptmsg="[y/N]"):
+    utils.run("sudo pacman -Syu --noconfirm", yolo=True, verbose=verbose, silent=silent)
+  
+  cli.echo(f"Upgrade finished!", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
 
 def search(query, limit=20, use_fuzz=True, timeout=3, exit_on_fail=False, verbose=False):
   utils.internet_check(print_and_exit=True)
@@ -437,11 +476,7 @@ def search(query, limit=20, use_fuzz=True, timeout=3, exit_on_fail=False, verbos
         return
     
     if use_fuzz:
-      results.sort(
-        key=lambda entry: fuzz.WRatio(query, entry.get("Name", "unknown")), reverse=True
-      )
-      # why is this not a one-liner?
-      # because y e s
+      results.sort(key=lambda entry: fuzz.WRatio(query, entry.get("Name", "unknown")), reverse=True)
 
     shown = results[:limit]
 
