@@ -3,7 +3,7 @@
 wahoo's launcher and the thing that actually gets installed to /usr/bin/ by pacman
 '''
 
-from wahoo.parser import main
+from wahoo.parser import parse
 import wahoo.cliutils as cli
 from wahoo.constants import *
 
