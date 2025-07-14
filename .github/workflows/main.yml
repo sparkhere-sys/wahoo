@@ -48,10 +48,10 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .SRCINFO PKGBUILD
           if ! git diff --cached --quiet; then
-            git commit -m "GitHub Actions: Update .SRCINFO and PKGBUILD"
+            git commit -m "ci: update checksums and regenerate .SRCINFO"
             git push origin HEAD || { echo "Push failed."; exit 255; }
           else
-            echo "No changes in .SRCINFO, not commiting."
+            echo "No changes, not committing."
           fi
       # update: changed 'git add .SRCINFO' to 'git add -u'
       ## damn the bot writes better commit messages than me (i don't even write commit messages lmao)
