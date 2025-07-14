@@ -60,6 +60,7 @@ def update():
 
 def main():
   try:
+    utils.sudo_check()
     update()
   except Exception as e:
     cli.echo("Something went wrong.", color=wahoo_colors["wahoo_error"], prefix=f"{sal_prefix} error")
