@@ -129,8 +129,10 @@ def parse():
         try:
           salmon.main()
           sys.exit(0)
-        except:
-          sys.exit(255)
+        except Exception as e:
+          if flag_verb:
+            cli.echo(f"Fail details: {e}", color=None, prefix=None)
+          sys.exit(3)
       
       main.update(pkg, yolo=flag_yolo, silent=flag_silent, verbose=flag_verb)
       
@@ -150,7 +152,7 @@ def parse():
       cli.help()
 
     case ("show" | "info" | "-Qi"):
-      cli.no_pkg()
+      cli.no_pkg(pkg)
       pacwrap.info(pkg, verbose=flag_verb)
     
     case ("list" | "-Qs"):
