@@ -1,10 +1,10 @@
 # roadmap
 
 ## next release: v0.5
-- [ ] rewrite of wahoo (in progress!)
+- [x] rewrite of wahoo
 - [x] new command: `clean` (aliases: `cleanup`, `-Rc`, `-C`)
-- [ ] deprecation of `install.sh` in favor of `salmon.py`
-- [ ] deprecation of the old version of wahoo (v0.4) in favor of the new one
+- [x] deprecation of `install.sh` in favor of `salmon.py`
+- [x] deprecation of the old version of wahoo (v0.4) in favor of the new one
 - [ ] man page
 - [ ] [more flags](https://github.com/sparkhere-sys/wahoo/issues/1)
 
