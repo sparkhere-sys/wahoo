@@ -10,6 +10,11 @@
 #       but this does have its downsides, since this isn't installed when you just casually run `makepkg`
 #       i *could* put this in the PKGBUILD, but im not really sure.
 
+echo "WARNING"
+echo "wahoo's install.sh has been deprecated in favor of salmon.py (for self-updating)"
+echo "continue at your own risk."
+sleep 2
+
 if [[ $EUID -eq 0 ]]; then
   echo "wahoo error: don't run this as root, or else makepkg will fail."
   exit 1

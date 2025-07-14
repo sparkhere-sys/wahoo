@@ -33,13 +33,14 @@ roadmap: [click me](./ROADMAP.md)
 |---------|---------|--------------|-------|
 | `install` | `-S` | Installs a package from the AUR. | `wahoo install foo` |
 | `uninstall` | `-R`, `-remove`, `-Rns`, `autoremove` | Uninstalls a package. (this just calls pacman lol) If you run this with `autoremove` or `-Rns` instead, wahoo will use the `--dont-remove-depends` flag. | `wahoo uninstall foo` |
+| **NEW** `clean` | `cleanup`, `-Rc`, `-C` | Cleans up wahoo's source directory. | `wahoo clean` |
 | `list` | `-Q`, `-Qs` | Lists all your installed packages. | `wahoo list`, `wahoo list foo` (which searches for an installed package) |
 | `show` | `-Qi`, `info` | Shows package information for an installed package. | `wahoo show foo` |
 | `update` | `-Sy` | Updates an AUR package. | `wahoo update foo`, and to update wahoo itself, `wahoo update wahoo` |
 | `upgrade` | `-Syu` | Updates all installed AUR packages *installed by wahoo* | `wahoo upgrade` |
 | `search` | `-Ss` | Searches for a package from the AUR. | `wahoo search foo` |
 | `version` | none :/ | I- What the hell do you want me to say? | `wahoo version` |
-| `help` | none :/ | Again, what the hell do you want me to say? | `wahoo help`, will also trigger if you run wahoo with no arguments. |
+| `help` | none :/ | Again, what the hell do you want me to say? | `wahoo help`, will also run if you run wahoo with no arguments. |
 
 > [!NOTE] 
 >
@@ -75,13 +76,11 @@ makepkg -si
 ```
 
 ### with the install.sh
-run this:
-```
-curl -fsSL https://raw.githubusercontent.com/sparkhere-sys/wahoo/refs/heads/main/install.sh -o install.sh
-chmod +x install.sh
-./install.sh
-```
-or, y'know, just download it.
+> [!WARNING]
+>
+> The `install.sh` has been deprecated and is not maintained anymore.
+>
+> Install it manually with makepkg.
 
 ### from AUR
 soon™️
@@ -94,10 +93,12 @@ run:
 wahoo update wahoo
 ```
 or,
+
 ```bash
 wahoo -Sy wahoo
 ```
-or you can run `./install.sh update` if you have that downloaded
+
+or, if you have `salmon` added to PATH like a madlad, just run `salmon`
 
 ## why wahoo?
 
@@ -144,3 +145,10 @@ contact me:
 ___
 
 <p align=center><img alt="License: MIT" src="https://img.shields.io/badge/license-mit-blue?style=for-the-badge&labelColor=white&color=%2374c7ec"></img></p>
+
+<!--
+<small>
+PS: 
+
+wahoo isn't named after Mario, Klonoa, the celebration, or even the <a href=https://en.wikipedia.org/wiki/Wahoo>fish</a>. the name wahoo is meant to mean "What kind of name is yay, anyway?"
+</small> -->

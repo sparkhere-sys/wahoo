@@ -2,6 +2,8 @@ name: Build and update .SRCINFO
 # i only made this because i wrote wahoo in windows and can't build it so uhhhh
 # github actions saves the day!
 
+# you have no clue how painful this was to write
+
 on:
   push:
     branches:

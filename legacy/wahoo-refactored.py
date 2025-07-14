@@ -184,6 +184,7 @@ class cli:
       return
     
     cli.echo("No package provided.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
+    sys.exit(2)
 
   @staticmethod
   def flagparsing(flags):
@@ -266,6 +267,10 @@ class cli:
     cmd = cmd if not cmd.startswith("-") else cmd.lower() # i.e, if command is "iNsTaLL" then it will become "install"
     # this ignores "-S" and other pacman-style commands, since the capital letters are intentional there
 
+    # fun fact: this used to be in older versions of the og wahoo,
+    #           since the match-case would see "-s" and not "-S"
+    #           my solution? remove it entirely. yeah past me was kinda stupid
+
     # FLAG ALIASES
 
     flag_yolo = parsed_flags["flag_yolo"]
@@ -287,16 +292,16 @@ class cli:
         cli.no_pkg(pkg)
         uninstall(pkg, yolo=flag_yolo, rns=flag_rns, verbose=flag_verb, silent=flag_silent)
 
-      case ("clean" | "cleanup" | "-Rc" | "-C"):
+      case ("clean" | "cleanup" | "-Rc" | "-C"): # unsure what the pacman equivalent of this would be
         cleanup(yolo=flag_yolo, verbose=flag_verb, silent=flag_silent)
 
       case ("update" | "-Sy"):
         update(pkg, yolo=flag_yolo, silent=flag_silent, verbose=flag_verb)
       
       case ("upgrade" | "updateall" | "-Syu"):
-        pass
+        upgrade(yolo=flag_yolo, verbose=flag_verb, silent=flag_silent)
 
-      case "-Su":
+      case ("-Su" | "-U"):
         cli.echo("wahoo is confused", color=None, prefix=None)
         cli.echo("If you meant to update a package, use -Sy.", color=None, prefix=None)
         cli.echo("If you meant to do an upgrade, use -Syu.", color=None, prefix=None)
@@ -400,10 +405,30 @@ class utils:
     1. install.sh stays and can still be used to update wahoo, however it will not be used by wahoo itself. (neither the old version nor this one)
     2. two scripts are added to PATH when wahoo is installed:
       - wahoo (this one)
-      - wahoo-update (the self-updater, wahoo requires this for self-updating and if it is removed then you'll be stuck with the version of wahoo you already have, which could potentially be buggy)
+      - salmon (the self-updater, wahoo requires this for self-updating and if it is removed then you'll be stuck with the version of wahoo you already have, which could potentially be buggy)
     '''
 
     pass
+
+class pacwrap:
+  '''
+  wahoo's not a pacman wrapper per se,
+  it's just here because i believe in good UX.
+
+  essentially, just helper functions.
+  '''
+
+  @staticmethod
+  def list(pkg, verbose=False): # no point in adding --silent support
+    if not pkg:
+      utils.run("pacman -Q", yolo=True, verbose=verbose)
+      sys.exit(0)
+    
+    utils.run(f"pacman -Qs {pkg}", yolo=True, verbose=verbose)
+
+  @staticmethod
+  def info(pkg, verbose=False):
+    utils.run(f"pacman -Qi {pkg}", yolo=True, verbose=verbose)
 
 # FUNCTIONS
 
@@ -456,7 +481,7 @@ def install(pkg, source="https://aur.archlinux.org", yolo=False, build=True, seg
     # TODO: add dependency resolution for packages that aren't available in the pacman repos
     # context: i tested out the old version again, tried to install osu-lazer-tachyon-bin (for funsies)
     #          then when the build started, makepkg freaked out about not being able to find
-    #          `osu-mime`. turns out osu-mime is an AUR package which needed to be installed with pacman.
+    #          `osu-mime`. turns out osu-mime is an AUR package which couldn't be installed with pacman.
 
     if build:
       if yolo:
@@ -517,6 +542,24 @@ def uninstall(pkg, yolo=False, silent=False, verbose=False, rns=False):
   cli.echo("Cleanup finished!", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
 
 def update(pkg, yolo=False, silent=False, verbose=False):
+  '''
+  Updates a package installed with wahoo.
+  NOTE: wahoo can't update any packages installed with other AUR helpers, such as yay or paru.
+
+  Flow:
+  * internet check
+  * sudo check
+  * checks if the package's source directory exists
+  * prompt to start the update
+  * fin
+
+  Args:
+  * pkg (string) - the package to be updated
+  * yolo (bool) - yolo mode - default: False
+  * silent (bool) - silences the update process (and pacman) - default: False
+  * verbose (bool) - prints error info should something go wrong - default: False
+  '''
+
   utils.internet_check(print_and_exit=True)
   utils.sudo_check()
 
@@ -524,7 +567,7 @@ def update(pkg, yolo=False, silent=False, verbose=False):
   if not sourcedir.exists():
     cli.echo(f"No source directory found for {pkg}.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
     cli.echo("If it was installed with pacman, try updating it with pacman instead.", color=None, prefix=None)
-    cli.echo("Otherwise, it may have been cleaned up. Try uninstalling it with pacman, then installing it with wahoo.", color=None, prefix=None)
+    cli.echo("Otherwise, it may have been cleaned up. Try uninstalling it with pacman, then reinstalling it with wahoo.", color=None, prefix=None)
     cli.echo("This will reinstall the latest version of the package from the AUR.", color=None, prefix=None)
 
   cli.prompt("Starting update...", yolo=yolo, dont_exit=False)
@@ -684,6 +727,8 @@ def cleanup(yolo=False, verbose=True, silent=True):
 
 if __name__ == "__main__":
   try:
+    cli.echo("You are using an outdated and soon to be deprecated version of wahoo.")
+    cli.prompt("Are you sure you want to continue?", dont_exit=False, use_msg_as_prompt=True, default=False, promptmsg="[y/N]")
     cli.main()
   except KeyboardInterrupt:
     cli.echo("Interrupted by Ctrl+C, see ya next time")
