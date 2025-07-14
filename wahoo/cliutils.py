@@ -34,6 +34,7 @@ class cli:
 
     ## flags = [arg for arg in sys.argv[1:] if arg.startswith("--")]
     ## positional = [arg for arg in sys.argv[1:] if not arg.startswith("--")]
+    
     # these oneliners also work!
     # i only commented them out for readability.
 
@@ -90,9 +91,10 @@ class cli:
     '''
 
     promptmsg_used = wahoo_colors["wahoo_yn"] + promptmsg
+    fullmsg = f"{cli.echo(msg, do_return=True)}{(' ' + promptmsg_used) if use_msg_as_prompt else ('\nProceed? ' + promptmsg_used + reset + ' ')}"
 
     if not yolo:
-      usrinput = input(f"{cli.echo(msg, color=None, do_return=True)}{(' ' + promptmsg_used) if use_msg_as_prompt else ('\nProceed? ' + promptmsg_used + ' ')}")
+      usrinput = input(fullmsg)
       if usrinput.lower().split()[0] == "n": # allows for answers like nn, no, nope, nah, etc
         if show_abort_msg:
           cli.echo("Aborted.", color=None, prefix=None)
@@ -110,14 +112,14 @@ class cli:
         cli.echo(f"Taking '{usrinput}' as {'yes' if default else 'no'}.", "wahoo warn", None)
         return default
     else:
-      # TODO: add a cli.echo() that shows what the message was (along with the [Y/n] prompt)
+      cli.echo(fullmsg, color=None, prefix=None)
       return default
     
   @staticmethod
   def no_pkg(pkg):
     '''
     Helper function.
-    No docstring needed, used in `core.main()`
+    No docstring needed.
     '''
     
     if pkg:
@@ -143,7 +145,7 @@ class cli:
     does this seriously need a docstring?
     '''
     
-    cli.echo(f"{colors["yellow"]}v{version}{reset}", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
+    cli.echo(f"{colors['yellow']}v{version}{reset}", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
     # in plain english,
     # it does this:
     ## print(f"wahoo: v{version}")
