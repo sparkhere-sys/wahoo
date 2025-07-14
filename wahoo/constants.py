@@ -2,6 +2,8 @@
 '''
 Constants. Unchanged stuff.
 
+Import this with `from wahoo.constants import *`.
+
 * version (float)
 * allow_colors (bool)
 * colors (dict)
