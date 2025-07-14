@@ -1,4 +1,14 @@
 #!/usr/bin/env python3
+'''
+The actual package manager.
+
+* install
+* uninstall
+* update
+* upgrade
+* search
+* cleanup
+'''
 
 # LIBRARIES AND MODULES
 
@@ -155,6 +165,7 @@ def update(pkg, yolo=False, silent=False, verbose=False):
     cli.echo("If it was installed with pacman, try updating it with pacman instead.", color=None, prefix=None)
     cli.echo("Otherwise, it may have been cleaned up. Try uninstalling it with pacman, then reinstalling it with wahoo.", color=None, prefix=None)
     cli.echo("This will reinstall the latest version of the package from the AUR.", color=None, prefix=None)
+    sys.exit(1)
 
   cli.prompt("Starting update...", yolo=yolo, dont_exit=False)
   cli.echo(f"Updating {pkg}...")
@@ -194,8 +205,7 @@ def upgrade(yolo=False, verbose=False, silent=False):
 
   cli.prompt("Starting upgrade...", yolo=yolo, dont_exit=False)
   cli.echo("Updating all packages...")
-  cli.echo("This will not update wahoo itself. (self-updating for wahoo refactored has not been implemented yet)")
-  # TODO: add self-updating
+  cli.echo("This will not update wahoo itself, use 'wahoo -Sy wahoo' for that.")
 
   try:
     for pkg in wahooroot.iterdir():
@@ -264,7 +274,10 @@ def search(query, limit=20, use_fuzz=True, timeout=3, exit_on_fail=False, verbos
     if use_fuzz:
       results.sort(key=lambda entry: fuzz.WRatio(query, entry.get("Name", "unknown")), reverse=True)
 
-    shown = results[:limit]
+    if limit:
+      shown = results[:limit]
+    else:
+      shown = results
 
     if len(results) > limit:
       cli.echo(f"Found {colors['blue']}{len(results)}{reset} results for '{query}', showing the first {limit} results.", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
@@ -303,6 +316,11 @@ def cleanup(yolo=False, verbose=True, silent=True):
     # would it be better to use rmdir instead of rm -rf?
     # eh... im not sure.
     # it should delete everything INSIDE the source dir, not nuke it completely.
+    
+    # better idea: using shutil.rmtree()
+    # more pythonic
+    # problem is, i really don't want to add one more import to this than necessary. subprocess will suffice.
+    
     cli.echo("Clean up finished!", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
   except Exception as e:
     cli.echo("Clean up failed.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
