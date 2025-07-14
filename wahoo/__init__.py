@@ -1,8 +1,5 @@
 # wahoo/__init__.py
 
-# i honestly did not want to make this, but ig i have no choice
-# anything to avoid dependency hell
-
 '''
 wahoo: an AUR helper written in python
 
