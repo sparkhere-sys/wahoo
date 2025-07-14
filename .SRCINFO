@@ -15,7 +15,7 @@ pkgbase = wahoo
 	conflicts = wahoo
 	source = wahoo.py
 	source = LICENSE
-	sha256sums = 226eb10fff953ec447074e5e4d64f8d7f6cebe299c330ce549895ffb462649b2
+	sha256sums = eb4acb580f78544f460e59dae3e9ec8336e7cc52842b6d8bd79c0d75870fb961
 	sha256sums = fb5d9a672ee9f4b5669d263652adaba135ec35ce1d0a693767caa0a8048f930a
 
 pkgname = wahoo
