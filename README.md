@@ -1,4 +1,4 @@
-# <p align=center>wahoo! v0.4</p>
+# <p align=center>wahoo! v0.5</p>
 
 <p align=center>
 <img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/sparkhere-sys/wahoo/main.yml?branch=main&style=for-the-badge&logo=github-actions&logoColor=black&label=build&labelColor=white&color=%23b7bdf8&link=https%3A%2F%2Fgithub.com%2Fsparkhere-sys%2Fwahoo%2Fblob%2Fmain%2F.github%2Fworkflows%2Fmain.yml">
@@ -80,7 +80,7 @@ makepkg -si
 >
 > The `install.sh` has been deprecated and is not maintained anymore.
 >
-> Install it manually with makepkg.
+> Install `wahoo` manually with `makepkg` instead.
 
 ### from AUR
 soon™️
@@ -89,9 +89,11 @@ wait a minute this is an AUR helper-
 
 ## updating wahoo
 run:
+
 ```bash
 wahoo update wahoo
 ```
+
 or,
 
 ```bash
@@ -146,9 +148,7 @@ ___
 
 <p align=center><img alt="License: MIT" src="https://img.shields.io/badge/license-mit-blue?style=for-the-badge&labelColor=white&color=%2374c7ec"></img></p>
 
-<!--
-<small>
-PS: 
 
-wahoo isn't named after Mario, Klonoa, the celebration, or even the <a href=https://en.wikipedia.org/wiki/Wahoo>fish</a>. the name wahoo is meant to mean "What kind of name is yay, anyway?"
-</small> -->
+> PS: 
+>
+> wahoo isn't named after Mario, Klonoa, the celebration, or even the [fish](https://en.wikipedia.org/wiki/Wahoo). the name wahoo is meant to mean "What kind of name is yay, anyway?"
