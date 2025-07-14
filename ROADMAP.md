@@ -10,7 +10,7 @@
 
 ## future releases
 ### v0.6
-- progress bars
+- progress bars (maybe with `tqdm`?)
 - multi-package support (eg. `wahoo install foo1 foo2`)
 
 ### v0.7-v0.9
