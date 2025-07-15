@@ -36,14 +36,16 @@ def echo(msg, color=wahoo_colors["wahoo_message"], prefix="wahoo", do_return=Fal
   # its starting to get ironic (yk, given the whole "prints with color" concept)
   # anyway this is just a developer "lol moment"
 
-  if prefix == "wahoo!":
+  if prefix is None:
+    used_prefix = ""
+  elif prefix == "wahoo!":
     used_prefix = f"{prefix} "
   else:
     used_prefix = f"{prefix}: "
   
   ## echoed = f"{color}{prefix + ':' if prefix and prefix != 'wahoo!' else ''} {reset}{msg}"
   ## echoed = color + used_prefix + reset + msg
-  echoed = f"{color}{used_prefix}{reset}{msg}"
+  echoed = f"{color if color else ''}{used_prefix}{reset}{msg}"
 
   if not do_return:
     print(echoed)
@@ -72,8 +74,12 @@ def prompt(msg, yolo=False, dont_exit=True, use_msg_as_prompt=False, show_abort_
   fullmsg = f"{echo(msg, do_return=True)}{(' ' + promptmsg_used) if use_msg_as_prompt else ('\nProceed? ' + promptmsg_used + reset + ' ')}"
 
   if not yolo:
-    usrinput = input(fullmsg)
-    if usrinput.lower().split()[0] == "n": # allows for answers like nn, no, nope, nah, etc
+    usrinput = input(fullmsg).lower().strip()
+    if not usrinput:
+      return default
+
+    splitted = usrinput.split()[0] # fat finger prevention >:D
+    if splitted == "n": # allows for answers like nn, no, nope, nah, etc
       if show_abort_msg:
         echo("Aborted.", color=None, prefix=None)
         
@@ -81,10 +87,8 @@ def prompt(msg, yolo=False, dont_exit=True, use_msg_as_prompt=False, show_abort_
         return False
       else:
         sys.exit(1)
-
-    elif not usrinput.split():
-      return default
-    elif usrinput.lower().split()[0] == "y": # allows for answers like yy, yes, yeah, yea, yep, etc
+        
+    elif splitted == "y": # allows for answers like yy, yes, yeah, yea, yep, etc
       return True
     else:
       echo(f"Taking '{usrinput}' as {'yes' if default else 'no'}.", "wahoo warn", None)
@@ -104,7 +108,6 @@ def no_pkg(pkg):
     
   echo("No package provided.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
   sys.exit(2)
-  
 
 def help():
   '''
@@ -116,7 +119,6 @@ def help():
   print("no help for u")
   print("help is in next version of the rewrite")
 
-
 def version():
   '''
   does this seriously need a docstring?
@@ -125,5 +127,5 @@ def version():
   echo(f"{colors['yellow']}v{version}{reset}", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
   # in plain english,
   # it does this:
-  ## print(f"wahoo: v{version}")
+  ## print(f"wahoo! v{version}")
   echo("Made with <3 by Spark", prefix=None, color=None)
