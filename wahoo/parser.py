@@ -127,6 +127,7 @@ def parse():
       cli.no_pkg(pkg)
       if pkg == "wahoo":
         try:
+          cli.prompt("Proceed with self-update?", yolo=flag_yolo, use_msg_as_prompt=True, dont_exit=False)
           salmon.main()
           sys.exit(0)
         except Exception as e:
