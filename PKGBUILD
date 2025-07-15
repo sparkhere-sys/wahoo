@@ -12,7 +12,7 @@ depends=('python>=3.11' 'git' 'bash' 'python-requests' 'python-rapidfuzz' 'sudo'
 source=('wahoo.py' 'LICENSE')
 provides=("$pkgname")
 conflicts=('wahoo') # wahoo cannot coexist with another wahoo installation
-sha256sums=('a10ace917200744e9e48644272a11b9b679ffa7866ac99e1577ba705a86f0726'
+sha256sums=('3b7bce0f5718919875c2da5566aec859ac11888224ef2ad255e7258ccf6d7885'
             'fb5d9a672ee9f4b5669d263652adaba135ec35ce1d0a693767caa0a8048f930a')
 
 package() {
