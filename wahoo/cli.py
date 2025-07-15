@@ -36,14 +36,20 @@ def echo(msg, color=wahoo_colors["wahoo_message"], prefix="wahoo", do_return=Fal
   # its starting to get ironic (yk, given the whole "prints with color" concept)
   # anyway this is just a developer "lol moment"
 
-  echoed = f"{color}{prefix + ':' if prefix and prefix != 'wahoo!' else ''} {reset}{msg}"
+  if prefix == "wahoo!":
+    used_prefix = f"{prefix} "
+  else:
+    used_prefix = f"{prefix}: "
+  
+  ## echoed = f"{color}{prefix + ':' if prefix and prefix != 'wahoo!' else ''} {reset}{msg}"
+  ## echoed = color + used_prefix + reset + msg
+  echoed = f"{color}{used_prefix}{reset}{msg}"
 
   if not do_return:
     print(echoed)
     return # ironic isn't it?
     
   return echoed
-
 
 def prompt(msg, yolo=False, dont_exit=True, use_msg_as_prompt=False, show_abort_msg=True, default=True, promptmsg="[Y/n]"):
   '''
