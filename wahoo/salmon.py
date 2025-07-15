@@ -63,7 +63,7 @@ def main():
     utils.sudo_check()
     update()
   except Exception as e:
-    cli.echo("Something went wrong.", color=wahoo_colors["wahoo_error"], prefix=f"{sal_prefix} error")
+    cli.echo(f"Something went wrong: {e}", color=wahoo_colors["wahoo_error"], prefix=f"{sal_prefix} error")
     cli.echo("You may have a broken wahoo install.", color=None, prefix=None)
     sys.exit(3)
 
