@@ -32,7 +32,7 @@ roadmap: [click me](./ROADMAP.md)
 | Command | Aliases | What it does | Usage |
 |---------|---------|--------------|-------|
 | `install` | `-S` | Installs a package from the AUR. | `wahoo install foo` |
-| `uninstall` | `-R`, `-remove`, `-Rns`, `autoremove` | Uninstalls a package. (this just calls pacman lol) If you run this with `autoremove` or `-Rns` instead, wahoo will use the `--dont-remove-depends` flag. | `wahoo uninstall foo` |
+| `uninstall` | `-R`, `-remove`, `-Rns`, `autoremove`, `purge` | Uninstalls a package. (this just calls pacman lol) | `wahoo uninstall foo` |
 | **NEW** `clean` | `cleanup`, `-Rc`, `-C` | Cleans up wahoo's source directory. | `wahoo clean` |
 | `list` | `-Q`, `-Qs` | Lists all your installed packages. | `wahoo list`, `wahoo list foo` (which searches for an installed package) |
 | `show` | `-Qi`, `info` | Shows package information for an installed package. | `wahoo show foo` |
@@ -55,7 +55,9 @@ suggest flags to add [here!](https://github.com/sparkhere-sys/wahoo/issues/1)
 | Flag | Aliases | What it does |
 |------|---------|--------------|
 | `--yolo` | `--noconfirm` | Skips all confirmation prompts. |
-| `--dont-remove-depends` | none :/ | Doesn't remove orphaned dependencies when running `wahoo uninstall`. |
+| `--dont-remove-depends` | none :/ | Doesn't remove orphaned dependencies when running `wahoo uninstall`. This is disabled if the flag isn't specified when running `purge`, `autoremove`, or `-Rns`. |
+| `--no-error-details` | none :/ | Hides error details (duh) |
+| `--silent` | none :/ | Silences the commands being ran by wahoo. *Does not* silence wahoo itself. |
 
 ## installation
 ### dependencies
