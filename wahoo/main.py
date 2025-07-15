@@ -17,8 +17,8 @@ from pathlib import Path
 
 ## wahoo stuff
 
-import wahoo.cliutils as cli
-import wahoo.reusables as utils
+import wahoo.cli as cli
+import wahoo.utils as utils
 from wahoo.constants import *
 
 ## pip packages

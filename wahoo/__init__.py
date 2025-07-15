@@ -11,4 +11,18 @@ DO NOT USE THIS FOR YOUR OWN PERSONAL SCRIPTS
 
 WAHOO IS A CLI TOOL AND NOT INTENDED TO BE USED
 AS A PYTHON MODULE.
+
+Index:
+* __init__.py (this file)
+* cli.py
+* constants.py
+* main.py
+* pacwrap.py
+* parser.py
+* utils.py
+* salmon.py
 '''
+
+# FIXME: the verbose and silent arguments for many functions
+#        have different defaults. some have True, some have False.
+#        in hindsight i should have marked this as a HACK instead

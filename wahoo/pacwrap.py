@@ -12,7 +12,7 @@ import sys
 
 ## wahoo stuff
 
-from wahoo.reusables import utils
+import wahoo.utils as utils
 
 # CLASSES
 

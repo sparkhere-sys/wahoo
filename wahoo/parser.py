@@ -9,7 +9,7 @@ import sys
 
 ## wahoo stuff
 
-from wahoo.cliutils import cli
+import wahoo.cli as cli
 import wahoo.main as main
 from wahoo.pacwrap import pacwrap
 from wahoo.constants import *

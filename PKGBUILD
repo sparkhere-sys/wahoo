@@ -1,5 +1,6 @@
 # Maintainer: Spark <spark-aur@proton.me>
 pythonver=$(python3 -c "import sys; print(f'python{sys.version_info.major}.{sys.version_info.minor}')")
+## pythonver=python3.11
 pkgname="wahoo"
 pkgver="0.5" # semantic versioning is weird.
 pkgrel=1
@@ -16,7 +17,7 @@ sha256sums=('a10ace917200744e9e48644272a11b9b679ffa7866ac99e1577ba705a86f0726'
 
 package() {
   install -Dm755 "$srcdir/wahoo.py" "$pkgdir/usr/bin/$pkgname"
-  install -Dm755 "$srcdir/wahoo/salmon.py" "$pkgdir/usr/bin/salmon"
+  ## install -Dm755 "$srcdir/wahoo/salmon.py" "$pkgdir/usr/bin/salmon"
   install -d "$pkgdir/usr/lib/$pythonver/site-packages"
   cp -r "$srcdir/wahoo/" "$pkgdir/usr/lib/$pythonver/site-packages/"
   install -Dm644 "$srcdir/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"

@@ -18,8 +18,8 @@ from pathlib import Path
 ## wahoo stuff
 
 from wahoo.constants import *
-import wahoo.cliutils as cli
-import wahoo.reusables as utils
+import wahoo.cli as cli
+import wahoo.utils as utils
 
 # CLASSES
 
