@@ -1,5 +1,38 @@
-*.pkg.tar.zst
-# thats really it
+# linux
 
-# SOMEONE PLEASE
-# ACTUALLY MAKE A GOOD .gitignore FILE
+*~
+*.swp
+*.swo
+*.bak
+
+# makepkg
+
+*.pkg.tar.zst
+*.tar.gz
+*.tar
+*.tar.*
+src/
+pkg/
+
+# environment files
+
+venv/
+.venv
+.env
+
+# python
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDEs
+
+.*.sw?
+.vscode/
+
+# wahoo specific
+
+*.ignore
+
+# thats really it
