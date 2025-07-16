@@ -29,8 +29,16 @@ source=('wahoo.py'
 # FIXME: just tar it you dumbass
 provides=("$pkgname")
 conflicts=('wahoo') # wahoo cannot coexist with another wahoo installation
-sha256sums=('3b7bce0f5718919875c2da5566aec859ac11888224ef2ad255e7258ccf6d7885'
-            'fb5d9a672ee9f4b5669d263652adaba135ec35ce1d0a693767caa0a8048f930a')
+sha256sums=('a'
+            'b'
+            'c'
+            'd'
+            'e'
+            'f'
+            'g'
+            'h'
+            'i'
+            'j')
 
 package() {
   pythonver=$(python -c "import sys; print(f'python{sys.version_info.major}.{sys.version_info.minor}')")
