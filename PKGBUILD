@@ -17,28 +17,14 @@ depends=('python>=3.11' 'git' 'bash' 'python-requests' 'python-rapidfuzz' 'sudo'
 # I JUST WANT THIS GODFORSAKEN THING TO WORK.
 source=('wahoo.py'
         'LICENSE'
-        'wahoo/__init__.py'
-        'wahoo/cli.py'
-        'wahoo/constants.py'
-        'wahoo/main.py'
-        'wahoo/pacwrap.py'
-        'wahoo/parser.py'
-        'wahoo/salmon.py'
-        'wahoo/utils.py')
+        'wahoo.tar.gz')
 # be glad i had the sanity remaining to do this in alphabetical order.
 # FIXME: just tar it you dumbass
 provides=("$pkgname")
 conflicts=('wahoo') # wahoo cannot coexist with another wahoo installation
 sha256sums=('a'
             'b'
-            'c'
-            'd'
-            'e'
-            'f'
-            'g'
-            'h'
-            'i'
-            'j')
+            'c')
 
 package() {
   pythonver=$(python -c "import sys; print(f'python{sys.version_info.major}.{sys.version_info.minor}')")
