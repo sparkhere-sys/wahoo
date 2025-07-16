@@ -36,7 +36,7 @@ jobs:
             updpkgsums && \
             makepkg --printsrcinfo > .SRCINFO && \
             cat .SRCINFO"
-      # update: added 'updpkgsums' which will update the sha256 checksums in the PKGBUILD. thank you github actions :D
+      # YAML is hell.
 
       - name: Fix git permissions # multiple times i had an error just because i forgot to add this
         run: sudo chown -R $USER:$USER ${{ github.workspace }}
