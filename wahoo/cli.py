@@ -109,16 +109,6 @@ def no_pkg(pkg):
   echo("No package provided.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
   sys.exit(2)
 
-def help():
-  '''
-  does this seriously need a docstring?
-  '''
-    
-  # this is the only function where it would be easier to use print() instead of cli.echo()
-  # so use print()
-  print("no help for u")
-  print("help is in next version of the rewrite")
-
 def version():
   '''
   does this seriously need a docstring?

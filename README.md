@@ -63,6 +63,7 @@ suggest flags to add [here!](https://github.com/sparkhere-sys/wahoo/issues/1)
 ### dependencies
 
 - Python 3.11+ (you probably already have this)
+- `base-devel`
 - `git`
 - `bash`
 - `sudo`
@@ -70,10 +71,12 @@ suggest flags to add [here!](https://github.com/sparkhere-sys/wahoo/issues/1)
 - Rapidfuzz (`python-rapidfuzz` from pacman)
 
 ### from source
-open up your terminal, then:
+
+open up your terminal, then run:
 ```bash
 git clone https://github.com/sparkhere-sys/wahoo.git
 cd wahoo
+tar -czf wahoo.tar.gz wahoo/
 makepkg -si
 ```
 
@@ -82,7 +85,7 @@ makepkg -si
 >
 > The `install.sh` has been deprecated and is not maintained anymore.
 >
-> Install `wahoo` manually with `makepkg` instead.
+> Install `wahoo` manually with `makepkg` instead like a normal human being.
 
 ### from AUR
 soon™️

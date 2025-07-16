@@ -14,6 +14,7 @@ import wahoo.main as main
 from wahoo.pacwrap import pacwrap
 from wahoo.constants import *
 import wahoo.salmon as salmon
+from wahoo.help import help
 
 # FUNCTIONS
 
@@ -57,12 +58,12 @@ def flagparsing(flags):
         parsed_flags["flag_yolo"] = True
       case ("--dont-remove-depends" | "--dontremovedepends"):
         parsed_flags["flag_rns"] = True
-      case "--no-error-details":
+      case ("--no-error-details" | "--noerrordetails"):
         parsed_flags["flag_verbose"] = False
       case "--silent":
         parsed_flags["flag_silent"] = True
       case "--help":
-        cli.help()
+        help()
         sys.exit(0)
       case "--version":
         cli.version()
@@ -150,7 +151,8 @@ def parse():
       cli.version()
 
     case ("help" | "-H"):
-      cli.help()
+      helpcmd = pkg # yes i know this looks weird
+      help(helpcmd)
 
     case ("show" | "info" | "-Qi"):
       cli.no_pkg(pkg)
@@ -161,4 +163,4 @@ def parse():
 
     case _:
       cli.echo(f"Unknown command: '{cmd}'.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
-      cli.help()
+      help()

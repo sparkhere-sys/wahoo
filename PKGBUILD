@@ -18,8 +18,7 @@ depends=('python>=3.11' 'git' 'bash' 'python-requests' 'python-rapidfuzz' 'sudo'
 source=('wahoo.py'
         'LICENSE'
         'wahoo.tar.gz')
-# be glad i had the sanity remaining to do this in alphabetical order.
-# FIXME: just tar it you dumbass
+# i ended up tarring it. i gave up.
 provides=("$pkgname")
 conflicts=('wahoo') # wahoo cannot coexist with another wahoo installation
 sha256sums=('3b7bce0f5718919875c2da5566aec859ac11888224ef2ad255e7258ccf6d7885'

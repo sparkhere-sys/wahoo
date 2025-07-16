@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 '''
 wahoo's launcher and the thing that actually gets installed to /usr/bin/ by pacman
 '''
