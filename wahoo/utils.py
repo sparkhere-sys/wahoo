@@ -28,7 +28,12 @@ import requests
 
 def internet_check(timeout=3, print_and_exit=False, request_to="https://archlinux.org"):
   '''
-  TODO: add docstring
+  Checks for internet by sending a GET request to a website.
+
+  Args:
+  * timeout (int) - passed to requests.get() - default: 3
+  * print_and_exit (bool) - prints a no internet message and exits with code 4 if true - default: False
+  * request_to (string?) - the server to send the GET request to - default: https://archlinux.org
   '''
 
   try:
@@ -41,7 +46,6 @@ def internet_check(timeout=3, print_and_exit=False, request_to="https://archlinu
     return False
     
   return True
-  
 
 def run(cmd, dir=None, yolo=False, dont_exit=True, verbose=True, silent=False):
   '''
@@ -72,14 +76,16 @@ def run(cmd, dir=None, yolo=False, dont_exit=True, verbose=True, silent=False):
       cli.echo(f"Running command: {cmd}", color=None, prefix=None)
 
   try:
-    # TODO: make the silencing better
-    #       and maybe add a log file
+    # TODO: add a log file
 
     # yes, this runs with shell=True.
     # no, i don't care.
     # we're arch users, what do you expect?
 
-    subprocess.run(cmd + (" > /dev/null 2>&1" if silent else ""), shell=True, check=True, cwd=dir)
+    silent_stdout = subprocess.DEVNULL if silent else None
+    ## silent_stderr = silent_stdout
+
+    subprocess.run(cmd, shell=True, check=True, cwd=dir, stdout=silent_stdout) ## stderr=silent_stderr
     return # doesn't need to return anything, just exits the function.
     
   except subprocess.CalledProcessError as e:
