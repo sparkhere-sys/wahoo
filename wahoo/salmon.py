@@ -61,6 +61,7 @@ def update():
 def main():
   try:
     utils.sudo_check()
+    utils.internet_check()
     update()
   except Exception as e:
     cli.echo(f"Something went wrong: {e}", color=wahoo_colors["wahoo_error"], prefix=f"{sal_prefix} error")
