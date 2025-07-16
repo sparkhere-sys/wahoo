@@ -31,6 +31,14 @@ colors = {
   "blue": "\u001b[34m" if allow_colors else ""
 }
 
+styles = {
+  "bold": "\u001b[1m" if allow_colors else "",
+  "faint": "\u001b[2m" if allow_colors else "",
+  "italic": "\u001b[3m" if allow_colors else "",
+  "underline": "\u001b[4m" if allow_colors else "",
+  "strike": "\u001b[9m"
+}
+
 wahoo_colors = { # since i used `if allow_colors else ""` in the above dict, there's no need for repetition
   "wahoo_message": colors["white"],
   "wahoo_success": colors["green"],
