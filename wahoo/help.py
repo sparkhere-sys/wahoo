@@ -52,7 +52,7 @@ info (show, -Qi)
 {blue}update (-Sy){reset}:               Update an AUR package.
 {blue}upgrade (updateall, -Syu){reset}:  Update all installed AUR packages.
 {green}[Other Commands]{reset}
-{styles["italic"]}{styles["dim"]}These commands wrap around their pacman equivalents.{reset}
+{styles["italic"]}{styles["faint"]}These commands wrap around their pacman equivalents.{reset}
 {blue}list (-Q, -Qs){reset}
 {blue}info (show, -Qi){reset}
 {green}[Flags]{reset}
