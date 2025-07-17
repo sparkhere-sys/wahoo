@@ -19,11 +19,19 @@ source=('wahoo.py'
         'LICENSE'
         'wahoo.tar.gz')
 # i ended up tarring it. i gave up.
+
+# FIXME: we are STILL in checksum hell!!!!!
+# makepkg sucks. (good thing its open source so someone smarter than me can make it better)
+# point is: when creating wahoo.tar.gz, github actions generated a checksum for *it*,
+#           and since the user is expected to create their own tarball,
+#           we get checksum mismatches and you have to manually run updpkgsums like a caveman.
+# the solution to all this madness?
+# just use a git source. and when we get on the AUR, we modify the PKGBUILD. simple as!
+# i will not implement this yet (this will probably be in a pull request)
+# for now we'll just do a lil' SKIP in the checksums department and disable github actions for a little bit.
 provides=("$pkgname")
-conflicts=('wahoo') # wahoo cannot coexist with another wahoo installation
-sha256sums=('c1823bb0eb6a121de5e24c222db870ae47f8a5a4f9cfc7d27fd3708a61edd80c'
-            'fb5d9a672ee9f4b5669d263652adaba135ec35ce1d0a693767caa0a8048f930a'
-            'e4d511c99476b2a87b3dba39ad98ad45d8334a2da68fe4297cbf4d220f175fa3')
+## conflicts=('wahoo') # wahoo cannot coexist with another wahoo installation
+sha256sums=('SKIP' 'SKIP' 'SKIP')
 
 package() {
   pythonver=$(python -c "import sys; print(f'python{sys.version_info.major}.{sys.version_info.minor}')")
