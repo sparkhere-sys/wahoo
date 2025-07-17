@@ -80,6 +80,8 @@ tar -czf wahoo.tar.gz wahoo/
 makepkg -si
 ```
 
+<!-- if the install doesn't work, refer to [this](https://github.com/sparkhere-sys/wahoo/issues/7) issue. -->
+
 ### with the install.sh
 > [!WARNING]
 >

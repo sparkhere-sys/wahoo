@@ -33,6 +33,6 @@ __pycache__/
 
 # wahoo specific
 
-*.ignore
+*.ignored
 
 # thats really it
