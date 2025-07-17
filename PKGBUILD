@@ -23,7 +23,7 @@ provides=("$pkgname")
 conflicts=('wahoo') # wahoo cannot coexist with another wahoo installation
 sha256sums=('c1823bb0eb6a121de5e24c222db870ae47f8a5a4f9cfc7d27fd3708a61edd80c'
             'fb5d9a672ee9f4b5669d263652adaba135ec35ce1d0a693767caa0a8048f930a'
-            '36e9442b9525f2c558f58044d76ad7409c9fef3e5d4d6f0f6b23f721b26dcd92')
+            'ac9fbef4322f274223ea96e620e414a3f77a65b1b1583cee1822874e8f6d3dd2')
 
 package() {
   pythonver=$(python -c "import sys; print(f'python{sys.version_info.major}.{sys.version_info.minor}')")
