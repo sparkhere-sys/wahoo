@@ -20,7 +20,6 @@ from wahoo.constants import *
 
 # FUNCTIONS
 
-# the FIXME has been satisfied!
 
 def echo(msg, color=wahoo_colors["wahoo_message"], prefix="wahoo", do_return=False):
   '''

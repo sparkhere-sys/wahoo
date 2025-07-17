@@ -16,11 +16,12 @@ Index:
 * __init__.py (this file)
 * cli.py
 * constants.py
+* help.py
 * main.py
 * pacwrap.py
 * parser.py
-* utils.py
 * salmon.py
+* utils.py
 '''
 
 # FIXME: the verbose and silent arguments for many functions

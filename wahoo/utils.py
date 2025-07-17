@@ -24,7 +24,6 @@ import requests
 
 # FUNCTIONS
 
-# the FIXME has been satisfied!
 
 def internet_check(timeout=3, print_and_exit=False, request_to="https://archlinux.org"):
   '''
