@@ -33,7 +33,7 @@ roadmap: [click me](./ROADMAP.md)
 |---------|---------|--------------|-------|
 | `install` | `-S` | Installs a package from the AUR. | `wahoo install foo` |
 | `uninstall` | `-R`, `-remove`, `-Rns`, `autoremove`, `purge` | Uninstalls a package. (this just calls pacman lol) | `wahoo uninstall foo` |
-| **NEW** `clean` | `cleanup`, `-Rc`, `-C` | Cleans up wahoo's source directory. | `wahoo clean` |
+| `clean` | `cleanup`, `-Rc`, `-C` | Cleans up wahoo's source directory. | `wahoo clean` |
 | `list` | `-Q`, `-Qs` | Lists all your installed packages. | `wahoo list`, `wahoo list foo` (which searches for an installed package) |
 | `show` | `-Qi`, `info` | Shows package information for an installed package. | `wahoo show foo` |
 | `update` | `-Sy` | Updates an AUR package. | `wahoo update foo`, and to update wahoo itself, `wahoo update wahoo` |

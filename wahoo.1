@@ -1,0 +1,59 @@
+.TH wahoo 1 "2025-07-18" "wahoo v0.5" "the man page"
+
+.SH NAME
+wahoo \- an AUR helper written in python
+
+.SH SYNOPSIS
+.B wahoo
+[\fICOMMAND\fR] [\fIFLAGS\fR]
+
+.SH DESCRIPTION
+wahoo is a lightweight AUR helper written in python!
+made with <3 by Spark
+
+.SH COMMANDS
+.TP
+.B install (-S)
+Installs a package from the AUR.
+.TP
+.B uninstall (remove, -R)
+Uninstalls a package on your system.
+.TP
+.B purge (autoremove, -Rns)
+Ditto, but removes orphaned dependencies by default.
+.TP
+.B clean (cleanup, -Rc, -C)
+Cleans up wahoo's source directory. (~/.wahoo/source)
+.TP
+.B update (-Sy)
+Update an AUR package.
+.TP
+.B upgrade (updateall, -Syu)
+Update all installed AUR packages.
+Optionally, also update the system.
+.TP
+.B list (-Q, -Qs)
+Wraps \`pacman -Q\` and \`pacman -Qs\`.
+.TP
+.B info (show, -Qi)
+Wraps \`pacman -Qi\`.
+
+.SH OPTIONS
+.TP
+.B --yolo (--noconfirm)
+Skips all confirmation prompts.
+.TP
+.B --dont-remove-depends
+When running wahoo's uninstall commands, wahoo will not remove orphaned dependencies when uninstalling a package.
+.TP
+.B --no-error-details
+Hides error info. (yeah.)
+.TP
+.B --silent
+Silences any commands ran by wahoo.
+
+.SH SEE ALSO
+pacman(8)
+
+.SH AUTHOR
+Spark \- spark\-aur@proton.me

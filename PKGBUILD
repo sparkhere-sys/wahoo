@@ -17,7 +17,8 @@ depends=('python>=3.11' 'git' 'bash' 'python-requests' 'python-rapidfuzz' 'sudo'
 # I JUST WANT THIS GODFORSAKEN THING TO WORK.
 source=('wahoo.py'
         'LICENSE'
-        'wahoo.tar.gz')
+        'wahoo.tar.gz'
+        'wahoo.1')
 # i ended up tarring it. i gave up.
 
 # FIXME: we are STILL in checksum hell!!!!!
@@ -31,7 +32,7 @@ source=('wahoo.py'
 # for now we'll just do a lil' SKIP in the checksums department and disable github actions for a little bit.
 provides=("$pkgname")
 ## conflicts=('wahoo') # wahoo cannot coexist with another wahoo installation
-sha256sums=('SKIP' 'SKIP' 'SKIP')
+sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP')
 
 package() {
   pythonver=$(python -c "import sys; print(f'python{sys.version_info.major}.{sys.version_info.minor}')")
@@ -41,6 +42,8 @@ package() {
   install -d "$pkgdir/usr/lib/$pythonver/site-packages/wahoo/"
   cp -r "$srcdir/wahoo/"* "$pkgdir/usr/lib/$pythonver/site-packages/wahoo/"
   install -Dm644 "$srcdir/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  gzip -f wahoo.1
+  install -Dm644 "$srcdir/wahoo.1" "$pkgdir/usr/share/man/man1/wahoo.1.gz"
 }
 
 # i obviously do not write commit messages when i update the PKGBUILD,
