@@ -13,10 +13,4 @@ if __name__ == "__main__":
     parse()
   except KeyboardInterrupt:
     cli.echo("Interrupted by Ctrl+C, see ya next time")
-    ## sys.exit(130)
-    # HACK: 130 is the exit code for Ctrl+C, but i dont want to use it since
-    #       the "KeyboardInterrupt" exception has already been handled,
-    #       so i see no need to exit the script with a non-zero exit code.
-    #       naturally, this doesn't play well with scripts that use wahoo since
-    #       they expect a non-zero exit code if wahoo is interrupted.
-    #       no way to get around this im afraid
+    sys.exit(130)

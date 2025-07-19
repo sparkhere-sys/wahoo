@@ -1,0 +1,60 @@
+name: Test build and regenerate .SRCINFO
+
+on:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'PKGBUILD'
+      - 'wahoo/'
+      - 'wahoo.py'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # you cannot escape canonical
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      
+      - name: Build in Arch container
+        uses: addnab/docker-run-action@v3
+        with:
+          image: archlinux:latest
+          options: -v ${{ github.workspace }}:/repo --rm
+          run: |
+            pacman -Syu --noconfirm base-devel git pacman-contrib
+            useradd -m builder
+            # useradd -m tester
+            echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers.d/builder
+            chown -R builder:builder /repo
+
+            sudo -u builder bash -c "cd /repo && \
+            makepkg --printsrcinfo > .SRCINFO && \
+            cat .SRCINFO && \
+            makepkg -si --noconfirm || { echo "Build failed!"; exit 255 }"
+
+            # sudo -u tester bash -c "set -euo pipefail && \
+            # echo 'Starting test!' && \
+            # wahoo && \
+            # wahoo install --yolo retroarch-git && \
+            # wahoo uninstall --yolo retroarch 
+            "
+
+      - name: Fix git permissions
+        run: chown -R $(whoami):$(whoami) ${{ github.workspace }}
+      
+      - name: Commit and push
+        run: |
+          cd ${{ github.workspace }}
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .SRCINFO PKGBUILD
+          if ! git diff --cached --quiet; then
+            git commit -m "ci: regenerate .SRCINFO"
+          else
+            echo "No changes, not committing."
+          fi
+
+# finito
