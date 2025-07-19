@@ -10,7 +10,7 @@ depends=('python>=3.11' 'git' 'bash' 'python-requests' 'python-rapidfuzz' 'sudo'
 source=("git+${url}.git")
 provides=("$pkgname")
 ## conflicts=('wahoo') # wahoo cannot coexist with another wahoo installation
-sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP')
+sha256sums=('SKIP')
 
 package() {
   pythonver=$(python -c "import sys; print(f'python{sys.version_info.major}.{sys.version_info.minor}')")
