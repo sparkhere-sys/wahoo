@@ -33,7 +33,7 @@ jobs:
             sudo -u builder bash -c "cd /repo && \
             makepkg --printsrcinfo > .SRCINFO && \
             cat .SRCINFO && \
-            makepkg -si --noconfirm || { echo "Build failed!"; exit 255 }"
+            makepkg -si --noconfirm || { echo "Build failed!"; exit 255; }"
 
             # sudo -u tester bash -c "set -euo pipefail && \
             # echo 'Starting test!' && \
