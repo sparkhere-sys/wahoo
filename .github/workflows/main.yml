@@ -43,7 +43,7 @@ jobs:
             "
 
       - name: Fix git permissions
-        run: chown -R $(whoami):$(whoami) ${{ github.workspace }}
+        run: sudo chown -R $(whoami):$(whoami) ${{ github.workspace }}
       
       - name: Commit and push
         run: |
