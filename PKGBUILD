@@ -7,7 +7,7 @@ arch=('x86_64') # sorry ARM users
 url="https://github.com/sparkhere-sys/wahoo"
 license=('Custom:Modified-MIT') # modified MIT license, no commercial usage clause added
 depends=('python>=3.11' 'git' 'bash' 'python-requests' 'python-rapidfuzz' 'sudo')
-source=("git+${url}.git#tag=v0.5")
+source=("git+${url}.git")
 provides=("$pkgname")
 ## conflicts=('wahoo') # wahoo cannot coexist with another wahoo installation
 sha256sums=('SKIP' 'SKIP' 'SKIP' 'SKIP')
