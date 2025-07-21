@@ -34,6 +34,7 @@ jobs:
             makepkg --printsrcinfo > .SRCINFO && \
             cat .SRCINFO && \
             cd /home/builder && \
+            curl -fsSL https://raw.githubusercontent.com/sparkhere-sys/wahoo/refs/heads/main/PKGBUILD -o /home/builder/PKGBUILD && \
             makepkg -si --noconfirm || { echo "Build failed!"; exit 255; }'
 
             # sudo -u tester bash -c "set -euo pipefail && \
