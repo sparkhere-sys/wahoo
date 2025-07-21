@@ -55,6 +55,7 @@ jobs:
           git add .SRCINFO PKGBUILD
           if ! git diff --cached --quiet; then
             git commit -m "ci: regenerate .SRCINFO"
+            git push origin main
           else
             echo "No changes, not committing."
           fi
