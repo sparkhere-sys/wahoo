@@ -1,6 +1,6 @@
 # Maintainer: Spark <spark-aur@proton.me>
 pkgname="wahoo"
-pkgver="0.5" # semantic versioning is weird.
+pkgver="0.6" # semantic versioning is weird.
 pkgrel=1
 pkgdesc="an AUR helper made in python because why not? made with <3 by spark"
 arch=('x86_64') # sorry ARM users
@@ -15,13 +15,16 @@ sha256sums=('SKIP')
 package() {
   pythonver=$(python -c "import sys; print(f'python{sys.version_info.major}.{sys.version_info.minor}')")
   ## pythonver=python3.11
-  install -Dm755 "$srcdir/wahoo.py" "$pkgdir/usr/bin/$pkgname"
+  install -Dm755 "$srcdir/wahoo/wahoo.py" "$pkgdir/usr/bin/$pkgname"
   ## install -Dm755 "$srcdir/wahoo/salmon.py" "$pkgdir/usr/bin/salmon"
-  install -d "$pkgdir/usr/lib/$pythonver/site-packages/wahoo/"
-  cp -r "$srcdir/wahoo/"* "$pkgdir/usr/lib/$pythonver/site-packages/wahoo/"
-  install -Dm644 "$srcdir/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-  gzip -f wahoo.1
-  install -Dm644 "$srcdir/wahoo.1" "$pkgdir/usr/share/man/man1/wahoo.1.gz"
+
+  install -d "$pkgdir/usr/lib/$pythonver/site-packages/" # just in case
+  cp -r "$srcdir/wahoo/wahoo" "$pkgdir/usr/lib/$pythonver/site-packages/"
+
+  install -Dm644 "$srcdir/wahoo/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+  gzip -f "$srcdir/wahoo/wahoo.1"
+  install -Dm644 "$srcdir/wahoo/wahoo.1.gz" "$pkgdir/usr/share/man/man1/wahoo.1.gz"
 }
 
 # i obviously do not write commit messages when i update the PKGBUILD,
