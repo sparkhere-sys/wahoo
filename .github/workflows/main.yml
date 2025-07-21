@@ -5,8 +5,9 @@ on:
     branches:
       - 'main'
     paths:
+      # '.github/workflows/main.yml
       - 'PKGBUILD'
-      - 'wahoo/'
+      - 'wahoo/**'
       - 'wahoo.py'
   workflow_dispatch:
 
