@@ -8,6 +8,7 @@
 - [x] man page
 
 ## next release: v0.6
+- [x] better dependency resolution
 - [ ] progress bars (maybe with `tqdm`?)
 - [ ] multi-package support (eg. `wahoo install foo1 foo2`)
 - [ ] [more flags](https://github.com/sparkhere-sys/wahoo/issues/1)

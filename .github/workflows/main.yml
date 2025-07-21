@@ -40,7 +40,7 @@ jobs:
             # wahoo && \
             # wahoo install --yolo retroarch-git && \
             # wahoo uninstall --yolo retroarch 
-            "
+            # "
 
       - name: Fix git permissions
         run: sudo chown -R $(whoami):$(whoami) ${{ github.workspace }}

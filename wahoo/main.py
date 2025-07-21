@@ -14,6 +14,8 @@ The actual package manager.
 
 import sys
 from pathlib import Path
+import subprocess
+from shutil import rmtree
 
 ## wahoo stuff
 
@@ -26,81 +28,202 @@ from wahoo.constants import *
 import requests
 from rapidfuzz import fuzz
 
-# FUNCTIONS
+# CLASSES
 
-def install(pkg, source="https://aur.archlinux.org", yolo=False, build=True, segfault=True, silent=False, verbose=False):
+class installer:
   '''
   installs a package from the AUR
-
-  Flow:
-  * segfault easter egg (if enabled)
-  * sudo check
-  * internet check
-  * prompts to start the cloning
-  * prompts to build and install (or build without installing) the package (if build=True)
-  * fin
-
-  Args:
-  * pkg (string) - the package to be installed
-  * source (string) - where to clone the package from - default: "https://aur.archlinux.org"
-  * yolo (bool) - yolo mode - default: False
-  * build (bool) - enable building - default: True
-  * segfault (bool) - segfault easter egg >:) - default: True
-  * silent (bool) - silences git and makepkg - default: False
-  * verbose (bool) - prints error info should something go wrong - default: False
+  is called by the install() function
   '''
 
-  if segfault and pkg == "wahoo":
-    # muahahahahahaha
-    cli.echo("Bold of you to try to install wahoo with wahoo.", color=None, prefix=None)
-    cli.echo("Segmentation fault (core dumped)", color=None, prefix=None)
-    sys.exit(11) # SIGSEGV
+  def __init__(self, pkg, source, yolo, build, segfault, silent, verbose):
+    self.pkg = pkg
+    self.source = source
+    self.yolo = yolo
+    self.build = build
+    self.segfault = segfault
+    self.silent = silent
+    self.verbose = verbose
+
+    self.wahooroot = Path.home() / ".wahoo" / "source"
+    self.wahooroot.mkdir(parents=True, exist_ok=True)
+    self.sourcedir = self.wahooroot / pkg
   
-  utils.sudo_check()
-  utils.internet_check(print_and_exit=True)
+  def segfault_easter_egg(self):
+    # i should probably be smart
+    # and make aliases for self.pkg and other shit
+    # later. programmer procrastination at its finest.
 
-  wahooroot = Path.home() / ".wahoo" / "source"
-  wahooroot.mkdir(parents=True, exist_ok=True)
-  sourcedir = wahooroot / pkg
+    if self.pkg == "wahoo" and self.segfault:
+      # muahahahahahaha
+      cli.echo("Bold of you to try to install wahoo with wahoo.", color=None, prefix=None)
+      cli.echo("Segmentation fault (core dumped)", color=None, prefix=None)
+      sys.exit(11) # SIGSEGV
+  
+  def main(self):
+    try:
+      self.segfault_easter_egg()
+      self.clone()
+      self.resolve_depends()
+      self.build_and_install()
+    except Exception as e:
+      cli.echo("Installation failed.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
+      if self.verbose:
+        cli.echo(f"Details: {e}", color=None, prefix=None)
 
-  try:
-    cli.prompt("Starting install...", yolo=yolo, dont_exit=False)
-    cli.echo(f"Installing {pkg}" + f" from {source}" if source != "https://aur.archlinux.org" else "...")
-    if not sourcedir.exists():
-      if verbose:
-        cli.echo(f"Cloning {pkg} git repo ({source}/{pkg}.git) to {sourcedir}")
+      sys.exit(1)
 
-      utils.run(f"git clone {source}/{pkg}.git", dir=wahooroot, yolo=yolo, dont_exit=False, silent=silent)
-    else:
-      cli.echo(f"Source directory for {pkg} already exists, skipping clone.", color=wahoo_colors["wahoo_warn"], prefix="wahoo warn")
+  def resolve_depends(self):
+    def parse_srcinfo():
+      # mmmm... nested functions...
+      deps = []
+      makedeps = []
+      optdeps = []
 
-    # TODO: add dependency resolution for packages that aren't available in the pacman repos
-    # context: i tested out the old version again, tried to install osu-lazer-tachyon-bin (for funsies)
-    #          then when the build started, makepkg freaked out about not being able to find
-    #          `osu-mime`. turns out osu-mime is an AUR package which couldn't be installed with pacman.
+      install_optdeps = cli.prompt("Install optional dependencies?", yolo=self.yolo, use_msg_as_prompt=True)
 
-    if build:
-      if yolo:
-        # assume the user wants to build and install the package (-si)
-        cli.echo("Building and installing package...")
-        utils.run("makepkg -si --noconfirm", dir=sourcedir, yolo=yolo, dont_exit=True, silent=silent, verbose=verbose)
-        cli.echo(f"Successfully installed {pkg}!", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
-        return
+      with srcinfo_path.open('r') as f:
+        for line in f:
+          line = line.strip()
+          if line.startswith("depends ="):
+            dep = line.split('=', 1)[1].strip()
+            deps.append(dep)
+
+          elif line.startswith("makedepends ="):
+            dep = line.split('=', 1)[1].strip()
+            makedeps.append(dep)
+
+          elif install_optdeps and line.startswith("optdepends ="):
+            opt = line.split('=', 1)[1].strip()
+            if ':' in opt:
+              name, desc = opt.split(':', 1)
+              optdeps.append((name.strip(), desc.strip()))
+            else:
+              optdeps.append((opt, None))
       
-      if cli.prompt(f"Build {pkg} without installing?", use_msg_as_prompt=True, default=False, promptmsg="[y/N]", show_abort_msg=False):
-        cli.echo("Building package...")
-        utils.run("makepkg -s", dir=sourcedir, silent=silent, verbose=verbose)
-        cli.echo(f"{pkg} built successfully!", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
-        sys.exit(0)
-        
-      cli.echo("Building and installing package...")
-      utils.run("makepkg -si", dir=sourcedir, silent=silent, verbose=verbose)
-  except Exception as e:
-    cli.echo(f"Installation failed.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
-    if verbose:
-      cli.echo(f"Details: {e}", color=None, prefix=None)
+      return deps, makedeps, optdeps
+
+    def is_installed(pkg):
+      result = utils.run(f"pacman -Qi {pkg}", silent=True, text=True, return_result=True)
+      return result and result.returncode == 0
     
-    sys.exit(1)
+    def is_in_pacman(pkg):
+      result = utils.run(f"pacman -Si {pkg}", silent=True, text=True, return_result=True)
+      return result and result.returncode == 0
+    
+    def install_aur_dep(pkg):
+      depdir = self.wahooroot / pkg
+
+      # clone
+      if not depdir.exists():
+        utils.run(f"git clone {self.source}/{pkg}.git", dir=self.wahooroot, silent=self.silent, dont_exit=False)
+
+      # build
+      utils.run(f"makepkg -si", dir=depdir, silent=self.silent, dont_exit=False)
+
+    try:
+      cli.echo("Resolving dependencies...")
+      srcinfo_path = self.sourcedir / ".SRCINFO"
+      if not srcinfo_path.exists():
+        result = utils.run("makepkg --printsrcinfo", yolo=True, dir=self.sourcedir, verbose=self.verbose, 
+                           silent=True, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, return_result=True)
+        
+        if result and result.stdout:
+          srcinfo_path.write_text(result.stdout)
+        else:
+          cli.echo("Failed to generate .SRCINFO", color=wahoo_colors["wahoo_warn"], prefix="wahoo warn")
+
+      deps, makedeps, optdeps = parse_srcinfo()
+      alldeps = deps + makedeps + [name for name, _ in optdeps]
+
+      for dep in alldeps:
+        if is_installed(dep):
+          if self.verbose:
+            cli.echo(f"{dep} already installed, skipping.")
+          continue
+          
+        elif is_in_pacman(dep):
+          if self.verbose:
+            cli.echo(f"{dep} is in official repos, skipping.")
+          
+          # wahoo will refuse to run without -s on makepkg
+          # so i see no point in running utils.run here
+          continue
+        
+        else:
+          if self.verbose:
+            cli.echo(f"{dep} not found in official repos, installing from AUR...")
+          
+          install_aur_dep(dep)
+
+    except Exception as e:
+      cli.echo("Dependency resolution failed.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
+      if self.verbose:
+        cli.echo(f"Details: {e}", color=None, prefix=None)
+
+  def clone(self):
+    cli.prompt("Starting install...", yolo=self.yolo, dont_exit=False)
+    cli.echo(f"Installing {self.pkg}" + (f" from {self.source}..." if self.source != "https://aur.archlinux.org" else "..."))
+    if not self.sourcedir.exists():
+      if self.verbose:
+        cli.echo(f"Cloning {self.pkg} git repo ({self.source}/{self.pkg}.git) to {self.sourcedir}")
+
+      utils.run(f"git clone {self.source}/{self.pkg}.git", dir=self.wahooroot, yolo=self.yolo, dont_exit=False, silent=self.silent)
+    else:
+      cli.echo(f"Source directory for {self.pkg} already exists, skipping clone.", color=wahoo_colors["wahoo_warn"], prefix="wahoo warn")
+  
+  def build_and_install(self):
+    if not self.build:
+      return
+    
+    if self.yolo:
+      # assume the user wants to build and install the package (-si)
+      cli.echo("Building and installing package...")
+      utils.run("makepkg -si --noconfirm", dir=self.sourcedir, yolo=self.yolo, dont_exit=True, silent=self.silent, verbose=self.verbose)
+      cli.echo(f"Successfully installed {self.pkg}!", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
+      return
+
+    if cli.prompt(f"Build {self.pkg} without installing?", use_msg_as_prompt=True, default=False, promptmsg="[y/N]", show_abort_msg=False):
+      cli.echo("Building package...")
+      utils.run("makepkg -s", dir=self.sourcedir, silent=self.silent, verbose=self.verbose)
+      cli.echo(f"{self.pkg} built successfully!", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
+      return
+        
+    cli.echo("Building and installing package...")
+    utils.run("makepkg -si", dir=self.sourcedir, silent=self.silent, verbose=self.verbose)
+    cli.echo(f"Successfully installed {self.pkg}!", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
+
+
+'''
+here's the old docstring for install():
+
+installs a package from the AUR
+
+Flow:
+* segfault easter egg (if enabled)
+* sudo check
+* internet check
+* prompts to start the cloning
+* prompts to build and install (or build without installing) the package (if build=True)
+* fin
+
+Args:
+* pkg (string) - the package to be installed
+* source (string) - where to clone the package from - default: "https://aur.archlinux.org"
+* yolo (bool) - yolo mode - default: False
+* build (bool) - enable building - default: True
+* segfault (bool) - segfault easter egg >:) - default: True
+* silent (bool) - silences git and makepkg - default: False
+* verbose (bool) - prints error info should something go wrong - default: False
+'''
+
+
+# FUNCTIONS
+
+def install(**kwargs):
+  install_class = installer(**kwargs)
+
+  install_class.main()
 
 def uninstall(pkg, yolo=False, silent=False, verbose=False, rns=False):
   '''
@@ -312,14 +435,8 @@ def cleanup(yolo=False, verbose=True, silent=True):
 
   cli.echo("Cleaning up everything...")
   try:
-    utils.run(f"rm -rf {wahooroot}/*", yolo=yolo, verbose=verbose, silent=silent)
-    # would it be better to use rmdir instead of rm -rf?
-    # eh... im not sure.
-    # it should delete everything INSIDE the source dir, not nuke it completely.
-    
-    # better idea: using shutil.rmtree()
-    # more pythonic
-    # problem is, i really don't want to add one more import to this than necessary. subprocess will suffice.
+    ## utils.run(f"rm -rf {wahooroot}/*", yolo=yolo, verbose=verbose, silent=silent)
+    rmtree(wahooroot)
     
     cli.echo("Clean up finished!", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
   except Exception as e:

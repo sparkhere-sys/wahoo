@@ -4,11 +4,20 @@ Constants. Unchanged stuff.
 
 Import this with `from wahoo.constants import *`.
 
+unlabelled:
 * version (float)
+
+ANSI colors:
 * allow_colors (bool)
 * colors (dict)
+* styles (dict)
 * wahoo_colors (dict)
 * reset (string)
+
+salmon specific:
+* repo_url (string)
+* sal_prefix (string)
+* pkgname (string)
 '''
 
 # LIBRARIES AND MODULES
@@ -17,7 +26,7 @@ import sys
 
 # CONSTANTS
 
-version = 0.5 # this doesn't need to be a string i just realized
+version = 0.6 # this doesn't need to be a string i just realized
 
 ## ANSI COLORS
 

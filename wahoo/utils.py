@@ -46,7 +46,8 @@ def internet_check(timeout=3, print_and_exit=False, request_to="https://archlinu
     
   return True
 
-def run(cmd, dir=None, yolo=False, dont_exit=True, verbose=True, silent=False):
+def run(cmd, dir=None, yolo=False, dont_exit=True, verbose=True, silent=False, 
+        stdout=None, stderr=None, return_result=False, text=False, shell=True):
   '''
   runs a shell command
 
@@ -57,11 +58,16 @@ def run(cmd, dir=None, yolo=False, dont_exit=True, verbose=True, silent=False):
 
   Args:
   * cmd (string) - the command to be run
-  * dir (string) - where to run the command (passed to subprocess.run()'s cwd paramater) - default: None (i.e, current working directory)
   * yolo (bool) - yolo mode - default: False
   * dont_exit (bool) - don't exit if the user aborts - default: True
   * verbose (bool) - prints error info should something go wrong - default: True
-  * 
+  * silent (bool) - silences the command being ran - default: False
+  * return_result (bool) - returns the result of the command to be ran - 
+
+  Passed to subprocess:
+  * dir (string?) - where to run the command (passed to subprocess.run()'s cwd paramater) - default: None (i.e, current working directory)
+  * stdout (idk what type this is)
+  * stderr (idk what type this is)
   '''
 
   if not yolo:
@@ -77,24 +83,35 @@ def run(cmd, dir=None, yolo=False, dont_exit=True, verbose=True, silent=False):
   try:
     # TODO: add a log file
 
-    # yes, this runs with shell=True.
+    # yes, this runs with shell=True by default.
     # no, i don't care.
     # we're arch users, what do you expect?
 
-    silent_stdout = subprocess.DEVNULL if silent else None
-    ## silent_stderr = silent_stdout
+    silent_stdout = subprocess.DEVNULL if silent and stdout is None else stdout
 
-    subprocess.run(cmd, shell=True, check=True, cwd=dir, stdout=silent_stdout) ## stderr=silent_stderr
-    return # doesn't need to return anything, just exits the function.
+    ran_cmd = cmd.split() if not shell else cmd
+
+    result = subprocess.run(
+                        ran_cmd, 
+                        shell=shell, 
+                        check=True,
+                        cwd=dir,
+                        stdout=silent_stdout,
+                        stderr=stderr,
+                        text=text
+                        )
+    
+    return result if return_result else None
     
   except subprocess.CalledProcessError as e:
-    # i refuse to just recycle the error handling from the old version of wahoo,
-    # that was a mess.
-    # TODO: make better error handling
     cli.echo(f"Command failed.", prefix="wahoo error", color=None)
     if verbose:
       cli.echo(f"Command: {cmd}", color=None, prefix=None)
       cli.echo(f"Details: {e}", color=None, prefix=None)
+      if e.stdout:
+        cli.echo(f"stdout: {e.stdout}", color=None, prefix=None)
+      if e.stderr:
+        cli.echo(f"stderr: {e.stderr}", color=None, prefix=None)
   
 def sudo_check(): # wahoo is flexible now, some commands support running as root, some don't.
   '''
