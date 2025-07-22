@@ -141,20 +141,15 @@ contact me:
 
 > [!IMPORTANT]
 > 
-> Please, for the love of all that is holy, do NOT sell my work.
-> 
-> I'm fine with you doing anything with my stuff, I won't yell at you.
-> 
-> But if you are trying to use `wahoo` for commercial purposes then I will have to politely ask you to cease.
+> Although it is permitted by wahoo's [LICENSE,](./LICENSE) please do not use wahoo for commerical purposes.
 >
-> Read the [License](./LICENSE), please.
-> 
-> Bye! :D
+> You are free to do so, but I request for you not to. This is because wahoo as a project is something I am passionate about, and I do not want to see people profitting over *my* work.
+>
+> tl;dr: you can sell this but pls dont
 
 ___
 
-<p align=center><img alt="License: MIT" src="https://img.shields.io/badge/license-mit-blue?style=for-the-badge&labelColor=white&color=%2374c7ec"></img></p>
-
+<p align=center><img alt="License: Apache 2.0" src="https://img.shields.io/badge/license-mit-blue?style=for-the-badge&labelColor=white&color=%2374c7ec"></img></p>
 
 > PS: 
 >
