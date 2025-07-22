@@ -5,7 +5,7 @@ pkgrel=1
 pkgdesc="an AUR helper made in python because why not? made with <3 by spark"
 arch=('x86_64') # sorry ARM users
 url="https://github.com/sparkhere-sys/wahoo"
-license=('Custom:Modified-MIT') # modified MIT license, no commercial usage clause added
+license=('Apache')
 depends=('python>=3.11' 'git' 'bash' 'python-requests' 'python-rapidfuzz' 'sudo')
 source=("git+${url}.git")
 provides=("$pkgname")
