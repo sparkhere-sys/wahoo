@@ -149,7 +149,8 @@ contact me:
 
 ___
 
-<p align=center><img alt="License: Apache 2.0" src="https://img.shields.io/badge/license-mit-blue?style=for-the-badge&labelColor=white&color=%2374c7ec"></img></p>
+<p align=center><img alt="GitHub License" src="https://img.shields.io/github/license/sparkhere-sys/wahoo?style=for-the-badge&logo=apache&logoColor=black&labelColor=white&color=%2374c7ec">
+</img></p>
 
 > PS: 
 >
