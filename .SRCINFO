@@ -4,7 +4,7 @@ pkgbase = wahoo
 	pkgrel = 1
 	url = https://github.com/sparkhere-sys/wahoo
 	arch = x86_64
-	license = Custom:Modified-MIT
+	license = Apache
 	depends = python>=3.11
 	depends = git
 	depends = bash
