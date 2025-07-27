@@ -10,7 +10,7 @@ import sys
 ## wahoo stuff
 
 import wahoo.cli as cli
-import wahoo.main as main
+import wahoo.pkgmgr as pkgmgr
 from wahoo.pacwrap import pacwrap
 from wahoo.constants import *
 import wahoo.salmon as salmon
@@ -112,17 +112,17 @@ def parse():
   match cmd:
     case ("install" | "-S"):
       cli.no_pkg(pkg)
-      main.install(pkg, yolo=flag_yolo, verbose=flag_verb, silent=flag_silent)
+      pkgmgr.install(pkg, yolo=flag_yolo, verbose=flag_verb, silent=flag_silent)
 
     case ("uninstall" | "remove" | "-R" | "purge" | "autoremove" | "-Rns"): # apt syntax my beloathed
       if cmd in ["purge", "autoremove", "-Rns"]:
         flag_rns = True
         
       cli.no_pkg(pkg)
-      main.uninstall(pkg, yolo=flag_yolo, rns=flag_rns, verbose=flag_verb, silent=flag_silent)
+      pkgmgr.uninstall(pkg, yolo=flag_yolo, rns=flag_rns, verbose=flag_verb, silent=flag_silent)
 
     case ("clean" | "cleanup" | "-Rc" | "-C"): # unsure what the pacman equivalent of this would be
-      main.cleanup(yolo=flag_yolo, verbose=flag_verb, silent=flag_silent)
+      pkgmgr.cleanup(yolo=flag_yolo, verbose=flag_verb, silent=flag_silent)
 
     case ("update" | "-Sy"):
       cli.no_pkg(pkg)
@@ -136,10 +136,10 @@ def parse():
             cli.echo(f"Fail details: {e}", color=None, prefix=None)
           sys.exit(3)
       
-      main.update(pkg, yolo=flag_yolo, silent=flag_silent, verbose=flag_verb)
+      pkgmgr.update(pkg, yolo=flag_yolo, silent=flag_silent, verbose=flag_verb)
       
     case ("upgrade" | "updateall" | "-Syu"):
-      main.upgrade(yolo=flag_yolo, verbose=flag_verb, silent=flag_silent)
+      pkgmgr.upgrade(yolo=flag_yolo, verbose=flag_verb, silent=flag_silent)
 
     case ("-Su" | "-U"):
       cli.echo("wahoo is confused", color=None, prefix=None)
