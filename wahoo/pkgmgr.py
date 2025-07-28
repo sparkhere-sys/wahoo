@@ -14,7 +14,6 @@ The actual package manager.
 
 import sys
 from pathlib import Path
-import subprocess
 from shutil import rmtree
 
 ## wahoo stuff

@@ -66,7 +66,7 @@ def flagparsing(flags):
         help()
         sys.exit(0)
       case "--version":
-        cli.version()
+        cli.version_msg()
         sys.exit(0)
       case _:
         cli.echo(f"Unknown flag: '{flag}'. Ignoring.", prefix="wahoo warn", color=wahoo_colors["wahoo_warn"])
@@ -148,7 +148,7 @@ def parse():
       sys.exit(2)
     
     case ("version" | "-V"):
-      cli.version()
+      cli.version_msg()
 
     case ("help" | "-H"):
       helpcmd = pkg # yes i know this looks weird

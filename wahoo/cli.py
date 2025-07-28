@@ -20,7 +20,6 @@ from wahoo.constants import *
 
 # FUNCTIONS
 
-
 def echo(msg, color=wahoo_colors["wahoo_message"], prefix="wahoo", do_return=False):
   '''
   prints with color (helper function)
@@ -108,7 +107,7 @@ def no_pkg(pkg):
   echo("No package provided.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
   sys.exit(2)
 
-def version():
+def version_msg():
   '''
   does this seriously need a docstring?
   '''

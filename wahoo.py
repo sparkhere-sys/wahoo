@@ -4,14 +4,13 @@ wahoo's launcher and the thing that actually gets installed to /usr/bin/ by pacm
 '''
 
 import sys
-from wahoo.parser import parse # as main
-import wahoo.cli as cli
+from wahoo.parser import parse as main
+from wahoo.cli import echo
 from wahoo.constants import *
 
 if __name__ == "__main__":
   try:
-    ## main()
-    parse()
+    main()
   except KeyboardInterrupt:
-    cli.echo("Interrupted by Ctrl+C, see ya next time")
+    echo("Interrupted by Ctrl+C, see ya next time")
     sys.exit(130)

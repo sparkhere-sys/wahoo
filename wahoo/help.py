@@ -43,6 +43,7 @@ info (show, -Qi)
 --no-error-details:         Hides error info. (yeah.)
 --silent:                   Silences any commands ran by wahoo.
 """
+
   main_msg = f"""
 {green}[Available Commands]{reset}
 {blue}install (-S){reset}:               Installs a package from the AUR.
