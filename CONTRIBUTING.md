@@ -14,7 +14,7 @@ if you'd like to contribute, feel free to do so!
 
 ## style guide
 
-- use `snake_case` and `snake_case` only, for consistency. (i know its python convention to use `CamelCase` for classes but i dont care)
+- use `snake_case` and `snake_case` only, for consistency. (i know its python convention to use `PascalCase` for classes but i dont care)
 - use `cli.echo()` instead of raw `print()`
 - section headers are in all caps (eg, `# THIS IS A SECTION HEADER`)
 - do not use emojis. anywhere. in docstrings, in comments, just please don't.
