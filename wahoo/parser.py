@@ -11,7 +11,7 @@ import sys
 
 import wahoo.cli as cli
 import wahoo.pkgmgr as pkgmgr
-from wahoo.pacwrap import pacwrap
+import wahoo.pacwrap as pacwrap
 from wahoo.constants import *
 import wahoo.salmon as salmon
 from wahoo.help import help
