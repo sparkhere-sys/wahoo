@@ -8,7 +8,7 @@ url="https://github.com/sparkhere-sys/wahoo"
 license=('Apache')
 depends=('python>=3.11' 'git' 'bash' 'python-requests' 'python-rapidfuzz' 'sudo')
 source=("git+${url}.git")
-provides=("$pkgname")
+## provides=("$pkgname") # useless (thank you for telling me this archwiki)
 ## conflicts=('wahoo') # wahoo cannot coexist with another wahoo installation
 sha256sums=('SKIP')
 

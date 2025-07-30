@@ -17,8 +17,9 @@ Index:
 * cli.py
 * constants.py
 * help.py
-* main.py
+* installer.py
 * pacwrap.py
+* pkgmgr.py
 * parser.py
 * salmon.py
 * utils.py

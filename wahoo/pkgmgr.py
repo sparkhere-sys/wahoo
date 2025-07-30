@@ -31,6 +31,13 @@ from rapidfuzz import fuzz
 # FUNCTIONS
 
 def install(**kwargs):
+  '''
+  was it a good idea to use **kwargs and NOT document the available args in the same file?
+  probably not.
+  did i do it anyway because vibe coding is a human right?
+  heck yeah.
+  '''
+
   install_class = installer(**kwargs)
 
   install_class.main()
@@ -58,6 +65,8 @@ def uninstall(pkg, yolo=False, silent=False, verbose=False, rns=False):
   # also no need for an internet check, since pacman isn't installing anything
 
   sourcedir = Path.home() / ".wahoo" / "source" / pkg
+
+  # TODO: use pyalpm for this
 
   cli.prompt(f"Uninstall {pkg}?", yolo=yolo, dont_exit=False, use_msg_as_prompt=True)
   utils.run(f"sudo pacman {'-Rns' if rns else '-R'} {'--noconfirm' if yolo else ''} {pkg}", silent=silent, verbose=verbose)
@@ -94,17 +103,24 @@ def update(pkg, yolo=False, silent=False, verbose=False):
 
   sourcedir = Path.home() / ".wahoo" / "source" / pkg
   if not sourcedir.exists():
-    cli.echo(f"No source directory found for {pkg}.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
-    cli.echo("If it was installed with pacman, try updating it with pacman instead.", color=None, prefix=None)
-    cli.echo("Otherwise, it may have been cleaned up. Try uninstalling it with pacman, then reinstalling it with wahoo.", color=None, prefix=None)
-    cli.echo("This will reinstall the latest version of the package from the AUR.", color=None, prefix=None)
-    sys.exit(1)
+    cli.echo(f"No source directory found for {pkg}.", color=wahoo_colors["wahoo_error"], prefix="wahoo warn")
 
-  cli.prompt("Starting update...", yolo=yolo, dont_exit=False)
-  cli.echo(f"Updating {pkg}...")
+  ## cli.prompt("Starting update...", yolo=yolo, dont_exit=False)
+  cli.prompt(f"Updating {pkg}...", yolo=yolo, dont_exit=False)
   try:
-    utils.run("git reset --hard HEAD", dir=sourcedir, yolo=yolo, dont_exit=False, silent=silent, verbose=verbose)
-    utils.run("git pull", dir=sourcedir, yolo=yolo, dont_exit=False, silent=silent, verbose=verbose)
+    if sourcedir.exists():
+      cli.echo("Pulling from latest source...")
+      utils.run("git reset --hard HEAD", dir=sourcedir, yolo=True, silent=silent, verbose=verbose)
+      utils.run("git pull", dir=sourcedir, yolo=True, dont_exit=False, silent=silent, verbose=verbose)
+    
+    cli.echo("Uninstalling old package...")
+    uninstall(pkg, yolo=True)
+    cli.echo("Reinstalling package...")
+    if sourcedir.exists():
+      utils.run("makepkg -si", dir=sourcedir, yolo=True, silent=silent, verbose=verbose)
+    
+    install(pkg)
+
     cli.echo(f"{pkg} updated successfully!", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
   except Exception as e:
     cli.echo(f"Update failed.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
@@ -241,7 +257,7 @@ def cleanup(yolo=False, verbose=True, silent=True):
   wahooroot = Path.home() / ".wahoo" / "source"
 
   cli.echo("Cleaning up wahoo's source directory will make it impossible to update a package with wahoo.", color=wahoo_colors["wahoo_warn"], prefix="wahoo warn")
-  cli.prompt("Are you sure?", dont_exit=False, use_msg_as_prompt=True)
+  cli.prompt("Are you sure?", yolo=yolo, dont_exit=False, use_msg_as_prompt=True)
 
   cli.echo("Cleaning up everything...")
   try:

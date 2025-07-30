@@ -46,7 +46,7 @@ def internet_check(timeout=3, print_and_exit=False, request_to="https://archlinu
     
   return True
 
-def run(cmd, dir=None, yolo=False, dont_exit=True, verbose=True, silent=False, 
+def run(cmd, dir=None, yolo=False, dont_exit=False, verbose=True, silent=False, 
         stdout=None, stderr=None, return_result=False, text=False, shell=True):
   '''
   runs a shell command
