@@ -118,8 +118,8 @@ def update(pkg, yolo=False, silent=False, verbose=False):
     cli.echo("Reinstalling package...")
     if sourcedir.exists():
       utils.run("makepkg -si", dir=sourcedir, yolo=True, silent=silent, verbose=verbose)
-    
-    install(pkg)
+    else:
+      install(pkg)
 
     cli.echo(f"{pkg} updated successfully!", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
   except Exception as e:
