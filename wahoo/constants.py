@@ -45,7 +45,7 @@ styles = {
   "faint": "\u001b[2m" if allow_colors else "",
   "italic": "\u001b[3m" if allow_colors else "",
   "underline": "\u001b[4m" if allow_colors else "",
-  "strike": "\u001b[9m"
+  "strike": "\u001b[9m" if allow_colors else "" # how did i forget to add this???
 }
 
 wahoo_colors = { # since i used `if allow_colors else ""` in the above dict, there's no need for repetition
