@@ -2,12 +2,9 @@
 '''
 CLI components.
 
-* find_args
 * echo
 * prompt
 * no_pkg
-* help
-* version
 '''
 
 # LIBRARIES AND MODULES
@@ -19,6 +16,9 @@ import sys
 from wahoo.constants import *
 
 # FUNCTIONS
+
+# TODO: possibly add a style() function?
+#       if so it will probably extend echo()'s functionality by a bit
 
 def echo(msg, color=wahoo_colors["wahoo_message"], prefix="wahoo", do_return=False):
   '''
@@ -94,6 +94,8 @@ def prompt(msg, yolo=False, dont_exit=True, use_msg_as_prompt=False, show_abort_
   else:
     echo(fullmsg, color=None, prefix=None)
     return default
+
+# TODO: move no_pkg() to parser.py since its only called there
     
 def no_pkg(pkg):
   '''
@@ -106,6 +108,8 @@ def no_pkg(pkg):
     
   echo("No package provided.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
   sys.exit(2)
+
+# TODO: move version_msg() to parser.py since its only called there
 
 def version_msg():
   '''
