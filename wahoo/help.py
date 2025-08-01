@@ -15,6 +15,7 @@ import wahoo.cli as cli
 def help(cmd=None):
   '''
   does this seriously need a docstring?
+  TODO: make this more DRY
   '''
 
   # COLORS
@@ -25,6 +26,7 @@ def help(cmd=None):
 
   # MAIN MESSAGE
 
+  # unstyled:
   main_msg_dev = """
 [Available Commands]
 install (-S):               Installs a package from the AUR.
@@ -43,7 +45,7 @@ info (show, -Qi)
 --no-error-details:         Hides error info. (yeah.)
 --silent:                   Silences any commands ran by wahoo.
 """
-
+  # styled:
   main_msg = f"""
 {green}[Available Commands]{reset}
 {blue}install (-S){reset}:               Installs a package from the AUR.

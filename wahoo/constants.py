@@ -19,11 +19,19 @@ salmon specific:
 * repo_url (string)
 * sal_prefix (string)
 * pkgname (string)
+
+pkgmgr.py specific:
+* wahoodir (path)
+* wahooroot (path)
+
+pyalpm:
+* nothing to see here...
 '''
 
 # LIBRARIES AND MODULES
 
 import sys
+from pathlib import Path
 
 # CONSTANTS
 
@@ -65,3 +73,16 @@ reset = "\u001b[0m" if allow_colors else ""
 repo_url = "https://github.com/sparkhere-sys/wahoo"
 sal_prefix = "salmon"
 pkgname = "wahoo"
+
+## pkgmgr.py SPECIFIC
+
+wahoodir = Path.home() / ".wahoo"
+wahooroot = wahoodir / "source"
+
+wahooroot.mkdir(exist_ok=True, parents=True) # this is the only function call i will put in constants.py, this is only here so i don't have to shove this into parser.py or smth
+
+# sourcedir isn't mentioned here, since that's the source directory of the package being managed
+
+## PYALPM
+
+# TODO: add this later

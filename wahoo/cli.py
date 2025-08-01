@@ -5,6 +5,9 @@ CLI components.
 * echo
 * prompt
 * no_pkg
+
+NOTE: this is not the main cli entry point. there is no __main__.py file here.
+      if you're looking for that, parser.py is your friend.
 '''
 
 # LIBRARIES AND MODULES

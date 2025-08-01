@@ -18,7 +18,7 @@ import wahoo.cli as cli
 # CLASSES
 
 # idk if i should flatten this
-# make a pull request if you think so and i'll push it
+# make a pull request if you think so and i'll push it, no questions asked
 
 class installer:
   '''
@@ -39,9 +39,7 @@ class installer:
     self.silent = silent
     self.verbose = verbose
 
-    self.wahooroot = Path.home() / ".wahoo" / "source"
-    self.wahooroot.mkdir(parents=True, exist_ok=True)
-    self.sourcedir = self.wahooroot / pkg
+    self.sourcedir = wahooroot / pkg
 
     self.aur_sources = ["https://aur.archlinux.org", "ssh://aur@aur.archlinux.org"]
   
@@ -78,6 +76,7 @@ class installer:
     '''
     resolves AUR package dependencies
     dependencies that are in the official pacman repos are just installed by makepkg
+    TODO: flatten this to make it more pythonic and DRY
     '''
 
     def parse_srcinfo():
@@ -137,11 +136,11 @@ class installer:
       instead, it just runs the two commands needed to build and install a package.
       '''
 
-      depdir = self.wahooroot / pkg
+      depdir = self.sourcedir
 
       # clone
       if not depdir.exists():
-        utils.run(f"git clone {self.source}/{pkg}.git", dir=self.wahooroot, silent=self.silent, dont_exit=False)
+        utils.run(f"git clone {self.source}/{pkg}.git", dir=wahooroot, silent=self.silent, dont_exit=False)
 
       # build
       utils.run("makepkg -si", dir=depdir, silent=self.silent, dont_exit=False)
@@ -197,7 +196,7 @@ class installer:
       if self.verbose:
         cli.echo(f"Cloning {self.pkg} git repo ({self.source}/{self.pkg}.git) to {self.sourcedir}")
 
-      utils.run(f"git clone {self.source}/{self.pkg}.git", dir=self.wahooroot, yolo=self.yolo, dont_exit=False, silent=self.silent)
+      utils.run(f"git clone {self.source}/{self.pkg}.git", dir=wahooroot, yolo=self.yolo, dont_exit=False, silent=self.silent)
     else:
       cli.echo(f"Source directory for {self.pkg} already exists, skipping clone.", color=wahoo_colors["wahoo_warn"], prefix="wahoo warn")
   

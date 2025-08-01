@@ -64,7 +64,7 @@ def uninstall(pkg, yolo=False, silent=False, verbose=False, rns=False):
   # no need for a sudo check here, pacman will require sudo anyway
   # also no need for an internet check, since pacman isn't installing anything
 
-  sourcedir = Path.home() / ".wahoo" / "source" / pkg
+  sourcedir = wahooroot / pkg
 
   # TODO: use pyalpm for this
 
@@ -101,7 +101,7 @@ def update(pkg, yolo=False, silent=False, verbose=False):
   utils.internet_check(print_and_exit=True)
   utils.sudo_check()
 
-  sourcedir = Path.home() / ".wahoo" / "source" / pkg
+  sourcedir = wahooroot / pkg
   if not sourcedir.exists():
     cli.echo(f"No source directory found for {pkg}.", color=wahoo_colors["wahoo_error"], prefix="wahoo warn")
 
@@ -146,8 +146,6 @@ def upgrade(yolo=False, verbose=False, silent=False):
   * verbose (bool) - prints error info should something go wrong - default: False
   * silent (bool) - silences the update process (and pacman) - default: False
   '''
-
-  wahooroot = Path.home() / ".wahoo" / "source"
   
   utils.internet_check(print_and_exit=True)
   utils.sudo_check()
@@ -158,10 +156,15 @@ def upgrade(yolo=False, verbose=False, silent=False):
 
   try:
     for pkg in wahooroot.iterdir():
+      # HACK: there is not going to be a ~/.wahoo/source/wahoo directory
+      #       i assume that `pkg.name != "wahoo"` is a vestigial structure from
+      #       the old version of wahoo, which used the now deprecated install.sh
+
       if pkg.is_dir() and pkg.name != "wahoo": # don't update wahoo itself here
-        pkgname = pkg.name # helpful alias
-        cli.echo(f"Updating {pkgname}...")
-        update(pkgname, yolo=True, verbose=verbose, silent=silent)
+        ## pkgname = pkg.name # helpful alias
+        # shadows pkgname from constants.py
+        cli.echo(f"Updating {pkg.name}...")
+        update(pkg.name, yolo=True, verbose=verbose, silent=silent)
 
   except Exception as e:
     cli.echo("Upgrade failed.", color=wahoo_colors["wahoo_error"], prefix="wahoo error")
@@ -170,10 +173,10 @@ def upgrade(yolo=False, verbose=False, silent=False):
 
     sys.exit(1)
   
+  cli.echo(f"Upgrade finished!", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
+
   if cli.prompt("Would you like to do a system update with pacman as well?", default=False, promptmsg="[y/N]"):
     utils.run("sudo pacman -Syu --noconfirm", yolo=True, verbose=verbose, silent=silent)
-  
-  cli.echo(f"Upgrade finished!", color=wahoo_colors["wahoo_success"], prefix="wahoo!")
 
 def search(query, limit=20, use_fuzz=True, timeout=3, exit_on_fail=False, verbose=False):
   '''
