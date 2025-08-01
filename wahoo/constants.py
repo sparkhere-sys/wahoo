@@ -6,6 +6,7 @@ Import this with `from wahoo.constants import *`.
 
 unlabelled:
 * version (float)
+* version_str (string)
 
 ANSI colors:
 * allow_colors (bool)
@@ -27,6 +28,7 @@ import sys
 # CONSTANTS
 
 version = 0.6 # this doesn't need to be a string i just realized
+version_str = str(version)
 
 ## ANSI COLORS
 
