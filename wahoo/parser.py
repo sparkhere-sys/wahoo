@@ -122,7 +122,7 @@ def parse():
       pkgmgr.uninstall(pkg, yolo=flag_yolo, rns=flag_rns, verbose=flag_verb, silent=flag_silent)
 
     case ("clean" | "cleanup" | "-Rc" | "-C"): # unsure what the pacman equivalent of this would be
-      pkgmgr.cleanup(yolo=flag_yolo, verbose=flag_verb, silent=flag_silent)
+      pkgmgr.cleanup(yolo=flag_yolo, verbose=flag_verb)
 
     case ("update" | "-Sy"):
       cli.no_pkg(pkg)

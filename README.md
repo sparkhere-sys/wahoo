@@ -1,9 +1,9 @@
 # <p align=center>wahoo! v0.6 beta</p>
 
 <p align=center>
-<img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/sparkhere-sys/wahoo/main.yml?branch=main&style=for-the-badge&logo=github-actions&logoColor=black&label=build&labelColor=white&color=%23b7bdf8&link=https%3A%2F%2Fgithub.com%2Fsparkhere-sys%2Fwahoo%2Fblob%2Fmain%2F.github%2Fworkflows%2Fmain.yml">
-<img alt="GitHub Issues or Pull Requests" src="https://img.shields.io/github/issues/sparkhere-sys/wahoo?style=for-the-badge&logo=github&logoColor=black&label=issues&labelColor=white&color=%23f38ba8">
-<img alt="GitHub Issues or Pull Requests" src="https://img.shields.io/github/issues-pr/sparkhere-sys/wahoo?style=for-the-badge&logo=git&logoColor=black&label=pull%20requests&labelColor=white&color=%23a6e3a1">
+<img alt="GitHub Actions Workflow Status (main.yml)" src="https://img.shields.io/github/actions/workflow/status/sparkhere-sys/wahoo/main.yml?branch=main&style=for-the-badge&logo=github-actions&logoColor=black&label=build&labelColor=white&color=%23b7bdf8&link=https%3A%2F%2Fgithub.com%2Fsparkhere-sys%2Fwahoo%2Fblob%2Fmain%2F.github%2Fworkflows%2Fmain.yml">
+<img alt="Open Issues (counter)" src="https://img.shields.io/github/issues/sparkhere-sys/wahoo?style=for-the-badge&logo=github&logoColor=black&label=issues&labelColor=white&color=%23f38ba8">
+<img alt="Open Pull Requests (counter)" src="https://img.shields.io/github/issues-pr/sparkhere-sys/wahoo?style=for-the-badge&logo=git&logoColor=black&label=pull%20requests&labelColor=white&color=%23a6e3a1">
 </p>
 
 ___
@@ -16,7 +16,7 @@ ___
 
 this README is informal by design, if you have any questions, pull up an issue or contact me.
 
-wahoo isn't intended to be used as a wrapper for pacman. fork it if you want that
+wahoo isn't intended to be used as a wrapper for pacman.
 
 roadmap: [click me](./ROADMAP.md)
 
@@ -57,7 +57,7 @@ suggest flags to add [here!](https://github.com/sparkhere-sys/wahoo/issues/1)
 | `--yolo` | `--noconfirm` | Skips all confirmation prompts. |
 | `--dont-remove-depends` | none :/ | Doesn't remove orphaned dependencies when running `wahoo uninstall`. This is disabled if the flag isn't specified when running `purge`, `autoremove`, or `-Rns`. |
 | `--no-error-details` | none :/ | Hides error details (duh) |
-| `--silent` | none :/ | Silences the commands being ran by wahoo. *Does not* silence wahoo itself. |
+| `--silent` | none :/ | Silences the commands being ran by wahoo. *Does not* silence wahoo itself. That's what we have `> /dev/null` for. |
 
 ## installation
 ### dependencies
@@ -76,11 +76,10 @@ open up your terminal, then run:
 ```bash
 git clone https://github.com/sparkhere-sys/wahoo.git
 cd wahoo
-tar -czf wahoo.tar.gz wahoo/
 makepkg -si
 ```
 
-<!-- if the install doesn't work, refer to [this](https://github.com/sparkhere-sys/wahoo/issues/7) issue. -->
+<!--
 
 ### with the install.sh
 > [!WARNING]
@@ -89,8 +88,10 @@ makepkg -si
 >
 > Install `wahoo` manually with `makepkg` instead like a normal human being.
 
+-->
+
 ### from AUR
-soon™️
+soon™
 
 wait a minute this is an AUR helper-
 

@@ -46,7 +46,7 @@ class steps:
 
 # FUNCTIONS
 
-def update():
+def _update():
   cli.echo("Starting update...", prefix=sal_prefix)
 
   with tempfile.TemporaryDirectory() as tmp:
@@ -62,15 +62,14 @@ def main():
   try:
     utils.sudo_check()
     utils.internet_check()
-    update()
+    _update()
   except Exception as e:
     cli.echo(f"Something went wrong: {e}", color=wahoo_colors["wahoo_error"], prefix=f"{sal_prefix} error")
     cli.echo("You may have a broken wahoo install.", color=None, prefix=None)
     sys.exit(3)
-
-if __name__ == "__main__":
-  try:
-    main()
   except KeyboardInterrupt:
     cli.echo("what have you done.", color=None, prefix=None)
-    sys.exit(255) # you deserve it at this point
+    sys.exit(255) # you deserve it at this point.
+
+if __name__ == "__main__": # in case some madlad has salmon in /usr/bin for some reason
+    main()
