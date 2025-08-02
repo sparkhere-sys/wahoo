@@ -92,7 +92,7 @@ def prompt(msg, yolo=False, dont_exit=True, use_msg_as_prompt=False, show_abort_
     elif splitted == "y": # allows for answers like yy, yes, yeah, yea, yep, etc
       return True
     else:
-      echo(f"Taking '{usrinput}' as {'yes' if default else 'no'}.", "wahoo warn", None)
+      echo(f"Taking '{usrinput}' as {'yes' if default else 'no'}.", color=wahoo_colors["wahoo_error"], prefix="wahoo warn")
       return default
   else:
     echo(fullmsg, color=None, prefix=None)

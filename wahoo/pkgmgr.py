@@ -256,11 +256,11 @@ def search(query, limit=20, use_fuzz=True, timeout=3, exit_on_fail=False, verbos
 
     sys.exit(1)
 
-def cleanup(yolo=False, verbose=True, silent=True):
-  wahooroot = Path.home() / ".wahoo" / "source"
+def cleanup(yolo=False, verbose=True):
+  ## wahooroot = Path.home() / ".wahoo" / "source"
 
-  cli.echo("Cleaning up wahoo's source directory will make it impossible to update a package with wahoo.", color=wahoo_colors["wahoo_warn"], prefix="wahoo warn")
-  cli.prompt("Are you sure?", yolo=yolo, dont_exit=False, use_msg_as_prompt=True)
+  ## cli.echo("Cleaning up wahoo's source directory will make it impossible to update a package with wahoo.", color=wahoo_colors["wahoo_warn"], prefix="wahoo warn")
+  cli.prompt("Clean up wahoo's source directory?", yolo=yolo, dont_exit=False, use_msg_as_prompt=True)
 
   cli.echo("Cleaning up everything...")
   try:

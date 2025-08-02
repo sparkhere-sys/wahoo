@@ -35,30 +35,36 @@ from pathlib import Path
 
 # CONSTANTS
 
+# if you want to add type annotations, be my guest.
+# just don't expect me to rely on them.
+# unlike linters, i have eyes.
+# plus, python is dynamically typed. be DRY. look at the docstring.
+
 version = 0.6 # this doesn't need to be a string i just realized
 version_str = str(version)
 
 ## ANSI COLORS
 
+_escape = "\u001b"
 allow_colors = sys.stdout.isatty() # meaning if not piped to less or something
 
 colors = {
-  "white": "\u001b[97m" if allow_colors else "",
-  "green": "\u001b[32m" if allow_colors else "",
-  "yellow": "\u001b[33m" if allow_colors else "",
-  "red": "\u001b[31m" if allow_colors else "",
-  "blue": "\u001b[34m" if allow_colors else ""
+  "white": f"{_escape}[97m" if allow_colors else "",
+  "green": f"{_escape}[32m" if allow_colors else "",
+  "yellow": f"{_escape}[33m" if allow_colors else "",
+  "red": f"{_escape}[31m" if allow_colors else "",
+  "blue": f"{_escape}[34m" if allow_colors else ""
 }
 
 styles = {
-  "bold": "\u001b[1m" if allow_colors else "",
-  "faint": "\u001b[2m" if allow_colors else "",
-  "italic": "\u001b[3m" if allow_colors else "",
-  "underline": "\u001b[4m" if allow_colors else "",
-  "strike": "\u001b[9m" if allow_colors else "" # how did i forget to add this???
+  "bold": f"{_escape}[1m" if allow_colors else "",
+  "faint": f"{_escape}[2m" if allow_colors else "",
+  "italic": f"{_escape}[3m" if allow_colors else "",
+  "underline": f"{_escape}[4m" if allow_colors else "",
+  "strike": f"{_escape}[9m" if allow_colors else ""
 }
 
-wahoo_colors = { # since i used `if allow_colors else ""` in the above dict, there's no need for repetition
+wahoo_colors = { # since i used `if allow_colors else ""` in the above dicts, there's no need for repetition
   "wahoo_message": colors["white"],
   "wahoo_success": colors["green"],
   "wahoo_warn": colors["yellow"],
@@ -66,7 +72,7 @@ wahoo_colors = { # since i used `if allow_colors else ""` in the above dict, the
   "wahoo_yn": colors["blue"]
 }
 
-reset = "\u001b[0m" if allow_colors else ""
+reset = f"{_escape}[0m" if allow_colors else ""
 
 ## SALMON SPECIFIC
 
