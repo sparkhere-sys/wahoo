@@ -93,7 +93,7 @@ def parse():
   # TODO: add multi-package support
   #       so that something like "wahoo -S foo1 foo2" is possible
 
-  cmd = cmd if not cmd.startswith("-") else cmd.lower() # i.e, if command is "iNsTaLL" then it will become "install"
+  cmd = cmd.lower() if not cmd.startswith("-") else cmd # i.e, if command is "iNsTaLL" then it will become "install"
   # this ignores "-S" and other pacman-style commands, since the capital letters are intentional there
   # fun fact: this used to be in older versions of the og wahoo, 
   #           but since the match-case would see "-s" and not "-S"
